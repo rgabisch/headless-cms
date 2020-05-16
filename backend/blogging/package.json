@@ -5,8 +5,8 @@
   "main": "src/app.ts",
   "scripts": {
     "tsc": "tsc",
-    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -e js,ts src/app.ts",
+    "test": "mocha -r ts-node/register test/**/*.ts",
     "prestart": "tsc",
     "start": "node ./dist/app.js"
   },
@@ -24,7 +24,7 @@
     "chai": "^4.2.0",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.4",
-    "ts-node-dev": "^1.0.0-pre.44",
+    "ts-node": "^8.10.1",
     "typescript": "^3.9.2"
   }
 }
