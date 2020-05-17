@@ -1,12 +1,13 @@
 import {expect} from 'chai';
 import OpenSpaceUseCase from "../../../src/domain/usecases/OpenSpaceUseCase";
-import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
+import FakedSpaceRepository from "../../fakes/reposetories/FakedSpaceRepository";
 import OpenSpaceCommand from "../../../src/domain/commands/OpenSpaceCommand";
 import EmptySpaceNameException from "../../../src/domain/exceptions/EmptySpaceNameException";
 import OpenedSpaceEvent from "../../../src/domain/events/OpenedSpaceEvent";
 import IDGenerator from "../../../src/shared/IDGenerator";
 import MoreThan50CharactersSpaceNameException
     from "../../../src/domain/exceptions/MoreThan50CharactersSpaceNameException";
+import SpaceRepository from "../../../src/domain/repositories/SpaceRepository";
 
 const emptyName = '';
 const nameWithOnlyWhitespace = '        ';
@@ -22,8 +23,11 @@ let idGenerator: IDGenerator = new class implements IDGenerator {
     }
 };
 
+let repository: FakedSpaceRepository;
+
 beforeEach(() => {
-    testSubject = new OpenSpaceUseCase(new InMemorySpaceRepository(), idGenerator);
+    repository = new FakedSpaceRepository();
+    testSubject = new OpenSpaceUseCase(repository, idGenerator);
 });
 
 describe('Open Space', () => {
@@ -64,9 +68,8 @@ describe('Open Space', () => {
 
             const openedSpaceEvent = testSubject.execute(command);
 
-            let openedSpaceEvent1 = new OpenedSpaceEvent(idGenerator.generate(), nameMadeOfOneCharacter);
-
-            expect(openedSpaceEvent).to.be.deep.equal(openedSpaceEvent1)
+            const expected = new OpenedSpaceEvent(idGenerator.generate(), nameMadeOfOneCharacter);
+            expect(openedSpaceEvent).to.be.deep.equal(expected)
         });
 
         it('with 50 characters as name it opens a space', () => {
@@ -74,7 +77,24 @@ describe('Open Space', () => {
 
             const openedSpaceEvent = testSubject.execute(command);
 
-            expect(openedSpaceEvent).to.be.deep.equal(new OpenedSpaceEvent(idGenerator.generate(), nameMadeOf50Characters))
+            const expected = new OpenedSpaceEvent(idGenerator.generate(), nameMadeOf50Characters);
+            expect(openedSpaceEvent).to.be.deep.equal(expected);
+        });
+
+        it('with one character as name it stores space in repository', () => {
+            const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
+
+            const openedSpaceEvent = testSubject.execute(command);
+
+            expect(repository.spaces).to.be.deep.equal([openedSpaceEvent])
+        });
+
+        it('with 50 characters as name it stores space in repository', () => {
+            const command = new OpenSpaceCommand(nameMadeOf50Characters);
+
+            const openedSpaceEvent = testSubject.execute(command);
+
+            expect(repository.spaces).to.be.deep.equal([openedSpaceEvent])
         });
 
     });
