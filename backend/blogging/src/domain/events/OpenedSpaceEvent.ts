@@ -1,5 +1,5 @@
 class OpenedSpaceEvent {
-    constructor(id: string, name: string) {
+    constructor(readonly id: string, readonly name: string) {
     }
 }
 

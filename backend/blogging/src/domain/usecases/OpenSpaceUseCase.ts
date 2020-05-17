@@ -14,9 +14,9 @@ class OpenSpaceUseCase {
         try {
             const space = new Space(this.idGenerator.generate(), command.name);
             this.repository.save(space);
-            return {};
-        } catch (e) {
-            throw e;
+            return new OpenedSpaceEvent(space.id, space.name);
+        } catch (exception) {
+            throw exception;
         }
     }
 

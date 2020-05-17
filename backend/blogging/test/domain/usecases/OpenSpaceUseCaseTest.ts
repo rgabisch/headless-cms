@@ -64,7 +64,9 @@ describe('Open Space', () => {
 
             const openedSpaceEvent = testSubject.execute(command);
 
-            expect(openedSpaceEvent).to.be.equal(new OpenedSpaceEvent(idGenerator.generate(), nameMadeOfOneCharacter))
+            let openedSpaceEvent1 = new OpenedSpaceEvent(idGenerator.generate(), nameMadeOfOneCharacter);
+
+            expect(openedSpaceEvent).to.be.deep.equal(openedSpaceEvent1)
         });
 
         it('with 50 characters as name it opens a space', () => {
@@ -72,7 +74,7 @@ describe('Open Space', () => {
 
             const openedSpaceEvent = testSubject.execute(command);
 
-            expect(openedSpaceEvent).to.be.equal(new OpenedSpaceEvent(idGenerator.generate(), nameMadeOf50Characters))
+            expect(openedSpaceEvent).to.be.deep.equal(new OpenedSpaceEvent(idGenerator.generate(), nameMadeOf50Characters))
         });
 
     });
