@@ -92,7 +92,7 @@ describe('Open Space', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            it('it stores space in repository', () => {
+            it('it stores space in repositories', () => {
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
 
                 const openedSpaceEvent = testSubject.execute(command);
@@ -111,7 +111,7 @@ describe('Open Space', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            it('it stores space in repository', () => {
+            it('it stores space in repositories', () => {
                 const command = new OpenSpaceCommand(nameMadeOf50Characters);
 
                 const openedSpaceEvent = testSubject.execute(command);
