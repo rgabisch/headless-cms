@@ -1,4 +1,12 @@
 import {expect} from 'chai';
+import OpenSpaceUseCase from "../../../src/domain/usecases/OpenSpaceUseCase";
+import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
+import OpenSpaceCommand from "../../../src/domain/commands/OpenSpaceCommand";
+import EmptySpaceNameException from "../../../src/domain/exceptions/EmptySpaceNameException";
+import OpenedSpaceEvent from "../../../src/domain/events/OpenedSpaceEvent";
+import IDGenerator from "../../../src/shared/IDGenerator";
+import MoreThan50CharactersSpaceNameException
+    from "../../../src/domain/exceptions/MoreThan50CharactersSpaceNameException";
 
 const emptyName = '';
 const nameWithOnlyWhitespace = '        ';
