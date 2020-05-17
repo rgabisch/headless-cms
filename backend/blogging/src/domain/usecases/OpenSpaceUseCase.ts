@@ -2,12 +2,12 @@ import OpenSpaceCommand from "../commands/OpenSpaceCommand";
 import SpaceRepository from "../repositories/SpaceRepository";
 import OpenedSpaceEvent from "../events/OpenedSpaceEvent";
 import Space from "../entities/Space";
-import IDGenerator from "../../shared/IDGenerator";
+import IdGenerator from "../../shared/IdGenerator";
 
 
 class OpenSpaceUseCase {
     constructor(private repository: SpaceRepository,
-                private idGenerator: IDGenerator) {
+                private idGenerator: IdGenerator) {
     }
 
     execute(command: OpenSpaceCommand): OpenedSpaceEvent {
