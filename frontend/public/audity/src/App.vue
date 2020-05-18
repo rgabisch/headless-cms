@@ -1,21 +1,29 @@
 <template>
   <div id="app" class="container col-xs-12 col-sm-12 col-md-offset-3 col-md-5 col-lg-offset-3 col-lg-5">
     <div>
-      <h2>Spaces</h2>
-      <p>Eine Übersicht deiner Spaces</p>
+      <h2>Audity</h2>
+      <p>Die Plattform für Content-Creator!</p>
     </div>
-    <Space />
+    <ul class="nav navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-around" id="navbar-audity">
+      <li class="nav-item"><router-link class="nav-link" to="/spaces">Spaces</router-link></li> 
+      <li class="nav-item"><router-link class="nav-link" to="/seiten">Seiten</router-link></li> 
+      <!-- Add more Navbar-Links -->
+    </ul>
+
+    <!-- Takes component based on route -->
+    <router-view></router-view>
+    <HelloWorld />
   </div>
 </template>
 
 <script>
-import Space from './components/Space.vue'
+import HelloWorld from './components/HelloWorld.vue'
 
 
 export default {
   name: 'App',
   components: {
-    Space
+    HelloWorld,
   }
 }
 </script>
@@ -34,5 +42,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+#navbar-audity{
+  margin-bottom: 40px;
 }
 </style>

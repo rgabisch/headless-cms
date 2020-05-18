@@ -4,7 +4,7 @@
             <form @submit.prevent="addSpace">
                 <div class="form-row align-items-center">
                     <div class="col-auto">
-                        <input class="form-control" type="text" placeholder="Space hinzufügen" v-model="spaceName">
+                        <input class="form-control" type="text" placeholder="Spacename..." v-model="spaceName">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary mb-2">Space erstellen</button>
