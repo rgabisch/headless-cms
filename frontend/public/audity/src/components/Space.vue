@@ -40,7 +40,7 @@ export default {
         addSpace(){
             console.log('Add:' + this.spaceName);
             // [JNR] check duplicates
-            axios.put('http://localhost:3000/spaces', {name: this.spaceName, userid: '0'}).then((response) => {
+            axios.post('http://localhost:3000/spaces', {name: this.spaceName, userid: '0'}).then((response) => {
                 if (response.data.ok){
                     // [JNR] take back when server supports GET
                     //this.refresh();
