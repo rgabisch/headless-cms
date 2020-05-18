@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
     name: 'Space',
@@ -38,16 +39,35 @@ export default {
     methods: {
         addSpace(){
             console.log('Add:' + this.spaceName);
-            this.spaces.push({
-                name: this.spaceName
+            // [JNR] check duplicates
+            axios.put('http://localhost:3000/spaces', {name: this.spaceName, userid: '0'}).then((response) => {
+                if (response.data.ok){
+                    // [JNR] take back when server supports GET
+                    //this.refresh();
+                } else{
+                    console.log('please start server or check duplicate naming');
+                }
             })
             this.spaceName = "";
             
         },
         deleteSpace(){
             //To Do
+        },
+        getData(){
+            axios.get('http://localhost:3000/spaces').then((response) => {
+                this.spaces = response.data.name;
+            })
         }
+    },
+    // [JNR] take back when server supports GET
+    
+    /*
+    // when the comonent is displayed, call this method to show all spaces
+    mounted(){
+        this.getData();
     }
+    */
 }
 
 </script>
