@@ -13,20 +13,16 @@ class OpenSpaceUseCase {
     }
 
     execute(command: OpenSpaceCommand): OpenedSpaceEvent {
-        try {
-            const space = new Space(this.idGenerator.generate(), command.name);
-            const spacesWithEqualName = this.repository.query(new FindByNameCriteria(space));
+        const space = new Space(this.idGenerator.generate(), command.name);
+        const spacesWithEqualName = this.repository.query(new FindByNameCriteria(space));
 
-            if (spacesWithEqualName.length > 0) {
-                throw new NotUniqueSpaceNameException();
-            }
-
-            this.repository.save(space);
-
-            return new OpenedSpaceEvent(space.id, space.name);
-        } catch (exception) {
-            throw exception;
+        if (spacesWithEqualName.length > 0) {
+            throw new NotUniqueSpaceNameException();
         }
+
+        this.repository.save(space);
+
+        return new OpenedSpaceEvent(space.id, space.name);
     }
 
 }
