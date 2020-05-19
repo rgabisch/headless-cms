@@ -8,9 +8,13 @@ import MoreThan50CharactersSpaceNameException
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 
-const id = '1';
+const userId = '1';
+const otherUserId = '5';
+const spaceId = '2';
 const emptyName = '';
+const emptyUserId = '';
 const nameWithOnlyWhitespace = '        ';
+const userIdWithOnlyWhitespace = '        ';
 const nameMadeOfOneCharacter = 'a';
 const nameMadeOf50Characters = 'a'.repeat(50);
 const nameMadeOf51Characters = 'a'.repeat(51);
@@ -21,7 +25,7 @@ let repository: InMemorySpaceRepository;
 
 beforeEach(() => {
     repository = new InMemorySpaceRepository();
-    testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(id));
+    testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(spaceId));
 });
 
 describe('Open Space', () => {
@@ -29,7 +33,7 @@ describe('Open Space', () => {
     describe('when execute', () => {
         it('with empty name it fails', () => {
             let exception;
-            const command = new OpenSpaceCommand(emptyName);
+            const command = new OpenSpaceCommand(emptyName, userId);
 
             try {
                 testSubject.execute(command)
@@ -42,7 +46,7 @@ describe('Open Space', () => {
 
         it('with only whitespaces as name it fails', () => {
             let exception;
-            const command = new OpenSpaceCommand(nameWithOnlyWhitespace);
+            const command = new OpenSpaceCommand(nameWithOnlyWhitespace, userId);
 
             try {
                 testSubject.execute(command)
@@ -50,13 +54,12 @@ describe('Open Space', () => {
                 exception = e;
             } finally {
                 expect(exception.name).to.be.equal('EmptySpaceNameException');
-
             }
         });
 
         it('with more than 50 characters as name it fails', () => {
             let exception;
-            const command = new OpenSpaceCommand(nameMadeOf51Characters);
+            const command = new OpenSpaceCommand(nameMadeOf51Characters, userId);
 
             try {
                 testSubject.execute(command)
@@ -67,10 +70,10 @@ describe('Open Space', () => {
             }
         });
 
-        it('with same name as a previous space it fails', () => {
+        it('with same name as a previous space it fails for the same user id', () => {
             let exception;
-            const previous = new OpenSpaceCommand(name);
-            const command = new OpenSpaceCommand(name);
+            const previous = new OpenSpaceCommand(name, userId);
+            const command = new OpenSpaceCommand(name, userId);
             testSubject.execute(previous);
 
             try {
@@ -82,41 +85,89 @@ describe('Open Space', () => {
             }
         });
 
-        describe('with one character as name', () => {
+        it('with an empty user id; it fails', () => {
+            let exception;
+            const command = new OpenSpaceCommand(name, emptyUserId);
+
+            try {
+                testSubject.execute(command)
+            } catch (e) {
+                exception = e;
+            } finally {
+                expect(exception.name).to.be.equal('EmptyUserIdException');
+            }
+        });
+
+        it('with only whitespaces as user id; it fails', () => {
+            let exception;
+            const command = new OpenSpaceCommand(name, userIdWithOnlyWhitespace);
+
+            try {
+                testSubject.execute(command)
+            } catch (e) {
+                exception = e;
+            } finally {
+                expect(exception.name).to.be.equal('EmptyUserIdException');
+            }
+        });
+
+        describe('with one character as name and a user id', () => {
             it('it opens a space', () => {
-                const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
                 const openedSpaceEvent = testSubject.execute(command);
 
-                const expected = new OpenedSpaceEvent(id, nameMadeOfOneCharacter);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
+                expect(openedSpaceEvent).to.be.deep.equal(expected)
+            });
+
+            it('it opens a space when other space of an other user has same name', () => {
+                const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
+                testSubject.execute(previous);
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
+
+                const openedSpaceEvent = testSubject.execute(command);
+
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
             it('it stores space in repositories', () => {
-                const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
                 const openedSpaceEvent = testSubject.execute(command);
 
-                expect(repository.findBy(id)).to.be.deep.equal(openedSpaceEvent);
+                expect(repository.findBy(spaceId)).to.be.deep.equal(openedSpaceEvent, userId);
             });
         });
 
-        describe('with 50 characters as name', () => {
+        describe('with 50 characters as name and a user id', () => {
             it('it opens a space', () => {
-                const command = new OpenSpaceCommand(nameMadeOf50Characters);
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
                 const openedSpaceEvent = testSubject.execute(command);
 
-                const expected = new OpenedSpaceEvent(id, nameMadeOf50Characters);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOf50Characters);
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            it('it stores space in repositories', () => {
-                const command = new OpenSpaceCommand(nameMadeOf50Characters);
+            it('it opens a space when other space of an other user has same name', () => {
+                const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
+                testSubject.execute(previous);
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
                 const openedSpaceEvent = testSubject.execute(command);
 
-                expect(repository.findBy(id)).to.be.deep.equal(openedSpaceEvent);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
+                expect(openedSpaceEvent).to.be.deep.equal(expected)
+            });
+
+            it('it stores space in repositories', () => {
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
+
+                const openedSpaceEvent = testSubject.execute(command);
+
+                expect(repository.findBy(spaceId)).to.be.deep.equal(openedSpaceEvent);
             });
         });
 

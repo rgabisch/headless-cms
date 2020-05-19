@@ -5,7 +5,7 @@ class StaticIdGenerator implements IdGenerator {
     }
 
     generate(): string {
-        return '1';
+        return this.id;
     }
 }
 

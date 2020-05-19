@@ -11,8 +11,9 @@ class SpaceController {
 
         router.post('/', (req, res) => {
             const name = req.body.name;
+            const userId = req.body.userid;
 
-            const command = new OpenSpaceCommand(name);
+            const command = new OpenSpaceCommand(name, userId);
             const openedSpaceEvent = this.openSpaceUseCase.execute(command);
 
             res.send(openedSpaceEvent);

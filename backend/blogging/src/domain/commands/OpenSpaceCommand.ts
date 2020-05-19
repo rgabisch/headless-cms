@@ -1,5 +1,5 @@
 class OpenSpaceCommand {
-    constructor(readonly name: string) {
+    constructor(readonly name: string, readonly userId: string) {
     }
 }
 
