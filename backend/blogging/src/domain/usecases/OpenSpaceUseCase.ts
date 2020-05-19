@@ -13,7 +13,7 @@ class OpenSpaceUseCase {
     }
 
     execute(command: OpenSpaceCommand): OpenedSpaceEvent {
-        const space = new Space(this.idGenerator.generate(), command.name);
+        const space = new Space(this.idGenerator.generate(), command.userId, command.name);
         const spacesWithEqualName = this.repository.query(new FindByNameCriteria(space));
 
         if (spacesWithEqualName.length > 0) {
