@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="container col-xs-12 col-sm-12 col-md-offset-3 col-md-5 col-lg-offset-3 col-lg-5">
+  <div id="app">
     <div>
       <h2>Audity</h2>
       <p>Die Plattform für Content-Creator!</p>
