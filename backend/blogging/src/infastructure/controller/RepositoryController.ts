@@ -7,6 +7,8 @@ import MoreThan50CharactersSpaceNameException from "../../domain/exceptions/More
 import NotUniqueSpaceNameException from "../../domain/exceptions/NotUniqueSpaceNameException";
 
 class SpaceController {
+    private errorFactory = new ErrorMessageFactory();
+
     constructor(private openSpaceUseCase: OpenSpaceUseCase) {
     }
 
@@ -23,46 +25,55 @@ class SpaceController {
                 const openedSpaceEvent = this.openSpaceUseCase.execute(command);
                 res.send(openedSpaceEvent);
             } catch (e) {
-                let message;
-
-                if (e instanceof EmptyUserIdException) {
-                    message = {
-                        field: 'userid',
-                        value: userId || '',
-                        cause: 'userid can not be empty or made of whitespace'
-                    }
-                }
-
-                if (e instanceof EmptySpaceNameException) {
-                    message = {
-                        field: 'name',
-                        value: name || '',
-                        cause: 'name can not be empty or made of whitespace'
-                    }
-                }
-
-                if (e instanceof MoreThan50CharactersSpaceNameException) {
-                    message = {
-                        field: 'name',
-                        value: name || '',
-                        cause: 'name can not contain more than 50 characters'
-                    }
-                }
-
-                if (e instanceof NotUniqueSpaceNameException) {
-                    message = {
-                        field: 'name',
-                        value: name || '',
-                        cause: 'it already exists a space with an equal name'
-                    }
-                }
-
-                res.status(400).send(message);
+                let errorMessage = this.errorFactory.createFrom(e, command);
+                res.status(400).send(errorMessage);
             }
-
         });
 
         return router;
+    }
+}
+
+class ErrorMessageFactory {
+
+    createFrom(e: Error, command: OpenSpaceCommand): { field: string, value: string, cause: string } {
+        if (e instanceof EmptyUserIdException) {
+            return {
+                field: 'userid',
+                value: command.userId || '',
+                cause: 'userid can not be empty or made of whitespace'
+            }
+        }
+
+        if (e instanceof EmptySpaceNameException) {
+            return {
+                field: 'name',
+                value: command.name || '',
+                cause: 'name can not be empty or made of whitespace'
+            }
+        }
+
+        if (e instanceof MoreThan50CharactersSpaceNameException) {
+            return {
+                field: 'name',
+                value: command.name || '',
+                cause: 'name can not contain more than 50 characters'
+            }
+        }
+
+        if (e instanceof NotUniqueSpaceNameException) {
+            return {
+                field: 'name',
+                value: command.name || '',
+                cause: 'it already exists a space with an equal name'
+            }
+        }
+
+        return {
+            field: '',
+            value: '',
+            cause: 'unknown error'
+        }
     }
 }
 
