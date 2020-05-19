@@ -7,6 +7,7 @@ import MoreThan50CharactersSpaceNameException
     from "../../../src/domain/exceptions/MoreThan50CharactersSpaceNameException";
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
+import Space from "../../../src/domain/entities/Space";
 
 const userId = '1';
 const otherUserId = '5';
@@ -135,9 +136,10 @@ describe('Open Space', () => {
             it('it stores space in repositories', () => {
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+                testSubject.execute(command);
 
-                expect(repository.findBy(spaceId)).to.be.deep.equal(openedSpaceEvent, userId);
+                const expected = new Space(spaceId, userId, nameMadeOfOneCharacter);
+                expect(repository.findBy(spaceId)).to.be.deep.equal(expected);
             });
         });
 
@@ -158,16 +160,17 @@ describe('Open Space', () => {
 
                 const openedSpaceEvent = testSubject.execute(command);
 
-                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOf50Characters);
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
             it('it stores space in repositories', () => {
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+                testSubject.execute(command);
 
-                expect(repository.findBy(spaceId)).to.be.deep.equal(openedSpaceEvent);
+                const expected = new Space(spaceId, userId, nameMadeOf50Characters);
+                expect(repository.findBy(spaceId)).to.be.deep.equal(expected);
             });
         });
 
