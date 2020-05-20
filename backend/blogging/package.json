@@ -6,7 +6,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "nodemon -e js,ts src/app.ts",
-    "test": "mocha -r ts-node/register test/**/*.ts",
+    "test": "mocha -r ts-node/register --ui tdd test/**/*.ts",
     "prestart": "tsc",
     "start": "node ./dist/app.js"
   },

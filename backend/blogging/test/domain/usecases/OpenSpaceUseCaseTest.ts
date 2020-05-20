@@ -7,10 +7,15 @@ import MoreThan50CharactersSpaceNameException
     from "../../../src/domain/exceptions/MoreThan50CharactersSpaceNameException";
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
+import Space from "../../../src/domain/entities/Space";
 
-const id = '1';
+const userId = '1';
+const otherUserId = '5';
+const spaceId = '2';
 const emptyName = '';
+const emptyUserId = '';
 const nameWithOnlyWhitespace = '        ';
+const userIdWithOnlyWhitespace = '        ';
 const nameMadeOfOneCharacter = 'a';
 const nameMadeOf50Characters = 'a'.repeat(50);
 const nameMadeOf51Characters = 'a'.repeat(51);
@@ -19,20 +24,21 @@ const name = nameMadeOfOneCharacter;
 let testSubject: OpenSpaceUseCase;
 let repository: InMemorySpaceRepository;
 
-beforeEach(() => {
-    repository = new InMemorySpaceRepository();
-    testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(id));
-});
+suite('Open Space Use Case', () => {
 
-describe('Open Space', () => {
+    setup(() => {
+        repository = new InMemorySpaceRepository();
+        testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(spaceId));
+    });
 
-    describe('when execute', () => {
-        it('with empty name it fails', () => {
+    suite('when execute', () => {
+
+        test('given empty name -> throws exception for an empty name', async () => {
             let exception;
-            const command = new OpenSpaceCommand(emptyName);
+            const command = new OpenSpaceCommand(emptyName, userId);
 
             try {
-                testSubject.execute(command)
+                await testSubject.execute(command)
             } catch (e) {
                 exception = e;
             } finally {
@@ -40,26 +46,25 @@ describe('Open Space', () => {
             }
         });
 
-        it('with only whitespaces as name it fails', () => {
+        test('given whitespaces as name -> throws exception for an empty name', async () => {
             let exception;
-            const command = new OpenSpaceCommand(nameWithOnlyWhitespace);
+            const command = new OpenSpaceCommand(nameWithOnlyWhitespace, userId);
 
             try {
-                testSubject.execute(command)
+                await testSubject.execute(command)
             } catch (e) {
                 exception = e;
             } finally {
                 expect(exception.name).to.be.equal('EmptySpaceNameException');
-
             }
         });
 
-        it('with more than 50 characters as name it fails', () => {
+        test('given more than 50 characters as name -> throws exception for more than 50 characters', async () => {
             let exception;
-            const command = new OpenSpaceCommand(nameMadeOf51Characters);
+            const command = new OpenSpaceCommand(nameMadeOf51Characters, userId);
 
             try {
-                testSubject.execute(command)
+                await testSubject.execute(command)
             } catch (e) {
                 exception = e;
             } finally {
@@ -67,14 +72,14 @@ describe('Open Space', () => {
             }
         });
 
-        it('with same name as a previous space it fails', () => {
+        test('given same name, same user id -> throws exception for unique space names', async () => {
             let exception;
-            const previous = new OpenSpaceCommand(name);
-            const command = new OpenSpaceCommand(name);
-            testSubject.execute(previous);
+            const previous = new OpenSpaceCommand(name, userId);
+            const command = new OpenSpaceCommand(name, userId);
+            await testSubject.execute(previous);
 
             try {
-                testSubject.execute(command);
+                await testSubject.execute(command);
             } catch (e) {
                 exception = e;
             } finally {
@@ -82,44 +87,94 @@ describe('Open Space', () => {
             }
         });
 
-        describe('with one character as name', () => {
-            it('it opens a space', () => {
-                const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
+        test('given an empty user id -> throws exception for empty user id', async () => {
+            let exception;
+            const command = new OpenSpaceCommand(name, emptyUserId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+            try {
+                await testSubject.execute(command)
+            } catch (e) {
+                exception = e;
+            } finally {
+                expect(exception.name).to.be.equal('EmptyUserIdException');
+            }
+        });
 
-                const expected = new OpenedSpaceEvent(id, nameMadeOfOneCharacter);
+        test('given only whitespaces as user id -> throws exception for empty user id', async () => {
+            let exception;
+            const command = new OpenSpaceCommand(name, userIdWithOnlyWhitespace);
+
+            try {
+                await testSubject.execute(command)
+            } catch (e) {
+                exception = e;
+            } finally {
+                expect(exception.name).to.be.equal('EmptyUserIdException');
+            }
+        });
+
+        suite('given one character and same user id', () => {
+            test('it returns an event', async () => {
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
+
+                const openedSpaceEvent = await testSubject.execute(command);
+
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            it('it stores space in repositories', () => {
-                const command = new OpenSpaceCommand(nameMadeOfOneCharacter);
+            test('it stores the space in the repository', async () => {
+                const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
+                await testSubject.execute(previous);
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+                const openedSpaceEvent = await testSubject.execute(command);
 
-                expect(repository.findBy(id)).to.be.deep.equal(openedSpaceEvent);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOfOneCharacter);
+                expect(openedSpaceEvent).to.be.deep.equal(expected)
+            });
+
+            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
+                const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
+
+                await testSubject.execute(command);
+
+                const expected = new Space(spaceId, userId, nameMadeOfOneCharacter);
+                const openedSpace = await repository.findBy(spaceId);
+                expect(openedSpace).to.be.deep.equal(expected);
             });
         });
 
-        describe('with 50 characters as name', () => {
-            it('it opens a space', () => {
-                const command = new OpenSpaceCommand(nameMadeOf50Characters);
+        suite('given 50 character and same user id', () => {
+            test('it returns an event', async () => {
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+                const openedSpaceEvent = await testSubject.execute(command);
 
-                const expected = new OpenedSpaceEvent(id, nameMadeOf50Characters);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOf50Characters);
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            it('it stores space in repositories', () => {
-                const command = new OpenSpaceCommand(nameMadeOf50Characters);
+            test('it stores the space in the repository', async () => {
+                const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
+                await testSubject.execute(previous);
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
-                const openedSpaceEvent = testSubject.execute(command);
+                const openedSpaceEvent = await testSubject.execute(command);
 
-                expect(repository.findBy(id)).to.be.deep.equal(openedSpaceEvent);
+                const expected = new OpenedSpaceEvent(spaceId, nameMadeOf50Characters);
+                expect(openedSpaceEvent).to.be.deep.equal(expected)
+            });
+
+            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
+                const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
+
+                await testSubject.execute(command);
+
+                const expected = new Space(spaceId, userId, nameMadeOf50Characters);
+                const openedSpace = await repository.findBy(spaceId);
+                expect(openedSpace).to.be.deep.equal(expected);
             });
         });
-
     });
-
 });
