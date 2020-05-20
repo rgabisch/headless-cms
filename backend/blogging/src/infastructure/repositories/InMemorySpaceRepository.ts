@@ -9,11 +9,11 @@ class InMemorySpaceRepository implements SpaceRepository {
         this.spaces.set(space.id, space);
     }
 
-    findBy(id: string): Space | undefined {
+    async findBy(id: string): Promise<Space | undefined> {
         return this.spaces.get(id);
     }
 
-    query(criteria: Criteria<any>): Space[] {
+    async query(criteria: Criteria<any>): Promise<Space[]> {
         const filtered = [];
 
         for (let space of this.spaces.values()) {
