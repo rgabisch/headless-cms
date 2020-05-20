@@ -1,15 +1,15 @@
-import EmptySpaceNameException from "../exceptions/EmptySpaceNameException";
-import MoreThan50CharactersSpaceNameException from "../exceptions/MoreThan50CharactersSpaceNameException";
+import EmptyValueException from "../exceptions/EmptyValueException";
+import MoreThan50CharactersException from "../exceptions/MoreThan50CharactersException";
 import EmptyUserIdException from "../exceptions/EmptyUserIdException";
 
 class Space {
     constructor(readonly id: string, readonly userId: string, readonly name: string) {
         if (!name || name.trim() === '') {
-            throw new EmptySpaceNameException();
+            throw new EmptyValueException();
         }
 
         if (name.trim().length > 50) {
-            throw new MoreThan50CharactersSpaceNameException();
+            throw new MoreThan50CharactersException();
         }
 
         if (!userId || userId.trim() === '') {

@@ -2,8 +2,8 @@ import express from 'express';
 import OpenSpaceUseCase from "../../domain/usecases/OpenSpaceUseCase";
 import OpenSpaceCommand from "../../domain/commands/OpenSpaceCommand";
 import EmptyUserIdException from "../../domain/exceptions/EmptyUserIdException";
-import EmptySpaceNameException from "../../domain/exceptions/EmptySpaceNameException";
-import MoreThan50CharactersSpaceNameException from "../../domain/exceptions/MoreThan50CharactersSpaceNameException";
+import EmptyValueException from "../../domain/exceptions/EmptyValueException";
+import MoreThan50CharactersException from "../../domain/exceptions/MoreThan50CharactersException";
 import NotUniqueSpaceNameException from "../../domain/exceptions/NotUniqueSpaceNameException";
 
 class SpaceController {
@@ -45,7 +45,7 @@ class ErrorMessageFactory {
             }
         }
 
-        if (e instanceof EmptySpaceNameException) {
+        if (e instanceof EmptyValueException) {
             return {
                 field: 'name',
                 value: command.name || '',
@@ -53,7 +53,7 @@ class ErrorMessageFactory {
             }
         }
 
-        if (e instanceof MoreThan50CharactersSpaceNameException) {
+        if (e instanceof MoreThan50CharactersException) {
             return {
                 field: 'name',
                 value: command.name || '',
