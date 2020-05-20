@@ -1,23 +1,50 @@
-import {expect} from 'chai';
+import {assert} from 'chai';
 import FindByNameCriteria from "../../../../src/domain/repositories/criterias/FindByNameCriteria";
 
-const testSubject = new FindByNameCriteria({name: 'a', userId: '1'});
-const objectWithSameName = {name: 'a', userId: '1'};
-const objectWithOtherName = {name: 'b', userId: '1'};
+const userId = '1';
+const otherUserId = '2';
+const equalId = userId;
+const name = 'a';
+const unequalName = 'b';
+const equalName = name;
+
+const testSubject = new FindByNameCriteria({name, userId});
 
 
-describe('FindByNameCriteria', () => {
-    describe('when match', () => {
-        it('with unequal name, it returns false', () => {
-            const isMatch = testSubject.matches(objectWithOtherName);
+suite('FindByNameCriteria', () => {
 
-            expect(isMatch).to.be.false;
+    suite('when verify', () => {
+        test('given unequal name, same user id -> it returns false', () => {
+            const obj = {name: unequalName, userId: equalId};
+
+            const isMatch = testSubject.matches(obj);
+
+            assert.isFalse(isMatch);
         });
 
-        it('with equal name, it returns true', () => {
-            const isMatch = testSubject.matches(objectWithSameName);
+        test('given unequal name, different user id -> it returns false', () => {
+            const obj = {name: unequalName, userId: otherUserId};
 
-            expect(isMatch).to.be.true;
+            const isMatch = testSubject.matches(obj);
+
+            assert.isFalse(isMatch);
         });
-    })
+
+        test('given equal name, different user id -> it returns false', () => {
+            const obj = {name: equalName, userId: otherUserId};
+
+            const isMatch = testSubject.matches(obj);
+
+            assert.isFalse(isMatch);
+        });
+
+        test('given equal name, same user id -> it returns true', () => {
+            const obj = {name: equalName, userId: equalId};
+
+            const isMatch = testSubject.matches(obj);
+
+            assert.isTrue(isMatch);
+        });
+    });
+
 });
