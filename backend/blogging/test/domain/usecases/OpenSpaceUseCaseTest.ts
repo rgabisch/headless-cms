@@ -1,10 +1,10 @@
 import {expect} from 'chai';
 import OpenSpaceUseCase from "../../../src/domain/usecases/OpenSpaceUseCase";
 import OpenSpaceCommand from "../../../src/domain/commands/OpenSpaceCommand";
-import EmptySpaceNameException from "../../../src/domain/exceptions/EmptySpaceNameException";
+import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
 import OpenedSpaceEvent from "../../../src/domain/events/OpenedSpaceEvent";
-import MoreThan50CharactersSpaceNameException
-    from "../../../src/domain/exceptions/MoreThan50CharactersSpaceNameException";
+import MoreThan50CharactersException
+    from "../../../src/domain/exceptions/MoreThan50CharactersException";
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
@@ -42,7 +42,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptySpaceNameException');
+                expect(exception.name).to.be.equal('EmptyValueException');
             }
         });
 
@@ -55,7 +55,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptySpaceNameException');
+                expect(exception.name).to.be.equal('EmptyValueException');
             }
         });
 
@@ -68,7 +68,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('MoreThan50CharactersSpaceNameException');
+                expect(exception.name).to.be.equal(MoreThan50CharactersException.name);
             }
         });
 
