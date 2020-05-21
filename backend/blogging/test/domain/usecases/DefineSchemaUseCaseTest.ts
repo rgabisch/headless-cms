@@ -127,6 +127,15 @@ suite('Define Schema Use Case', () => {
             }
         });
 
+        test('given creator id, name, and types -> return defined schema event', async () => {
+            const command = new DefineSchemaCommand(creatorId, schemaName, types);
+
+            const event = await testSubject.execute(command);
+
+            const expected = new DefinedSchemaEvent(schemaId, creatorId, types);
+            assert.equal(event, expected);
+        });
+
     })
 })
 ;
