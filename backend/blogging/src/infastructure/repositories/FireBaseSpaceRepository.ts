@@ -12,7 +12,7 @@ class FireBaseSpaceRepository extends FireBase implements SpaceRepository{
     save(space: Space): void {
         super.insert(space.id, space)
     }
-    
+
     findBy(id: string): Promise<Space | undefined> {
         return super.read(id)
     }
@@ -22,3 +22,5 @@ class FireBaseSpaceRepository extends FireBase implements SpaceRepository{
     }
 
 }
+
+export default FireBaseSpaceRepository;
