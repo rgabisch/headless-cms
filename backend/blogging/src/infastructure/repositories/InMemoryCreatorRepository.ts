@@ -4,7 +4,7 @@ import Creator from "../../domain/entities/Creator";
 class InMemoryCreatorRepository implements CreatorRepository {
     private creators = new Map<string, Creator>();
 
-    async getBy(id: string): Promise<Creator | undefined> {
+    async findBy(id: string): Promise<Creator | undefined> {
         return this.creators.get(id);
     }
 

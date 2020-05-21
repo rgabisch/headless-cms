@@ -1,8 +1,10 @@
 abstract class Type {
-    constructor(private name: string) {
+    constructor(readonly id: string) {
     }
 }
 
 class AudioFile extends Type {
 
 }
+
+export default Type
