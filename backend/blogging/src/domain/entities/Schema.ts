@@ -2,9 +2,9 @@ import MoreThan50CharactersException from "../exceptions/MoreThan50CharactersExc
 import EmptyValueException from "../exceptions/EmptyValueException";
 
 class Schema {
-    constructor(private name: string,
+    constructor(readonly id: string,
+                private name: string,
                 private types: { id: string, name: string }[]) {
-
         if (name.trim() === '')
             throw new EmptyValueException();
 

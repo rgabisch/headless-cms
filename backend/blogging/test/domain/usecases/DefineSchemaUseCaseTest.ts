@@ -11,6 +11,7 @@ import InMemoryTypeRepository from "../../../src/infastructure/repositories/InMe
 import Type from "../../../src/domain/entities/Type";
 import {DefinedSchemaEvent} from "../../../src/domain/events/DefineSchemaUseCase";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
+import Schema from "../../../src/domain/entities/Schema";
 
 let testSubject: DefineSchemaUseCase;
 
@@ -31,18 +32,19 @@ const schemaId = '1';
 
 const types = [{id: '1', name: 'guest description'}];
 
+let creatorRepository: InMemoryCreatorRepository;
 
 suite('Define Schema Use Case', () => {
 
     setup(async () => {
-        const creatorRepository = new InMemoryCreatorRepository();
+        creatorRepository = new InMemoryCreatorRepository();
         await creatorRepository.add(new Creator(creatorId, []));
 
-        const schemaRepository = new InMemoryTypeRepository();
-        await schemaRepository.add(new class extends Type {
+        const typeRepository = new InMemoryTypeRepository();
+        await typeRepository.add(new class extends Type {
         }(typeId));
 
-        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, schemaRepository);
+        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, typeRepository);
     });
 
     suite('when execute', () => {
@@ -133,7 +135,17 @@ suite('Define Schema Use Case', () => {
             const event = await testSubject.execute(command);
 
             const expected = new DefinedSchemaEvent(schemaId, creatorId, types);
-            assert.equal(event, expected);
+            assert.deepEqual(event, expected);
+        });
+
+        test('given creator id, name, and types -> saves schema in repository', async () => {
+            const command = new DefineSchemaCommand(creatorId, schemaName, types);
+
+            await testSubject.execute(command);
+
+            const creator = await creatorRepository.findBy(schemaId);
+            const expected = new Creator(creatorId, [new Schema(schemaId, schemaName, types)]);
+            assert.deepEqual(creator, expected);
         });
 
     })

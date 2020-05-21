@@ -11,6 +11,10 @@ class InMemoryCreatorRepository implements CreatorRepository {
     async add(creator: Creator) {
         this.creators.set(creator.id, creator);
     }
+
+    update(creator: Creator): void {
+        this.creators.set(creator.id, creator);
+    }
 }
 
 export default InMemoryCreatorRepository;
