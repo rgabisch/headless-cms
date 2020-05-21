@@ -4,6 +4,8 @@ import Space from "../../../src/domain/entities/Space";
 import Criteria from "../../domain/repositories/criterias/Criteria";
 
 class FireBaseSpaceRepository extends FireBase implements SpaceRepository{
+    
+    private spaces: Map<string, Space> = new Map<string, Space>();
 
     constructor(){
         super("Space")
@@ -13,12 +15,20 @@ class FireBaseSpaceRepository extends FireBase implements SpaceRepository{
         super.insert(space.id, space)
     }
 
-    findBy(id: string): Promise<Space | undefined> {
+    async findBy(id: string): Promise<Space | undefined> {
         return super.read(id)
     }
 
-    query(query: Criteria<any>): Promise<Space[]> {
-        throw new Error("Method not implemented.");
+    async query(criteria: Criteria<any>): Promise<Space[]> {
+        const filtered = [];
+
+        for (let space of this.spaces.values()) {
+            if (criteria.matches(space)) {
+                filtered.push(space);
+            }
+        }
+
+        return filtered;
     }
 
 }
