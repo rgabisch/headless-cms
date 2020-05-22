@@ -1,17 +1,19 @@
 import {expect} from "chai";
 import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
 import WriteContentUseCase from "../../../src/domain/usecases/WriteContentUseCase";
-import {WriteContentCommand} from "../../../src/domain/commands/WriteContentUseCaseTest";
+import {WriteContentCommand} from "../../../src/domain/commands/WriteContentCommand";
 import {WrittenContentEvent} from "../../../src/domain/events/WriteContentUseCaseTest";
 import assert = require("assert");
 
 const testSubject = new WriteContentUseCase();
 
 const creatorId = '1';
+const unassignedCreatorId = '500';
 const emptyCreatorId = '';
 const whitespaceCreatorId = '            ';
 
 const schemaId = '1';
+const unassignedSchemaId = '500';
 const emptySchemaId = '';
 const whitespaceSchemaId = '           ';
 
@@ -69,6 +71,34 @@ suite('Write Content Use Case', () => {
         } finally {
             expect(exception.name).to.be.equal(UnassignedIdException.name);
         }
+    });
+
+    test('given unassigned creator id -> throw exception for unassigned id', async () => {
+        let exception;
+        const command = new WriteContentCommand(schemaId, unassignedCreatorId, [{typeId: typeId, content: ''}]);
+
+        try {
+            await testSubject.execute(command)
+        } catch (e) {
+            exception = e;
+        } finally {
+            expect(exception.name).to.be.equal(UnassignedIdException.name);
+        }
+
+    });
+
+    test('given unassigned schema id -> throw exception for unassigned id', async () => {
+        let exception;
+        const command = new WriteContentCommand(unassignedSchemaId, creatorId, [{typeId: typeId, content: ''}]);
+
+        try {
+            await testSubject.execute(command)
+        } catch (e) {
+            exception = e;
+        } finally {
+            expect(exception.name).to.be.equal(UnassignedIdException.name);
+        }
+
     });
 
     test('given type not included in the schema -> throw exception', async () => {
