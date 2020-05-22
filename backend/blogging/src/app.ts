@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import SpaceController from "./infastructure/controller/RepositoryController";
 import OpenSpaceUseCase from "./domain/usecases/OpenSpaceUseCase";
 import InMemorySpaceRepository from "./infastructure/repositories/InMemorySpaceRepository";
+//import FireBaseSpaceRepository from "./infastructure/repositories/FireBaseSpaceRepository";
 import GlobalUniqueIdGenerator from "./shared/GlobalUniqueIdGenerator";
 import SchemaController from "./infastructure/controller/SchemaController";
 import DefineSchemaUseCase from "./domain/usecases/DefineSchemaUseCase";
@@ -20,6 +21,8 @@ creatorRepository.add(new Creator('1', []));
 
 const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), new GlobalUniqueIdGenerator()));
 const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository()));
+//const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
+
 
 app.use(bodyParser.json());
 app.use('/spaces', spaceController.routes());
