@@ -38,7 +38,7 @@ suite('Define Schema Use Case', () => {
 
     setup(async () => {
         creatorRepository = new InMemoryCreatorRepository();
-        await creatorRepository.add(new Creator(creatorId, []));
+        await creatorRepository.add(new Creator(creatorId, new Map(), new Map()));
 
         const typeRepository = new InMemoryTypeRepository();
         await typeRepository.add(new class extends Type {
@@ -144,10 +144,13 @@ suite('Define Schema Use Case', () => {
             await testSubject.execute(command);
 
             const creator = await creatorRepository.findBy(schemaId);
-            const expected = new Creator(creatorId, [new Schema(schemaId, schemaName, types)]);
+            const expected = new Creator(
+                creatorId,
+                new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, types)),
+                new Map()
+            );
             assert.deepEqual(creator, expected);
         });
 
-    })
-})
-;
+    });
+});
