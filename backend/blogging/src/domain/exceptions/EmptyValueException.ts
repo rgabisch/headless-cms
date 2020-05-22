@@ -1,12 +1,12 @@
-class EmptySpaceNameException extends Error {
+class EmptyValueException extends Error {
 
     constructor() {
         super('a name of a space can not be longer than 50 characters');
 
-        this.name = 'EmptySpaceNameException';
+        this.name = 'EmptyValueException';
         Object.setPrototypeOf(this, new.target.prototype);
     }
 
 }
 
-export default EmptySpaceNameException;
+export default EmptyValueException;
