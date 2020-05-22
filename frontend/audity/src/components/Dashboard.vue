@@ -50,7 +50,7 @@
                         </v-col>
                     </v-row>
 
-                    <v-card height="300">
+                    <v-card height="500">
                         <v-card-title>Aktive Seiten und Entwürfe</v-card-title>
                     </v-card>
                 </v-col>
@@ -65,7 +65,7 @@
                                     label="Veröffentlichen in Space"
                                     placeholder=" "
                             ></v-text-field>
-                            <v-btn block>Erstellen</v-btn>
+                            <v-btn to="/seiten" block>Erstellen</v-btn>
                         </v-card>
                         <v-card class="pa-3 mt-2">
                             <v-card-title>Space erstellen</v-card-title>
@@ -73,7 +73,15 @@
                                     label="Name des Space"
                                     placeholder=" "
                             ></v-text-field>
-                            <v-btn block>Erstellen</v-btn>
+                            <v-btn to="/spaces" block>Erstellen</v-btn>
+                        </v-card>
+                        <v-card class="pa-3 mt-2">
+                            <v-card-title>Contenttyp erstellen</v-card-title>
+                            <v-text-field
+                                    label="Name des Contenttyps"
+                                    placeholder=" "
+                            ></v-text-field>
+                            <v-btn to="create-contenttyp" block>Erstellen</v-btn>
                         </v-card>
                 </v-col>
             </v-row>
@@ -85,7 +93,7 @@
     import axios from 'axios'
 
     export default {
-        name: 'Space',
+        name: 'Dashboard',
 
         // [JNR] replace/send dummy data with CouchDB-Data.
 

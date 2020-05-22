@@ -3,18 +3,20 @@ import App from './App.vue';
 import VueRouter from 'vue-router';
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 
+import Dashboard from './components/Dashboard.vue';
 import Space from './components/Space.vue';
 import Seite from './components/Seite.vue';
-import Dashboard from './components/Dashboard.vue';
+import Schema from './components/Schema.vue';
 
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
 const routes = [
+  { path: '', component: Dashboard },
   { path: '/spaces', component: Space },
   { path: '/seiten', component: Seite },
-  { path: '/dashboard', component: Dashboard }
+  { path: '/create-contenttyp', component: Schema}
 ];
 
 const router = new VueRouter({

@@ -1,2 +1,5 @@
 .DS_Store
 .idea
+/frontend/public/audity/dist/
+/frontend/public/audity/node_modules/
+/frontend/public/audity/package-lock.json
