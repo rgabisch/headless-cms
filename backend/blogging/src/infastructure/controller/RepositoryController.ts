@@ -15,14 +15,14 @@ class SpaceController {
     routes(): express.Router {
         const router = express.Router();
 
-        router.post('/', (req, res) => {
+        router.post('/', async (req, res) => {
             const name = req.body.name;
             const userId = req.body.userid;
 
             const command = new OpenSpaceCommand(name, userId);
 
             try {
-                const openedSpaceEvent = this.openSpaceUseCase.execute(command);
+                const openedSpaceEvent = await this.openSpaceUseCase.execute(command);
                 res.send(openedSpaceEvent);
             } catch (e) {
                 let errorMessage = this.errorFactory.createFrom(e, command);
