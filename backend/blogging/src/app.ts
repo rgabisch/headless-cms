@@ -11,6 +11,7 @@ import DefineSchemaUseCase from "./domain/usecases/DefineSchemaUseCase";
 import InMemoryCreatorRepository from "./infastructure/repositories/InMemoryCreatorRepository";
 import InMemoryTypeRepository from "./infastructure/repositories/InMemoryTypeRepository";
 import Creator from "./domain/entities/Creator";
+import TypeFactory from "./domain/factories/TypeFactory";
 
 const app = express();
 const port = 3000;
@@ -20,7 +21,7 @@ const creatorRepository = new InMemoryCreatorRepository();
 creatorRepository.add(new Creator('1', new Map(), new Map()));
 
 const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), new GlobalUniqueIdGenerator()));
-const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository()));
+const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory()));
 //const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
 
