@@ -1,8 +1,7 @@
 <template>
-  <div>
     <v-row>
-
-      <v-col lg="6" class="mr-2 ml-2">
+      <v-col lg="2"></v-col>
+      <v-col>
         <v-card class="p-3 mt-3">
           <h1>Space erstellen</h1>
           <p>Zurück</p>
@@ -39,7 +38,7 @@
         </v-card>
       </v-col>
 
-      <v-col lg="3">
+      <v-col lg="3" class="ml-5">
         <v-card class="p-3">
           <v-card-title>Was ist ein Space?</v-card-title>
           <v-card-text>
@@ -50,7 +49,6 @@
         </v-card>
       </v-col>
     </v-row>
-  </div>
 </template>
 
 

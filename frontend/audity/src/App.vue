@@ -1,14 +1,9 @@
 <template>
-	<div id="app">
-    
-	<v-row>
+    <v-app>
 		<!-- Takes component based on route -->
-		<NavBar/>
 		<router-view/>
-    </v-row>
-	
-	<!-- Ende id="app" -->
-	</div>
+		<nav-bar/>
+	</v-app>
 </template>
 
 <script>
@@ -26,4 +21,9 @@ export default {
 /* Bootstrap Framework */
 /* [JNR] Exchange the framework with another framework if you prefer. */
 @import "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css";
+body{
+	max-width: 96%;
+	margin-right: 2%;
+	margin-left: 2%;
+}
 </style>
