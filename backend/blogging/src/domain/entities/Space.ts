@@ -4,6 +4,10 @@ import EmptyUserIdException from "../exceptions/EmptyUserIdException";
 
 class Space {
     constructor(readonly id: string, readonly userId: string, readonly name: string) {
+        if (id.trim() === '')
+            throw new EmptyValueException();
+
+
         if (!name || name.trim() === '') {
             throw new EmptyValueException();
         }

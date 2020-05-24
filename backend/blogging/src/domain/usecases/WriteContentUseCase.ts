@@ -3,7 +3,7 @@ import {WrittenContentEvent} from "../events/WriteContentUseCaseTest";
 import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
 import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
 import IdGenerator from "../../shared/IdGenerator";
-import Content from "../entitiesContent";
+import Content from "../entities/Content";
 
 class WriteContentUseCase {
     constructor(private creatorRepository: CreatorRepository,
@@ -19,7 +19,12 @@ class WriteContentUseCase {
         if (creator.hasNotDefined(command.schemaId))
             throw new UnassignedIdException();
 
-        const content = new Content(this.idGenerator.generate(), command.content);
+        const content = new Content(
+            this.idGenerator.generate(),
+            creator.getSchemaBy(command.schemaId),
+            command.content
+        );
+
         creator.write(content);
 
         this.creatorRepository.update(creator);

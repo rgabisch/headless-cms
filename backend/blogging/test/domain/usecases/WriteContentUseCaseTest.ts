@@ -8,7 +8,7 @@ import Creator from "../../../src/domain/entities/Creator";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Schema from "../../../src/domain/entities/Schema";
 import assert = require("assert");
-import Content from "../../../src/domain/entitiesContent";
+import Content from "../../../src/domain/entities/Content";
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -29,7 +29,10 @@ const schemaName = 'Podcast';
 const typeId = '1';
 const unassignedTypeId = 'unit-test';
 
-const creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, [])), new Map());
+const creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, [{
+    id: typeId,
+    name: 'unit test'
+}])), new Map());
 
 suite('Write Content Use Case', () => {
 
@@ -157,8 +160,18 @@ suite('Write Content Use Case', () => {
             await creatorRepository.findBy(creatorId),
             new Creator(
                 creatorId,
-                new Map().set(schemaId, new Schema(schemaId, schemaName, [])),
-                new Map().set(contentId, new Content(contentId, [{typeId: typeId, content: 'unit test'}]))
+                new Map().set(schemaId, new Schema(schemaId, schemaName, [{id: typeId, name: 'unit test'}])),
+                new Map().set(
+                    contentId,
+                    new Content(
+                        contentId,
+                        new Schema(schemaId, schemaName, [{id: typeId, name: 'unit test'}]),
+                        [{
+                            typeId: typeId,
+                            content: 'unit test'
+                        }]
+                    )
+                )
             )
         );
     });

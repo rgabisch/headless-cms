@@ -4,3 +4,9 @@ export class WriteContentCommand {
                 public content: { typeId: string; content: string }[]) {
     }
 }
+
+export interface WriteContentCommand {
+    schemaId: string,
+    creatorId: string,
+    content: { typeId: string; content: string }[]
+}

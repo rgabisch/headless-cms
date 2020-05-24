@@ -1,5 +1,6 @@
 abstract class Type {
     constructor(readonly id: string) {
+
     }
 }
 
