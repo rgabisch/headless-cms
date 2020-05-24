@@ -5,7 +5,7 @@ import Type from "./Type";
 class Schema {
     constructor(readonly id: string,
                 private name: string,
-                private types: { id: string, name: string }[]) {
+                private typeDefinition: TypeDefinition) {
         if (id.trim() === '')
             throw new EmptyValueException();
 
@@ -16,20 +16,42 @@ class Schema {
             throw new MoreThan50CharactersException();
     }
 
-    isFitInWith(mapping: { type: Type, content: string }[]) {
-        if (this.types.length !== mapping.length)
-            return false;
+    isFitInWith(mapping: TypeMapping) {
+        return this.typeDefinition.equals(mapping);
+    }
 
-        for (let i = 0; i < this.types.length; i++) {
-            if (this.types[i].id !== mapping[i].)
+    isNotFitInWith(mapping: TypeMapping) {
+        return !this.isFitInWith(mapping);
+    }
+}
+
+export class TypeDefinition {
+    constructor(private definitions: { type: Type, name: string }[]) {
+    }
+
+    equals(mapping: TypeMapping): boolean {
+        for (let i = 0; i < this.definitions.length; i++) {
+            if (mapping.hasNotDefinitionAtIndex(this.definitions[i], i))
                 return false;
         }
 
         return true;
     }
+}
 
-    isNotFitInWith(mapping: { type: Type, content: string }[]) {
-        return !this.isFitInWith(mapping);
+export class TypeMapping {
+    constructor(private mappings: { type: Type, name: string, content: string }[]) {
+    }
+
+    hasDefinitionAtIndex(definition: { type: Type; name: string }, index: number) {
+        if (index >= this.mappings.length)
+            return false;
+
+        return (this.mappings[index].type.equals(definition.type)) && (this.mappings[index].name === definition.name);
+    }
+
+    hasNotDefinitionAtIndex(definition: { type: Type; name: string }, index: number) {
+        return !this.hasDefinitionAtIndex(definition, index);
     }
 }
 

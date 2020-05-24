@@ -1,12 +1,8 @@
-export class WriteContentCommand {
+class WriteContentCommand {
     constructor(public schemaId: string,
                 public creatorId: string,
-                public content: { typeId: string; content: string }[]) {
+                public content: { typeId: string; name: string, content: string }[]) {
     }
 }
 
-export interface WriteContentCommand {
-    schemaId: string,
-    creatorId: string,
-    content: { typeId: string; content: string }[]
-}
+export default WriteContentCommand;

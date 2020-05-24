@@ -1,6 +1,10 @@
 abstract class Type {
-    constructor(readonly id: string) {
+    protected constructor(readonly id: string) {
 
+    }
+
+    equals(other: Type): boolean {
+        return this.id === other.id;
     }
 }
 

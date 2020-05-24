@@ -1,14 +1,14 @@
 import {assert, expect, should} from 'chai';
 import Creator from "../../../src/domain/entities/Creator";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
-import Schema from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
 import Content from "../../../src/domain/entities/Content";
 import {UndefinedSchemaException} from "../../../src/domain/exceptions/UndefinedSchemaException";
 
 suite('Creator Entity', () => {
     const creatorId = '16543';
     const schemaId = '53632';
-    const schema = new Schema(schemaId, 'podcast', []);
+    const schema = new Schema(schemaId, 'podcast', new TypeDefinition([]));
 
     suite('constructor', () => {
         test('given empty id -> throws exception for empty value', () => {
@@ -92,8 +92,8 @@ suite('Creator Entity', () => {
         test('given content and an undefined schema -> throws an error', () => {
             let exception;
             const creator = new Creator(creatorId, new Map(), new Map());
-            const undefinedSchema = new Schema('unit-test', 'podcast', []);
-            const content = new Content('1', undefinedSchema, []);
+            const undefinedSchema = new Schema('unit-test', 'podcast', new TypeDefinition([]));
+            const content = new Content('1', undefinedSchema, new TypeMapping([]));
 
             try {
                 creator.write(content);
@@ -107,7 +107,7 @@ suite('Creator Entity', () => {
         test('given content and schema -> creator writes content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
-            const content = new Content('1', schema, []);
+            const content = new Content('1', schema, new TypeMapping([]));
 
             creator.write(content);
 

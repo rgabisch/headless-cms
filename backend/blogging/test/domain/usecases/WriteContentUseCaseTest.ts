@@ -1,14 +1,16 @@
 import {expect} from "chai";
 import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
 import WriteContentUseCase from "../../../src/domain/usecases/WriteContentUseCase";
-import {WriteContentCommand} from "../../../src/domain/commands/WriteContentCommand";
+import WriteContentCommand from "../../../src/domain/commands/WriteContentCommand";
 import {WrittenContentEvent} from "../../../src/domain/events/WriteContentUseCaseTest";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
-import Schema from "../../../src/domain/entities/Schema";
-import assert = require("assert");
+import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
 import Content from "../../../src/domain/entities/Content";
+import Type from "../../../src/domain/entities/Type";
+import TypeFactory from "../../../src/domain/factories/TypeFactory";
+import assert = require("assert");
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -28,22 +30,39 @@ const schemaName = 'Podcast';
 
 const typeId = '1';
 const unassignedTypeId = 'unit-test';
+const typeName = 'unit-test';
 
-const creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, [{
-    id: typeId,
-    name: 'unit test'
-}])), new Map());
+class FakeType extends Type {
+    constructor(id: string) {
+        super(id);
+    }
+}
+
+class FakeTypeFactory extends TypeFactory {
+    createBy(id: string): Type {
+        return new FakeType(id);
+    }
+}
+
+const creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
+    type: new FakeType(typeId),
+    name: typeName
+}]))), new Map());
 
 suite('Write Content Use Case', () => {
 
     setup(() => {
         creatorRepository = new InMemoryCreatorRepository();
-        testSubject = new WriteContentUseCase(creatorRepository, new StaticIdGenerator(contentId));
+        testSubject = new WriteContentUseCase(creatorRepository, new StaticIdGenerator(contentId), new FakeTypeFactory());
     });
 
     test('given empty schema id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(emptySchemaId, creatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(emptySchemaId, creatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -56,7 +75,11 @@ suite('Write Content Use Case', () => {
 
     test('given schema id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -69,7 +92,11 @@ suite('Write Content Use Case', () => {
 
     test('given empty creator id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, emptyCreatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(schemaId, emptyCreatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -82,7 +109,11 @@ suite('Write Content Use Case', () => {
 
     test('given creator id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -95,7 +126,11 @@ suite('Write Content Use Case', () => {
 
     test('given unassigned creator id -> throw exception for unassigned id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, unassignedCreatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(schemaId, unassignedCreatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -111,7 +146,11 @@ suite('Write Content Use Case', () => {
         await creatorRepository.add(new Creator(creatorId, new Map<string, Schema>(), new Map()));
 
         let exception;
-        const command = new WriteContentCommand(unassignedSchemaId, creatorId, [{typeId: typeId, content: ''}]);
+        const command = new WriteContentCommand(unassignedSchemaId, creatorId, [{
+            typeId: typeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -125,7 +164,11 @@ suite('Write Content Use Case', () => {
 
     test('given type not included in the schema -> throw exception', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, creatorId, [{typeId: unassignedTypeId, content: ''}]);
+        const command = new WriteContentCommand(schemaId, creatorId, [{
+            typeId: unassignedTypeId,
+            name: schemaName,
+            content: ''
+        }]);
 
         try {
             await testSubject.execute(command)
@@ -138,7 +181,11 @@ suite('Write Content Use Case', () => {
 
     test('given schema id, creator id, content -> return written content', async () => {
         await creatorRepository.add(creator);
-        const command = new WriteContentCommand(schemaId, creatorId, [{typeId: typeId, content: 'unit test'}]);
+        const command = new WriteContentCommand(schemaId, creatorId, [{
+            typeId: typeId,
+            name: typeName,
+            content: 'unit test'
+        }]);
 
         const writtenContentEvent = await testSubject.execute(command);
 
@@ -152,7 +199,11 @@ suite('Write Content Use Case', () => {
 
     test('given schema id, creator id, content -> stores content', async () => {
         await creatorRepository.add(creator);
-        const command = new WriteContentCommand(schemaId, creatorId, [{typeId: typeId, content: 'unit test'}]);
+        const command = new WriteContentCommand(schemaId, creatorId, [{
+            typeId: typeId,
+            name: typeName,
+            content: 'unit test'
+        }]);
 
         await testSubject.execute(command);
 
@@ -160,16 +211,23 @@ suite('Write Content Use Case', () => {
             await creatorRepository.findBy(creatorId),
             new Creator(
                 creatorId,
-                new Map().set(schemaId, new Schema(schemaId, schemaName, [{id: typeId, name: 'unit test'}])),
+                new Map().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
+                    type: new FakeType(typeId),
+                    name: typeName
+                }]))),
                 new Map().set(
                     contentId,
                     new Content(
                         contentId,
-                        new Schema(schemaId, schemaName, [{id: typeId, name: 'unit test'}]),
-                        [{
-                            typeId: typeId,
+                        new Schema(schemaId, schemaName, new TypeDefinition([{
+                            type: new FakeType(typeId),
+                            name: typeName
+                        }])),
+                        new TypeMapping([{
+                            type: new FakeType(typeId),
+                            name: typeName,
                             content: 'unit test'
-                        }]
+                        }])
                     )
                 )
             )
