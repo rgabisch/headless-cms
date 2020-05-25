@@ -6,6 +6,7 @@ import IdGenerator from "../../shared/IdGenerator";
 import Content from "../entities/Content";
 import {TypeMapping} from "../entities/Schema";
 import TypeFactory from "../factories/TypeFactory";
+import Space from "../entities/Space";
 
 class WriteContentUseCase {
     constructor(private creatorRepository: CreatorRepository,
@@ -22,11 +23,16 @@ class WriteContentUseCase {
         if (creator.hasNotDefined(command.schemaId))
             throw new UnassignedIdException();
 
+        if (creator.hasNotOpens(command.spaceId))
+            throw new UnassignedIdException();
+
         const typeMapping = command.content.map(({typeId, name, content}) => ({
             type: this.typeFactory.createBy(typeId),
             name,
             content
         }));
+
+        const space = <Space>creator.getSpace(command.spaceId);
 
         const content = new Content(
             this.idGenerator.generate(),
@@ -34,7 +40,7 @@ class WriteContentUseCase {
             new TypeMapping(typeMapping)
         );
 
-        creator.write(content);
+        creator.write(content, space);
 
         this.creatorRepository.update(creator);
 

@@ -1,5 +1,5 @@
 export class WrittenContentEvent {
-    constructor(contentId: string, creatorId: string, content: { typeId: string; content: string }[]) {
+    constructor(readonly contentId: string, readonly creatorId: string, readonly content: { typeId: string; name: string, content: string }[]) {
 
     }
 

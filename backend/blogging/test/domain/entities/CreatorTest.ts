@@ -4,10 +4,12 @@ import EmptyValueException from "../../../src/domain/exceptions/EmptyValueExcept
 import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
 import Content from "../../../src/domain/entities/Content";
 import {UndefinedSchemaException} from "../../../src/domain/exceptions/UndefinedSchemaException";
+import Space from "../../../src/domain/entities/Space";
 
 suite('Creator Entity', () => {
     const creatorId = '16543';
     const schemaId = '53632';
+    const space = new Space('1', creatorId, 'name');
     const schema = new Schema(schemaId, 'podcast', new TypeDefinition([]));
 
     suite('constructor', () => {
@@ -89,14 +91,15 @@ suite('Creator Entity', () => {
     });
 
     suite('write content', () => {
-        test('given content and an undefined schema -> throws an error', () => {
+        test('given content, space and an undefined schema -> throws an error', () => {
             let exception;
             const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(new Space('1', creator.id, 'name'));
             const undefinedSchema = new Schema('unit-test', 'podcast', new TypeDefinition([]));
             const content = new Content('1', undefinedSchema, new TypeMapping([]));
 
             try {
-                creator.write(content);
+                creator.write(content, space);
             } catch (e) {
                 exception = e;
             } finally {
@@ -107,17 +110,15 @@ suite('Creator Entity', () => {
         test('given content and schema -> creator writes content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
+            creator.open(new Space('1', creatorId, 'name'));
             const content = new Content('1', schema, new TypeMapping([]));
+            creator.write(content, space);
 
-            creator.write(content);
+            const expected = creator.getContent(content.id, '1');
 
             assert.deepEqual(
-                creator,
-                new Creator(
-                    creator.id,
-                    new Map().set(schema.id, schema),
-                    new Map().set(content.id, content)
-                )
+                content,
+                expected
             );
         });
     })

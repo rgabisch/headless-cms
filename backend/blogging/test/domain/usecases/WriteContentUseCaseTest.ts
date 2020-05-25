@@ -11,6 +11,7 @@ import Content from "../../../src/domain/entities/Content";
 import Type from "../../../src/domain/entities/Type";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
 import assert = require("assert");
+import Space from "../../../src/domain/entities/Space";
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -32,6 +33,8 @@ const typeId = '1';
 const unassignedTypeId = 'unit-test';
 const typeName = 'unit-test';
 
+const spaceId = '1';
+
 class FakeType extends Type {
     constructor(id: string) {
         super(id);
@@ -44,21 +47,22 @@ class FakeTypeFactory extends TypeFactory {
     }
 }
 
-const creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
-    type: new FakeType(typeId),
-    name: typeName
-}]))), new Map());
+let creator: Creator;
 
 suite('Write Content Use Case', () => {
 
     setup(() => {
+        creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
+            type: new FakeType(typeId),
+            name: typeName
+        }]))), new Map());
         creatorRepository = new InMemoryCreatorRepository();
         testSubject = new WriteContentUseCase(creatorRepository, new StaticIdGenerator(contentId), new FakeTypeFactory());
     });
 
     test('given empty schema id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(emptySchemaId, creatorId, [{
+        const command = new WriteContentCommand(emptySchemaId, creatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -75,7 +79,7 @@ suite('Write Content Use Case', () => {
 
     test('given schema id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, [{
+        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -92,7 +96,7 @@ suite('Write Content Use Case', () => {
 
     test('given empty creator id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, emptyCreatorId, [{
+        const command = new WriteContentCommand(schemaId, emptyCreatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -109,7 +113,7 @@ suite('Write Content Use Case', () => {
 
     test('given creator id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, [{
+        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -126,7 +130,7 @@ suite('Write Content Use Case', () => {
 
     test('given unassigned creator id -> throw exception for unassigned id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, unassignedCreatorId, [{
+        const command = new WriteContentCommand(schemaId, unassignedCreatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -146,7 +150,7 @@ suite('Write Content Use Case', () => {
         await creatorRepository.add(new Creator(creatorId, new Map<string, Schema>(), new Map()));
 
         let exception;
-        const command = new WriteContentCommand(unassignedSchemaId, creatorId, [{
+        const command = new WriteContentCommand(unassignedSchemaId, creatorId, spaceId, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -164,7 +168,7 @@ suite('Write Content Use Case', () => {
 
     test('given type not included in the schema -> throw exception', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, creatorId, [{
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
             typeId: unassignedTypeId,
             name: schemaName,
             content: ''
@@ -180,56 +184,49 @@ suite('Write Content Use Case', () => {
     });
 
     test('given schema id, creator id, content -> return written content', async () => {
+        const content = 'content';
+        creator.open(new Space('1', '1', 'my personal podcast'));
         await creatorRepository.add(creator);
-        const command = new WriteContentCommand(schemaId, creatorId, [{
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
             typeId: typeId,
             name: typeName,
-            content: 'unit test'
+            content: content
         }]);
 
         const writtenContentEvent = await testSubject.execute(command);
-
         assert.deepStrictEqual(
             writtenContentEvent,
             new WrittenContentEvent(contentId, creatorId, [{
                 typeId: typeId,
-                content: 'unit test'
+                name: typeName,
+                content: content
             }]))
     });
 
     test('given schema id, creator id, content -> stores content', async () => {
         await creatorRepository.add(creator);
-        const command = new WriteContentCommand(schemaId, creatorId, [{
+        creator.open(new Space('1', '1', 'my personal podcast'));
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
             typeId: typeId,
             name: typeName,
             content: 'unit test'
         }]);
 
         await testSubject.execute(command);
-
+        const actual = (<Creator>await creatorRepository.findBy(creatorId)).getContent(contentId, spaceId);
         assert.deepStrictEqual(
-            await creatorRepository.findBy(creatorId),
-            new Creator(
-                creatorId,
-                new Map().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
+            actual,
+            new Content(
+                contentId,
+                new Schema(schemaId, schemaName, new TypeDefinition([{
                     type: new FakeType(typeId),
                     name: typeName
-                }]))),
-                new Map().set(
-                    contentId,
-                    new Content(
-                        contentId,
-                        new Schema(schemaId, schemaName, new TypeDefinition([{
-                            type: new FakeType(typeId),
-                            name: typeName
-                        }])),
-                        new TypeMapping([{
-                            type: new FakeType(typeId),
-                            name: typeName,
-                            content: 'unit test'
-                        }])
-                    )
-                )
+                }])),
+                new TypeMapping([{
+                    type: new FakeType(typeId),
+                    name: typeName,
+                    content: 'unit test'
+                }])
             )
         );
     });
