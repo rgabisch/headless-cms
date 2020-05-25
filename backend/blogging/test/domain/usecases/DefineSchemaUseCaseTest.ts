@@ -11,7 +11,8 @@ import InMemoryTypeRepository from "../../../src/infastructure/repositories/InMe
 import Type from "../../../src/domain/entities/Type";
 import {DefinedSchemaEvent} from "../../../src/domain/events/DefineSchemaUseCase";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
-import Schema from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition} from "../../../src/domain/entities/Schema";
+import TypeFactory from "../../../src/domain/factories/TypeFactory";
 
 let testSubject: DefineSchemaUseCase;
 
@@ -34,17 +35,28 @@ const types = [{id: '1', name: 'guest description'}];
 
 let creatorRepository: InMemoryCreatorRepository;
 
+class FakeType extends Type {
+    constructor(id: string) {
+        super(id);
+    }
+}
+
+class FakeTypeFactory extends TypeFactory {
+    createBy(id: string): Type {
+        return new FakeType(id);
+    }
+}
+
 suite('Define Schema Use Case', () => {
 
     setup(async () => {
         creatorRepository = new InMemoryCreatorRepository();
-        await creatorRepository.add(new Creator(creatorId, []));
+        await creatorRepository.add(new Creator(creatorId, new Map(), new Map()));
 
         const typeRepository = new InMemoryTypeRepository();
-        await typeRepository.add(new class extends Type {
-        }(typeId));
+        await typeRepository.add(new FakeType(typeId));
 
-        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, typeRepository);
+        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, typeRepository, new FakeTypeFactory());
     });
 
     suite('when execute', () => {
@@ -144,10 +156,16 @@ suite('Define Schema Use Case', () => {
             await testSubject.execute(command);
 
             const creator = await creatorRepository.findBy(schemaId);
-            const expected = new Creator(creatorId, [new Schema(schemaId, schemaName, types)]);
+            const expected = new Creator(
+                creatorId,
+                new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
+                    type: new FakeType('1'),
+                    name: 'guest description'
+                }]))),
+                new Map()
+            );
             assert.deepEqual(creator, expected);
         });
 
-    })
-})
-;
+    });
+});

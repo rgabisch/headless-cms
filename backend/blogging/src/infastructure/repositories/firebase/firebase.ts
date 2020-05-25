@@ -1,5 +1,6 @@
 // Load Firebase modules
 import * as admin from 'firebase-admin'
+
 const serviceAccount = require('./serviceaccount.json')
 
 /*
@@ -11,9 +12,9 @@ class Firebase {
 
     // Root-Destination (e.g. 'Space', 'Content', ...)
     root: string;
-    
+
     // Constructor to initialize the database connection
-    constructor(root: string){
+    constructor(root: string) {
 
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
@@ -22,7 +23,6 @@ class Firebase {
 
         this.root = root
     }
-
 
 
     /*
@@ -35,16 +35,15 @@ class Firebase {
     return:
         object : the data stored behind the reference 
     */
-    async read(id : string = ""){
+    async read(id: string = "") {
         let ref = this.ref(id)
-        if(await this.exists(ref)){
-           return (await ref.once('value')).val()              
+        if (await this.exists(ref)) {
+            return (await ref.once('value')).val()
         } else {
             console.log(`[ERROR]: Read - Object with ID ${id} doesn't exists`)
         }
-        
-    }
 
+    }
 
 
     /*
@@ -54,19 +53,18 @@ class Firebase {
         new_id (string): the new given id
         key_values (object): the data to be stored
     */
-    async insert(new_id : string, key_values: object){
-        if(new_id.trim() != ""){
+    async insert(new_id: string, key_values: object) {
+        if (new_id.trim() != "") {
             let ref = this.ref(new_id)
-            if(!await this.exists(ref)){
+            if (!await this.exists(ref)) {
                 ref.set(key_values)
             } else {
                 console.log(`[ERROR]: Insert - Object with ID ${new_id} already exists`)
             }
-        } else {   
+        } else {
             console.log(`[ERROR]: Insert - ID can't be empty`)
         }
     }
-
 
 
     /*
@@ -75,10 +73,10 @@ class Firebase {
     param:
         id (string): the object to be removed
     */
-    async remove(id: string){
-        if(id.trim() != ""){
+    async remove(id: string) {
+        if (id.trim() != "") {
             let ref = this.ref(id)
-            if(await this.exists(ref)){
+            if (await this.exists(ref)) {
                 ref.remove()
             } else {
                 console.log(`[ERROR]: Remove - Object with ID ${id} doesn't exist`)
@@ -89,18 +87,17 @@ class Firebase {
     }
 
 
-
-    /*  
+    /*
     Update Data within the reference
 
     param:
         id (string): the object to be update
         key_vaues (object): the data to replace
     */
-    async update(id: string, key_values: object){
-        if (id.trim() != ""){
+    async update(id: string, key_values: object) {
+        if (id.trim() != "") {
             let ref = this.ref(id)
-            if(await this.exists(ref)){
+            if (await this.exists(ref)) {
                 ref.set(key_values)
             } else {
                 console.log(`[ERROR]: Update - Object with ID ${id} doesn't exist`)
@@ -120,7 +117,6 @@ class Firebase {
     */
 
 
-
     /*
     Get a Reference-Object to apply the CRUD-Methods
 
@@ -136,7 +132,6 @@ class Firebase {
     }
 
 
-
     /*
     Look up if any Object(s) exists on the referene
 
@@ -147,7 +142,7 @@ class Firebase {
         true : if any object(s) exists
         false: if any object(s) doesn't exists
     */
-    async exists(ref: admin.database.Reference): Promise<any>{
+    async exists(ref: admin.database.Reference): Promise<any> {
         return (await ref.once('value')).exists()
     }
 }

@@ -1,4 +1,4 @@
-import Schema from "../entities/Schema";
+import Schema, {TypeDefinition} from "../entities/Schema";
 import {DefineSchemaCommand} from "../commands/DefineSchemaUseCase";
 import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
 import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
@@ -6,11 +6,13 @@ import {TypeRepository} from "../repositories/TypeRepository";
 import {DefinedSchemaEvent} from "../events/DefineSchemaUseCase";
 import IdGenerator from "../../shared/IdGenerator";
 import Type from "../entities/Type";
+import TypeFactory from "../factories/TypeFactory";
 
 class DefineSchemaUseCase {
     constructor(private idGenerator: IdGenerator,
                 private creatorRepository: CreatorRepository,
-                private typeRepository: TypeRepository) {
+                private typeRepository: TypeRepository,
+                private typeFactory: TypeFactory) {
     }
 
     async execute(command: DefineSchemaCommand): Promise<DefinedSchemaEvent> {
@@ -24,7 +26,13 @@ class DefineSchemaUseCase {
             throw new UnassignedIdException();
         }
 
-        const schema = new Schema(this.idGenerator.generate(), command.name, command.types);
+
+        const mappedCommandToTypeDefinition = command.types.map(type => ({
+            type: this.typeFactory.createBy(type.id),
+            name: type.name
+        }));
+
+        const schema = new Schema(this.idGenerator.generate(), command.name, new TypeDefinition(mappedCommandToTypeDefinition));
         creator.define(schema);
 
         await this.creatorRepository.update(creator);
@@ -36,7 +44,7 @@ class DefineSchemaUseCase {
         );
     }
 
-    private async containsUnassignedIds(types: Type[]) {
+    private async containsUnassignedIds(types: { id: string, name: string }[]) {
         const typeIds = types.map(x => x.id);
         const foundedTypes = await this.typeRepository.findAllBy(typeIds);
         return foundedTypes.some(x => x == undefined)
