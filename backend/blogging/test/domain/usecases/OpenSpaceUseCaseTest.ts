@@ -8,6 +8,8 @@ import MoreThan50CharactersException
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
+import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
+import Creator from "../../../src/domain/entities/Creator";
 
 const userId = '1';
 const otherUserId = '5';
