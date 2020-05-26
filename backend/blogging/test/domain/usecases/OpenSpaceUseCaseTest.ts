@@ -23,12 +23,15 @@ const name = nameMadeOfOneCharacter;
 
 let testSubject: OpenSpaceUseCase;
 let repository: InMemorySpaceRepository;
+let creatorRepository: InMemoryCreatorRepository;
 
 suite('Open Space Use Case', () => {
 
-    setup(() => {
+    setup(async () => {
         repository = new InMemorySpaceRepository();
-        testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(spaceId));
+        creatorRepository = new InMemoryCreatorRepository();
+        await creatorRepository.add(new Creator(userId, new Map(), new Map()));
+        testSubject = new OpenSpaceUseCase(repository, creatorRepository, new StaticIdGenerator(spaceId));
     });
 
     suite('when execute', () => {
