@@ -12,16 +12,16 @@ class FireBaseSpaceRepository extends FireBase implements SpaceRepository{
     }
 
     save(space: Space): void {
-        super.insert(space.id, space)
+        super.db_add(space.id, space)
     }
 
     async findBy(id: string): Promise<Space | undefined> {
-        return super.read(id)
+        return super.db_get(id)
     }
 
     async query(criteria: Criteria<any>): Promise<Space[]> {
         const filtered = [];
-
+        // super.db_get() <- returns all objects
         for (let space of this.spaces.values()) {
             if (criteria.matches(space)) {
                 filtered.push(space);

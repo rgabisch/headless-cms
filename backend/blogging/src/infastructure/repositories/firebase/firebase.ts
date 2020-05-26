@@ -10,7 +10,7 @@ the credentials are pre-set based on the firebase serviceaccount
 */
 class Firebase {
 
-    // Root-Destination (e.g. 'Space', 'Content', ...)
+    // Root-Destination (e.g. 'Space', 'Type', ...)
     root: string;
 
     // Constructor to initialize the database connection
@@ -35,7 +35,7 @@ class Firebase {
     return:
         object : the data stored behind the reference 
     */
-    async read(id: string = "") {
+    async db_get(id: string = "") {
         let ref = this.ref(id)
         if (await this.exists(ref)) {
             return (await ref.once('value')).val()
@@ -53,7 +53,7 @@ class Firebase {
         new_id (string): the new given id
         key_values (object): the data to be stored
     */
-    async insert(new_id: string, key_values: object) {
+    async db_add(new_id: string, key_values: object) {
         if (new_id.trim() != "") {
             let ref = this.ref(new_id)
             if (!await this.exists(ref)) {
@@ -73,7 +73,7 @@ class Firebase {
     param:
         id (string): the object to be removed
     */
-    async remove(id: string) {
+    async db_remove(id: string) {
         if (id.trim() != "") {
             let ref = this.ref(id)
             if (await this.exists(ref)) {
@@ -94,7 +94,7 @@ class Firebase {
         id (string): the object to be update
         key_vaues (object): the data to replace
     */
-    async update(id: string, key_values: object) {
+    async db_update(id: string, key_values: object) {
         if (id.trim() != "") {
             let ref = this.ref(id)
             if (await this.exists(ref)) {
