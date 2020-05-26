@@ -9,6 +9,7 @@ import InMemorySpaceRepository from "../../../src/infastructure/repositories/InM
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
+import Creator from "../../../src/domain/entities/Creator";
 
 const userId = '1';
 const otherUserId = '5';
@@ -28,9 +29,10 @@ let creatorRepository: InMemoryCreatorRepository;
 
 suite('Open Space Use Case', () => {
 
-    setup(() => {
+    setup(async () => {
         repository = new InMemorySpaceRepository();
         creatorRepository = new InMemoryCreatorRepository();
+        await creatorRepository.add(new Creator(userId, new Map(), new Map()));
         testSubject = new OpenSpaceUseCase(repository, creatorRepository, new StaticIdGenerator(spaceId));
     });
 
