@@ -130,6 +130,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
+
             test('it stores the space in the spaceRepository', async () => {
                 await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
@@ -163,7 +164,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            test('it stores the space in the spaceRepository', async () => {
+            test('it stores the space in the repository', async () => {
                 await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
                 await testSubject.execute(previous);
