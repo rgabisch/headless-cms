@@ -10,6 +10,8 @@ import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
+import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
+import NotUniqueSpaceNameException from "../../../src/domain/exceptions/NotUniqueSpaceNameException";
 
 const userId = '1';
 const otherUserId = '5';
@@ -24,16 +26,16 @@ const nameMadeOf51Characters = 'a'.repeat(51);
 const name = nameMadeOfOneCharacter;
 
 let testSubject: OpenSpaceUseCase;
-let repository: InMemorySpaceRepository;
+let spaceRepository: InMemorySpaceRepository;
 let creatorRepository: InMemoryCreatorRepository;
 
 suite('Open Space Use Case', () => {
 
     setup(async () => {
-        repository = new InMemorySpaceRepository();
+        spaceRepository = new InMemorySpaceRepository();
         creatorRepository = new InMemoryCreatorRepository();
         await creatorRepository.add(new Creator(userId, new Map(), new Map()));
-        testSubject = new OpenSpaceUseCase(repository, creatorRepository, new StaticIdGenerator(spaceId));
+        testSubject = new OpenSpaceUseCase(spaceRepository, creatorRepository, new StaticIdGenerator(spaceId));
     });
 
     suite('when execute', () => {
@@ -47,7 +49,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyValueException');
+                expect(exception.name).to.be.equal(EmptyValueException.name);
             }
         });
 
@@ -60,7 +62,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyValueException');
+                expect(exception.name).to.be.equal(EmptyValueException.name);
             }
         });
 
@@ -88,7 +90,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('NotUniqueSpaceNameException');
+                expect(exception.name).to.be.equal(NotUniqueSpaceNameException.name);
             }
         });
 
@@ -101,7 +103,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyUserIdException');
+                expect(exception.name).to.be.equal(UnassignedIdException.name);
             }
         });
 
@@ -114,7 +116,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyUserIdException');
+                expect(exception.name).to.be.equal(UnassignedIdException.name);
             }
         });
 
@@ -128,7 +130,8 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('it stores the space in the repository', async () => {
+            test('it stores the space in the spaceRepository', async () => {
+                await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
                 await testSubject.execute(previous);
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
@@ -139,13 +142,13 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
                 await testSubject.execute(command);
 
                 const expected = new Space(spaceId, userId, nameMadeOfOneCharacter);
-                const openedSpace = await repository.findBy(spaceId);
+                const openedSpace = await spaceRepository.findBy(spaceId);
                 expect(openedSpace).to.be.deep.equal(expected);
             });
         });
@@ -160,7 +163,8 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            test('it stores the space in the repository', async () => {
+            test('it stores the space in the spaceRepository', async () => {
+                await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
                 await testSubject.execute(previous);
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
@@ -171,13 +175,13 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
                 await testSubject.execute(command);
 
                 const expected = new Space(spaceId, userId, nameMadeOf50Characters);
-                const openedSpace = await repository.findBy(spaceId);
+                const openedSpace = await spaceRepository.findBy(spaceId);
                 expect(openedSpace).to.be.deep.equal(expected);
             });
         });
