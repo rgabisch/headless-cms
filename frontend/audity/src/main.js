@@ -25,10 +25,6 @@ const routes = [
       {
         path: '/create-contenttyp',
         component: () => import('./components/Schema'),
-      },
-      {
-        path: '/contenttyp/Podcast',
-        component: () => import('./components/Content'),
       }
   ]
   },
