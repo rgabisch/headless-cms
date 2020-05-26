@@ -8,6 +8,7 @@ import MoreThan50CharactersException
 import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
+import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 
 const userId = '1';
 const otherUserId = '5';
@@ -23,12 +24,14 @@ const name = nameMadeOfOneCharacter;
 
 let testSubject: OpenSpaceUseCase;
 let repository: InMemorySpaceRepository;
+let creatorRepository: InMemoryCreatorRepository;
 
 suite('Open Space Use Case', () => {
 
     setup(() => {
         repository = new InMemorySpaceRepository();
-        testSubject = new OpenSpaceUseCase(repository, new StaticIdGenerator(spaceId));
+        creatorRepository = new InMemoryCreatorRepository();
+        testSubject = new OpenSpaceUseCase(repository, creatorRepository, new StaticIdGenerator(spaceId));
     });
 
     suite('when execute', () => {
