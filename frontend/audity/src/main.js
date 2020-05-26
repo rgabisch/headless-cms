@@ -12,7 +12,6 @@ Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-
 // Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyDgpHVICL0qqTaiNicKU5ysejCbuDs6UMI",
