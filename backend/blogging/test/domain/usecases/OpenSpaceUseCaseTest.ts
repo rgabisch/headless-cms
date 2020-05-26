@@ -10,6 +10,7 @@ import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
+import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
 
 const userId = '1';
 const otherUserId = '5';
@@ -101,7 +102,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyUserIdException');
+                expect(exception.name).to.be.equal(UnassignedIdException.name);
             }
         });
 
@@ -114,7 +115,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyUserIdException');
+                expect(exception.name).to.be.equal(UnassignedIdException.name);
             }
         });
 
