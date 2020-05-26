@@ -130,6 +130,7 @@ suite('Open Space Use Case', () => {
             });
 
             test('it stores the space in the repository', async () => {
+                await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
                 await testSubject.execute(previous);
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
@@ -162,6 +163,7 @@ suite('Open Space Use Case', () => {
             });
 
             test('it stores the space in the repository', async () => {
+                await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
                 await testSubject.execute(previous);
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
