@@ -11,6 +11,7 @@ import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
 import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
+import NotUniqueSpaceNameException from "../../../src/domain/exceptions/NotUniqueSpaceNameException";
 
 const userId = '1';
 const otherUserId = '5';
@@ -48,7 +49,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyValueException');
+                expect(exception.name).to.be.equal(EmptyValueException.name);
             }
         });
 
@@ -61,7 +62,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('EmptyValueException');
+                expect(exception.name).to.be.equal(EmptyValueException.name);
             }
         });
 
@@ -89,7 +90,7 @@ suite('Open Space Use Case', () => {
             } catch (e) {
                 exception = e;
             } finally {
-                expect(exception.name).to.be.equal('NotUniqueSpaceNameException');
+                expect(exception.name).to.be.equal(NotUniqueSpaceNameException.name);
             }
         });
 
