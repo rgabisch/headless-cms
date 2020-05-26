@@ -130,7 +130,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('it stores the space in the spaceRepository', async () => {
+            test('it stores the space in the repository', async () => {
                 await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
                 await testSubject.execute(previous);
@@ -142,7 +142,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
                 await testSubject.execute(command);
@@ -163,7 +163,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected);
             });
 
-            test('it stores the space in the spaceRepository', async () => {
+            test('it stores the space in the repository', async () => {
                 await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOf50Characters, otherUserId);
                 await testSubject.execute(previous);
@@ -175,7 +175,7 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in the repository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
                 await testSubject.execute(command);

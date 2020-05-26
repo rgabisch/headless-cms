@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  # This workflow contains a single job called "build"
+  test_pull_request:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend/blogging
+        
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: develop
+      
+    - name: set Node.js to 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+
+    - name: install dependencies
+      run: npm ci
+    
+    - name: execute tests
+      run: npm test
+    
+    - name: build module
+      run: npm run tsc
