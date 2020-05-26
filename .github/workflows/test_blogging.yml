@@ -12,7 +12,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: /backend/blogging
+        working-directory: ./backend/blogging
         
     steps:
     - uses: actions/checkout@v2
@@ -31,4 +31,4 @@ jobs:
       run: npn test
     
     - name: build module
-      run: npm tsc
+      run: npm run tsc
