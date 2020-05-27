@@ -9,13 +9,17 @@ class ListAllContentsUseCase {
     async execute(command: ListAllContentsCommand): Promise<ListedAllContentsEvent> {
         const creator = await this.creatorRepository.findBy(command.creatorId);
 
+        console.log(creator)
+        console.log('a')
         if (!creator) {
             throw new UnassignedIdException();
         }
 
+        console.log('b')
         if (creator.hasNotOpens(command.spaceId))
             throw new UnassignedIdException();
 
+        console.log('c')
         const contents = <Content[]>creator.getContentsOf(command.spaceId);
 
         return new ListedAllContentsEvent(this.map(contents));
