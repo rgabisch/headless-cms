@@ -17,6 +17,7 @@ let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
 
 const contentId = '1';
+const contentName = 'my first podcast';
 
 const creatorId = '1';
 const unassignedCreatorId = '500';
@@ -62,7 +63,7 @@ suite('Write Content Use Case', () => {
 
     test('given empty schema id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(emptySchemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(emptySchemaId, creatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -79,7 +80,7 @@ suite('Write Content Use Case', () => {
 
     test('given schema id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(whitespaceSchemaId, creatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -96,7 +97,7 @@ suite('Write Content Use Case', () => {
 
     test('given empty creator id -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, emptyCreatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, emptyCreatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -113,7 +114,7 @@ suite('Write Content Use Case', () => {
 
     test('given creator id made of whitespace -> throw exception for empty id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, whitespaceCreatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -130,7 +131,7 @@ suite('Write Content Use Case', () => {
 
     test('given unassigned creator id -> throw exception for unassigned id', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, unassignedCreatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, unassignedCreatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -150,7 +151,7 @@ suite('Write Content Use Case', () => {
         await creatorRepository.add(new Creator(creatorId, new Map<string, Schema>(), new Map()));
 
         let exception;
-        const command = new WriteContentCommand(unassignedSchemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(unassignedSchemaId, creatorId, spaceId, contentName, [{
             typeId: typeId,
             name: schemaName,
             content: ''
@@ -168,7 +169,7 @@ suite('Write Content Use Case', () => {
 
     test('given type not included in the schema -> throw exception', async () => {
         let exception;
-        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
             typeId: unassignedTypeId,
             name: schemaName,
             content: ''
@@ -187,7 +188,7 @@ suite('Write Content Use Case', () => {
         const content = 'content';
         creator.open(new Space('1', '1', 'my personal podcast'));
         await creatorRepository.add(creator);
-        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
             typeId: typeId,
             name: typeName,
             content: content
@@ -206,7 +207,7 @@ suite('Write Content Use Case', () => {
     test('given schema id, creator id, content -> stores content', async () => {
         await creatorRepository.add(creator);
         creator.open(new Space('1', '1', 'my personal podcast'));
-        const command = new WriteContentCommand(schemaId, creatorId, spaceId, [{
+        const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
             typeId: typeId,
             name: typeName,
             content: 'unit test'
@@ -218,6 +219,7 @@ suite('Write Content Use Case', () => {
             actual,
             new Content(
                 contentId,
+                'my first podcast',
                 new Schema(schemaId, schemaName, new TypeDefinition([{
                     type: new FakeType(typeId),
                     name: typeName

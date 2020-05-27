@@ -33,6 +33,10 @@ class Space {
     get(id: string): Content | undefined {
         return this.contents.get(id);
     }
+
+    getAll(): Content[] {
+        return Array.from(this.contents.values());
+    }
 }
 
 export default Space;

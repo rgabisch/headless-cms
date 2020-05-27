@@ -36,6 +36,7 @@ class WriteContentUseCase {
 
         const content = new Content(
             this.idGenerator.generate(),
+            command.contentName,
             creator.getSchemaBy(command.schemaId),
             new TypeMapping(typeMapping)
         );

@@ -58,16 +58,15 @@ suite('List All Content Use Cases', () => {
 
             const event = await testSubject.execute(command);
 
-            assert.equal(event, new ListedAllContentsEvent([]));
+            assert.deepEqual(event, new ListedAllContentsEvent([]));
         });
 
         test('given an assigned creator id and spade id with content in this space -> returns an event with content', async () => {
-            const contentName = 'my first podcast';
             const creator = new Creator('1', new Map(), new Map());
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('4', 'Podcast', new TypeDefinition([]));
             const typeMapping = new TypeMapping([]);
-            const content = new Content('3', schema, typeMapping);
+            const content = new Content('3', 'my first podcast', schema, typeMapping);
             space.add(content);
             creator.open(space);
             await creatorRepository.add(creator);
@@ -75,7 +74,7 @@ suite('List All Content Use Cases', () => {
 
             const event = await testSubject.execute(command);
 
-            assert.equal(event, new ListedAllContentsEvent([{id: content.id, name: contentName}]));
+            assert.deepEqual(event, new ListedAllContentsEvent([{id: content.id, name: content.name}]));
         });
     });
 
