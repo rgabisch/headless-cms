@@ -1,5 +1,5 @@
 import express from 'express';
-import {DefineSchemaCommand} from "../../domain/commands/DefineSchemaUseCase";
+import {DefineSchemaCommand} from "../../domain/commands/DefineSchemaCommand";
 import DefineSchemaUseCase from "../../domain/usecases/DefineSchemaUseCase";
 
 class SchemaController {

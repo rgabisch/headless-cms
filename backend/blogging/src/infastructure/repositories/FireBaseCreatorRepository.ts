@@ -1,4 +1,4 @@
-import {CreatorRepository} from "../../domain/repositories/DefineSchemaUseCase";
+import {CreatorRepository} from "../../domain/repositories/CreatorRepository";
 import Creator from "../../domain/entities/Creator";
 import FireBase from './firebase/firebase'
 

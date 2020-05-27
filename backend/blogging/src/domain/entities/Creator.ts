@@ -75,6 +75,15 @@ class Creator {
         if (space)
             return space.get(id);
     }
+
+    getContentsOf(spaceId: string): Content[] | undefined {
+        const space = this.spaces.get(spaceId);
+
+        if (!space)
+            return undefined;
+
+        return space.getAll();
+    }
 }
 
 export default Creator;

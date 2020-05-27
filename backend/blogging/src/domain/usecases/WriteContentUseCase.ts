@@ -1,7 +1,7 @@
 import WriteContentCommand from "../commands/WriteContentCommand";
-import {WrittenContentEvent} from "../events/WriteContentUseCaseTest";
-import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
-import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
+import {WrittenContentEvent} from "../events/WriteContentEvent";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
+import {CreatorRepository} from "../repositories/CreatorRepository";
 import IdGenerator from "../../shared/IdGenerator";
 import Content from "../entities/Content";
 import {TypeMapping} from "../entities/Schema";
@@ -36,6 +36,7 @@ class WriteContentUseCase {
 
         const content = new Content(
             this.idGenerator.generate(),
+            command.contentName,
             creator.getSchemaBy(command.schemaId),
             new TypeMapping(typeMapping)
         );

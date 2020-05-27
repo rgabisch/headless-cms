@@ -1,5 +1,4 @@
 import Schema, {TypeMapping} from "./Schema";
-import Type from "./Type";
 
 class ContentNotFitInWithSchema implements Error {
     message: string = '';
@@ -8,6 +7,7 @@ class ContentNotFitInWithSchema implements Error {
 
 export class Content {
     constructor(readonly id: string,
+                readonly name: string,
                 private schema: Schema,
                 private typeMapping: TypeMapping) {
         if (schema.isNotFitInWith(typeMapping))

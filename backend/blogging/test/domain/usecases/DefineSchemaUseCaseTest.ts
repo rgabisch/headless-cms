@@ -1,15 +1,15 @@
 import {assert} from 'chai';
 
 import DefineSchemaUseCase from "../../../src/domain/usecases/DefineSchemaUseCase";
-import {DefineSchemaCommand} from "../../../src/domain/commands/DefineSchemaUseCase";
+import {DefineSchemaCommand} from "../../../src/domain/commands/DefineSchemaCommand";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
-import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
+import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
 import Creator from "../../../src/domain/entities/Creator";
 import MoreThan50CharactersException from "../../../src/domain/exceptions/MoreThan50CharactersException";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
 import InMemoryTypeRepository from "../../../src/infastructure/repositories/InMemoryTypeRepository";
 import Type from "../../../src/domain/entities/Type";
-import {DefinedSchemaEvent} from "../../../src/domain/events/DefineSchemaUseCase";
+import {DefinedSchemaEvent} from "../../../src/domain/events/DefineSchemaEvent";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Schema, {TypeDefinition} from "../../../src/domain/entities/Schema";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
