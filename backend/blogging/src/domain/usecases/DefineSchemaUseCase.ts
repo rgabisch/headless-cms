@@ -1,9 +1,9 @@
 import Schema, {TypeDefinition} from "../entities/Schema";
-import {DefineSchemaCommand} from "../commands/DefineSchemaUseCase";
-import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
-import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
+import {DefineSchemaCommand} from "../commands/DefineSchemaCommand";
+import {CreatorRepository} from "../repositories/CreatorRepository";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import {TypeRepository} from "../repositories/TypeRepository";
-import {DefinedSchemaEvent} from "../events/DefineSchemaUseCase";
+import {DefinedSchemaEvent} from "../events/DefineSchemaEvent";
 import IdGenerator from "../../shared/IdGenerator";
 import Type from "../entities/Type";
 import TypeFactory from "../factories/TypeFactory";

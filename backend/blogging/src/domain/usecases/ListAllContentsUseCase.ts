@@ -1,5 +1,5 @@
-import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
-import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
+import {CreatorRepository} from "../repositories/CreatorRepository";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
 
 class ListAllContentsUseCase {

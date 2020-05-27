@@ -4,7 +4,7 @@ import ListAllContentsOfASpaceUseCase, {
 } from "../../../src/domain/usecases/ListAllContentsUseCase";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import {assert} from "chai";
-import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
+import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
 import Creator from "../../../src/domain/entities/Creator";
 import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";

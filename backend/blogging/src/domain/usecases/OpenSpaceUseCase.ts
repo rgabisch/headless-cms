@@ -5,8 +5,8 @@ import Space from "../entities/Space";
 import IdGenerator from "../../shared/IdGenerator";
 import NotUniqueSpaceNameException from "../exceptions/NotUniqueSpaceNameException";
 import FindByNameCriteria from "../repositories/criterias/FindByNameCriteria";
-import {CreatorRepository} from "../repositories/DefineSchemaUseCase";
-import {UnassignedIdException} from "../exceptions/DefineSchemaUseCase";
+import {CreatorRepository} from "../repositories/CreatorRepository";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 
 class OpenSpaceUseCase {

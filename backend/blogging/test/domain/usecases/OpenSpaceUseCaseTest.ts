@@ -10,7 +10,7 @@ import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
-import {UnassignedIdException} from "../../../src/domain/exceptions/DefineSchemaUseCase";
+import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
 import NotUniqueSpaceNameException from "../../../src/domain/exceptions/NotUniqueSpaceNameException";
 
 const userId = '1';
