@@ -23,10 +23,18 @@ const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpa
 const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository()));
 //const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.use(bodyParser.json());
 app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
+
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
