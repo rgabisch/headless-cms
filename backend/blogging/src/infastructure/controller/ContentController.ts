@@ -38,7 +38,6 @@ class ContentController {
                 const writtenContentEvent = await this.listAllContentsUseCase.execute(command);
                 res.send(writtenContentEvent.content);
             } catch (e) {
-                console.log(e.name)
                 res.status(400).send('post body is invalid');
             }
 
