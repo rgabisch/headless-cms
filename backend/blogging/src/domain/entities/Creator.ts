@@ -84,6 +84,19 @@ class Creator {
 
         return space.getAll();
     }
+
+    hasWritten(contentId: string, spaceId: string): boolean {
+        const space = this.spaces.get(spaceId);
+
+        if (!space)
+            return false;
+
+        return !!space.get(contentId);
+    }
+
+    hasNotWritten(contentId: string, spaceId: string): boolean {
+        return !this.hasWritten(contentId, spaceId);
+    }
 }
 
 export default Creator;

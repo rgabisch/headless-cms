@@ -1,8 +1,8 @@
-class ShowContentCommand {
+class ViewContentCommand {
     constructor(public creatorId: string,
                 public spaceId: string,
                 public contentId: string) {
     }
 }
 
-export default ShowContentCommand;
+export default ViewContentCommand;

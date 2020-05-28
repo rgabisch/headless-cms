@@ -16,11 +16,11 @@ class Schema {
             throw new MoreThan50CharactersException();
     }
 
-    isFitInWith(mapping: TypeMapping) {
+    isFitInWith(mapping: TypeMappings) {
         return this.typeDefinition.equals(mapping);
     }
 
-    isNotFitInWith(mapping: TypeMapping) {
+    isNotFitInWith(mapping: TypeMappings) {
         return !this.isFitInWith(mapping);
     }
 }
@@ -29,7 +29,7 @@ export class TypeDefinition {
     constructor(private definitions: { type: Type, name: string }[]) {
     }
 
-    equals(mapping: TypeMapping): boolean {
+    equals(mapping: TypeMappings): boolean {
         for (let i = 0; i < this.definitions.length; i++) {
             if (mapping.hasNotDefinitionAtIndex(this.definitions[i], i))
                 return false;
@@ -39,7 +39,7 @@ export class TypeDefinition {
     }
 }
 
-export class TypeMapping {
+export class TypeMappings implements Iterable<{ type: Type, name: string, content: string }> {
     constructor(private mappings: { type: Type, name: string, content: string }[]) {
     }
 
@@ -52,6 +52,19 @@ export class TypeMapping {
 
     hasNotDefinitionAtIndex(definition: { type: Type; name: string }, index: number) {
         return !this.hasDefinitionAtIndex(definition, index);
+    }
+
+    [Symbol.iterator](): Iterator<{ type: Type; name: string; content: string }> {
+        let counter = 0;
+        const mappings = this.mappings;
+        return {
+            next: function (...args: [] | [undefined]): IteratorYieldResult<{ type: Type; name: string; content: string }> | IteratorReturnResult<any> {
+                return {
+                    done: counter == mappings.length,
+                    value: mappings[counter++]
+                }
+            }
+        }
     }
 }
 

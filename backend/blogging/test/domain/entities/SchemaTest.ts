@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 import Type from "../../../src/domain/entities/Type";
 
 
@@ -15,7 +15,7 @@ suite('Schema Entity', () => {
         const otherType = new FakeType('9');
 
         test('given empty mapping when schema is not empty -> return true', () => {
-            const mapping = new TypeMapping([]);
+            const mapping = new TypeMappings([]);
             const schema = new Schema(
                 '1',
                 'podcast',
@@ -28,7 +28,7 @@ suite('Schema Entity', () => {
         });
 
         test('given mapping with different type -> return true', () => {
-            const mapping = new TypeMapping([{type: otherType, name: '', content: ''}]);
+            const mapping = new TypeMappings([{type: otherType, name: '', content: ''}]);
             const schema = new Schema(
                 '1',
                 'podcast',
@@ -41,7 +41,7 @@ suite('Schema Entity', () => {
         });
 
         test('given content with equal type but a equal name -> return false', () => {
-            const mapping = new TypeMapping([{type: type, name: 'name', content: ''}]);
+            const mapping = new TypeMappings([{type: type, name: 'name', content: ''}]);
             const schema = new Schema(
                 '1',
                 'podcast',

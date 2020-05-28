@@ -1,27 +1,30 @@
 import {assert} from "chai";
-import ShowContentUseCase from "../../../src/domain/usecases/ShowContentUseCase";
+import ViewContentUseCase from "../../../src/domain/usecases/ViewContentUseCase";
 import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
-import {CreatorRepository} from "../../../src/domain/repositories/CreatorRepository";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
-import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";
-import ShowContentCommand from "../../../src/domain/commands/ShowContentCommand";
-import ShowContentEvent from "../../../src/domain/events/ShowContentEvent";
+import ViewContentCommand from "../../../src/domain/commands/ViewContentCommand";
+import ViewContentEvent from "../../../src/domain/events/ViewContentEvent";
 
-suite('Show Content Use Case', () => {
+suite('View Content Use Case', () => {
 
     let creatorRepository: InMemoryCreatorRepository;
-    const testSubject = new ShowContentUseCase();
+    let testSubject: ViewContentUseCase;
+    setup(() => {
+        creatorRepository = new InMemoryCreatorRepository();
+        testSubject = new ViewContentUseCase(creatorRepository);
+    });
 
     suite('when execute', () => {
         test('given unassigned creator id -> throws exception', async () => {
-            const command = new ShowContentCommand('1', '2', '3');
+            const command = new ViewContentCommand('1', '2', '3');
 
             let exception;
             try {
-                testSubject.execute(command);
+                await testSubject.execute(command);
             } catch (e) {
                 exception = e;
             } finally {
@@ -32,11 +35,11 @@ suite('Show Content Use Case', () => {
         test('given unassigned space id -> throws exception', async () => {
             const creator = new Creator('1', new Map(), new Map());
             await creatorRepository.add(creator);
-            const command = new ShowContentCommand(creator.id, '2', '3');
+            const command = new ViewContentCommand(creator.id, '2', '3');
 
             let exception;
             try {
-                testSubject.execute(command);
+                await testSubject.execute(command);
             } catch (e) {
                 exception = e;
             } finally {
@@ -49,11 +52,11 @@ suite('Show Content Use Case', () => {
             const space = new Space('2', creator.id, 'My Podcast');
             creator.open(space);
             await creatorRepository.add(creator);
-            const command = new ShowContentCommand(creator.id, space.id, '1');
+            const command = new ViewContentCommand(creator.id, space.id, '1');
 
             let exception;
             try {
-                testSubject.execute(command);
+                await testSubject.execute(command);
             } catch (e) {
                 exception = e;
             } finally {
@@ -65,17 +68,18 @@ suite('Show Content Use Case', () => {
             const creator = new Creator('1', new Map(), new Map());
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('1', 'podcast', new TypeDefinition([]));
-            const content = new Content('3', 'my first podcast', schema, new TypeMapping([]));
+            const content = new Content('3', 'my first podcast', schema, new TypeMappings([]));
             creator.open(space);
+            creator.define(schema);
             creator.write(content, space);
             await creatorRepository.add(creator);
-            const command = new ShowContentCommand(creator.id, space.id, content.id);
+            const command = new ViewContentCommand(creator.id, space.id, content.id);
 
-            const event = testSubject.execute(command);
+            const event = await testSubject.execute(command);
 
-            assert.equal(
+            assert.deepEqual(
                 event,
-                new ShowContentEvent(
+                new ViewContentEvent(
                     content.id,
                     content.name,
                     {
@@ -86,6 +90,6 @@ suite('Show Content Use Case', () => {
                 )
             );
         });
-    })
+    });
 
 });

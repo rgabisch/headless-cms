@@ -1,4 +1,4 @@
-class ShowContentEvent {
+class ViewContentEvent {
     constructor(readonly id: string,
                 readonly name: string,
                 readonly schema: { id: string, name: string },
@@ -6,4 +6,4 @@ class ShowContentEvent {
     }
 }
 
-export default ShowContentEvent;
+export default ViewContentEvent;

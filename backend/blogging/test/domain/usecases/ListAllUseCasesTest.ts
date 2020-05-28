@@ -8,7 +8,7 @@ import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedId
 import Creator from "../../../src/domain/entities/Creator";
 import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";
-import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 
 suite('List All Content Use Cases', () => {
 
@@ -65,7 +65,7 @@ suite('List All Content Use Cases', () => {
             const creator = new Creator('1', new Map(), new Map());
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('4', 'Podcast', new TypeDefinition([]));
-            const typeMapping = new TypeMapping([]);
+            const typeMapping = new TypeMappings([]);
             const content = new Content('3', 'my first podcast', schema, typeMapping);
             space.add(content);
             creator.open(space);
