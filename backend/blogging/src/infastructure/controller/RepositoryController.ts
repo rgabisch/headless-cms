@@ -5,12 +5,14 @@ import EmptyUserIdException from "../../domain/exceptions/EmptyUserIdException";
 import EmptyValueException from "../../domain/exceptions/EmptyValueException";
 import MoreThan50CharactersException from "../../domain/exceptions/MoreThan50CharactersException";
 import NotUniqueSpaceNameException from "../../domain/exceptions/NotUniqueSpaceNameException";
+import ListAllSpacesUseCase, {ListAllSpacesCommand} from "../../domain/usecases/ListAllSpacesUseCase";
 
 class SpaceController {
     private errorFactory = new ErrorMessageFactory();
 
-    constructor(private openSpaceUseCase: OpenSpaceUseCase) {
-    }
+    constructor(private openSpaceUseCase: OpenSpaceUseCase,
+                private listAllSpacesUseCase: ListAllSpacesUseCase) {
+                }
 
     routes(): express.Router {
         const router = express.Router();
@@ -28,6 +30,24 @@ class SpaceController {
                 let errorMessage = this.errorFactory.createFrom(e, command);
                 res.status(400).send(errorMessage);
             }
+        });
+
+        // returns all spaces [requires creator id in header]
+
+        router.get('/', async (req, res) => {
+            console.log(req.get('creatorId'))
+
+            // send creator-id
+            const command = new ListAllSpacesCommand();
+
+            try {
+                //receive spaces
+                //edit useCases
+            } catch (e) {
+                console.log(e.name)
+                res.status(400).send('post body is invalid');
+            }
+
         });
 
         return router;
