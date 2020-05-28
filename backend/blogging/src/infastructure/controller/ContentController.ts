@@ -4,10 +4,13 @@ import DefineSchemaUseCase from "../../domain/usecases/DefineSchemaUseCase";
 import WriteContentUseCase from "../../domain/usecases/WriteContentUseCase";
 import WriteContentCommand from "../../domain/commands/WriteContentCommand";
 import ListAllContentsUseCase, {ListAllContentsCommand} from "../../domain/usecases/ListAllContentsUseCase";
+import ViewContentUseCase from "../../domain/usecases/ViewContentUseCase";
+import ViewContentCommand from "../../domain/commands/ViewContentCommand";
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
-                private listAllContentsUseCase: ListAllContentsUseCase) {
+                private listAllContentsUseCase: ListAllContentsUseCase,
+                private viewContentUseCase: ViewContentUseCase) {
     }
 
     routes(): express.Router {
@@ -31,17 +34,29 @@ class ContentController {
         });
 
         router.get('/spaces/:spaceId', async (req, res) => {
-            console.log(req.get('creatorId'))
             const command = new ListAllContentsCommand(req.get('creatorId') ?? "", req.params.spaceId);
 
             try {
                 const writtenContentEvent = await this.listAllContentsUseCase.execute(command);
                 res.send(writtenContentEvent.content);
             } catch (e) {
-                console.log(e.name)
                 res.status(400).send('post body is invalid');
             }
+        });
 
+        router.get('/:contentId/spaces/:spaceId', async (req, res) => {
+            const command = new ViewContentCommand(
+                req.get('creatorId') ?? "",
+                req.params.spaceId,
+                req.params.contentId
+            );
+
+            try {
+                const viewedContentEvent = await this.viewContentUseCase.execute(command);
+                res.send(viewedContentEvent);
+            } catch (e) {
+                res.status(400).send('post body is invalid');
+            }
         });
 
         return router;

@@ -6,7 +6,7 @@ import {WrittenContentEvent} from "../../../src/domain/events/WriteContentEvent"
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
-import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 import Content from "../../../src/domain/entities/Content";
 import Type from "../../../src/domain/entities/Type";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
@@ -224,7 +224,7 @@ suite('Write Content Use Case', () => {
                     type: new FakeType(typeId),
                     name: typeName
                 }])),
-                new TypeMapping([{
+                new TypeMappings([{
                     type: new FakeType(typeId),
                     name: typeName,
                     content: 'unit test'
