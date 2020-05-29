@@ -69,6 +69,15 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
+    getSpaces(): Space[] | undefined{
+        const spaces = this.spaces.values
+
+        if(!spaces)
+            return undefined;
+
+        return spaces.arguments;
+    }
+
     getContent(id: string, spaceId: string): Content | undefined {
         const space = this.getSpace(spaceId);
 

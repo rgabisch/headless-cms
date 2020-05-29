@@ -16,8 +16,8 @@ class ListAllContentsUseCase {
         }
 
         //get all spaces
-        const spaces = 'bla'
-        return new ListedAllSpacesEvent(this.map(spaces));
+        const spaces = <Space[]>creator.getSpaces();
+        return new ListedAllSpacesEvent(spaces);
     }
 
     private map(contents: Content[]) {

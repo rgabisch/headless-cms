@@ -15,6 +15,7 @@ import TypeFactory from "./domain/factories/TypeFactory";
 import ContentController from "./infastructure/controller/ContentController";
 import WriteContentUseCase from "./domain/usecases/WriteContentUseCase";
 import ListAllContentsUseCase from "./domain/usecases/ListAllContentsUseCase";
+import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 
 const app = express();
 const port = 3000;
@@ -27,6 +28,7 @@ const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpa
 const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory()));
 const writeContentUseCase = new WriteContentUseCase(creatorRepository, new GlobalUniqueIdGenerator(), new TypeFactory());
 const listAllContentsUseCase = new ListAllContentsUseCase(creatorRepository);
+const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
 const contentController = new ContentController(writeContentUseCase, listAllContentsUseCase);
 //const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
