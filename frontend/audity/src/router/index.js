@@ -19,7 +19,7 @@ const routes = [
 
             {
                 path: '',
-                name: 'dashboard',
+                name: 'Dashboard',
                 component: () => import('../components/Dashboard'),
             },
             {
