@@ -33,16 +33,15 @@ class SpaceController {
         });
 
         // returns all spaces [requires creator id in header]
+        // /:spaceId returns content -> included in ContentController
 
         router.get('/', async (req, res) => {
             console.log(req.get('creatorId'))
-
-            // send creator-id
-            const command = new ListAllSpacesCommand();
+            const command = new ListAllSpacesCommand(req.get('creatorId') ?? "");
 
             try {
-                //receive spaces
-                //edit useCases
+                const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
+                res.send(writtenSpacesEvent.content);
             } catch (e) {
                 console.log(e.name)
                 res.status(400).send('post body is invalid');
