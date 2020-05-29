@@ -3,13 +3,20 @@
         <v-col lg="2"></v-col>
         <v-col>
             <h1>{Space name}</h1>
-            <v-container>
+            <v-container v-if="contents.length">
                 <v-card v-for="content in contents"
                         :key="content.id"
                         class="mt-3"
                         :to="{ name: 'content', params: { cid: content.id }}"
                 >
                     <v-card-title>{{content.name}}</v-card-title>
+                </v-card>
+            </v-container>
+            <v-container v-else>
+                <v-card>
+                    <v-card-text>Lass uns deinen ersten
+                        <router-link :to="{ name: 'createContent'}">Content erstellen</router-link>
+                    </v-card-text>
                 </v-card>
             </v-container>
         </v-col>
