@@ -36,6 +36,13 @@ const viewContentUseCase = new ViewContentUseCase(creatorRepository);
 const contentController = new ContentController(writeContentUseCase, listAllContentsUseCase, viewContentUseCase);
 //const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.use(bodyParser.json());
 
@@ -50,6 +57,7 @@ app.use((req, res, next) => {
 app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());
+
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
