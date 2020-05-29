@@ -5,35 +5,34 @@
         <v-card class="p-3 mt-3">
           <h1>Space erstellen</h1>
           <p>Zurück</p>
-          <div class="form">
-            <form @submit.prevent="addSpaceLocal">
-              <div class="form-row align-items-center">
-                <div class="col-auto">
-                  <input
-                    class="form-control"
-                    type="text"
-                    placeholder="Spacename..."
-                    v-model="spaceName"
-                  />
-                </div>
-                <div class="col-auto">
-                  <button type="submit" class="btn btn-primary mb-2">Space erstellen</button>
-                </div>
-              </div>
-            </form>
-          </div>
+          <v-form>
+            <v-text-field
+                        label="Name des Spaces"
+                        filled
+                        dense
+                        v-model="spaceName"
+            ></v-text-field>
+            <v-btn id="submit-btn" class="mr-4" @click="addSpace">submit</v-btn>
+          </v-form>
         </v-card>
-        <br />
+        <br>
+        <div v-if="dataChecker == 'created'">
+            <div id="alert" class="alert alert-success">
+          <strong>Erfolg!</strong> Dein Space wurde erstellt!
+        </div>
+        </div>
+
+        <div v-else-if="dataChecker == 'fail'">
+          <div id="alert" class="alert alert-danger">
+            <strong>Error!</strong> Es ist ein Fehler aufgetreten bei dem Erstellen eines Spaces!
+          </div>
+        </div>
+
+
+        <br>
         <v-card>
           <v-card-subtitle>Übersicht</v-card-subtitle>
           <v-col lg="12">
-            <ul class="list-group">
-              <li
-                class="list-group-item clearfix task"
-                v-for="space in spaces"
-                :key="space.name"
-              >{{ space.name }}</li>
-            </ul>
           </v-col>
         </v-card>
       </v-col>
@@ -57,12 +56,11 @@ import axios from "axios";
 
 export default {
   name: "Space",
-
-  // [JNR] replace/send dummy data with CouchDB-Data.
-
   data: () => ({
-    spaces: [{ name: "Scrum-Podcast" }, { name: "Mein Reisepodcast" }],
-    spaceName: ""
+    spaceName: "",
+    //Replace creator ID with LoggedIn user
+    creator: "1",
+    dataChecker: ''
   }),
   methods: {
     addSpaceLocal(){
@@ -73,41 +71,51 @@ export default {
             this.spaceName = "";
             
     },
+
+
     addSpace() {
-      console.log("Add:" + this.spaceName);
-      // [JNR] check duplicates
-      axios
-        .post("http://localhost:3000/spaces", {
-          name: this.spaceName,
-          userid: "0"
-        })
-        .then(response => {
-          if (response.data.ok) {
-            // [JNR] take back when server supports GET
-            //this.refresh();
-          } else {
-            console.log("please start server or check duplicate naming");
-          }
+      let Space = {
+        name: this.spaceName,
+        userid: this.creator
+        }
+        
+        console.log(JSON.stringify(Space))
+        axios.post('http://localhost:3000/spaces', Space)
+          .then((response) => {
+            console.log(response); 
+            this.dataChecker = 'created'    
+          }, (error) => {
+            console.log(error); 
+            this.dataChecker = 'fail' 
         });
-      this.spaceName = "";
+
+        // delete User-Input
+        this.spaceName = ""
     },
+
+
     deleteSpace() {
       //To Do
     },
+
+
     getData() {
       axios.get("http://localhost:3000/spaces").then(response => {
         this.spaces = response.data.name;
       });
     }
+
+  
+
+
   }
   // [JNR] take back when server supports GET
-
   /*
     // when the comonent is displayed, call this method to show all spaces
     mounted(){
         this.getData();
     }
-    */
+  */
 };
 </script>
 <style scoped>
