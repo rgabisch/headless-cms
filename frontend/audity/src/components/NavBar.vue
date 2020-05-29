@@ -7,7 +7,7 @@
   >
       <v-list>
         <v-list-item>
-          <v-list-item-content>Test Doe</v-list-item-content>
+          <v-list-item-content>{{ user.data.email }}</v-list-item-content>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>Dashboard</v-list-item-content>
@@ -21,12 +21,25 @@
           <v-list-item-content>Dateien</v-list-item-content>
         </v-list-item>
       </v-list>
+    <template v-slot:append>
+      <div class="pa-2">
+        <v-btn v-on:click="signOut" @click.stop="drawer = !drawer">Ausloggen</v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script>
+  import { mapGetters } from "vuex";
+  import firebase from "firebase";
 export default {
     name: 'NavBar',
+    computed: {
+      // map `this.user` to `this.$store.getters.user`
+      ...mapGetters({
+        user: "user"
+      })
+    },
     data: () => ({
       drawer: true,
       items: [
@@ -57,6 +70,19 @@ export default {
             {id: 4, name: 'Placeholder'},
           ],
         }
-      ]})
+      ]}),
+      methods: {
+    signOut() {
+
+      firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                this.$router.replace({
+                  name: "login"
+                });
+              });
+      }
+  }
 }
 </script>
