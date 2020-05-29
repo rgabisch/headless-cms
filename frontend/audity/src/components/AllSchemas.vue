@@ -3,15 +3,22 @@
         <v-col lg="2"></v-col>
         <v-col>
             <h1>Schemas</h1>
-        <v-container>
-            <v-card v-for="schema in schemas"
-                    :key="schema.id"
-                    class="mt-3"
-                    :to="{ name: 'schema', params: { id: schema.schemaId }}"
-            >
-                <v-card-title>{{schema.name}}</v-card-title>
-            </v-card>
-        </v-container>
+            <v-container v-if="schemas.length">
+                <v-card v-for="schema in schemas"
+                        :key="schema.id"
+                        class="mt-3"
+                        :to="{ name: 'schema', params: { id: schema.schemaId }}"
+                >
+                    <v-card-title>{{schema.name}}</v-card-title>
+                </v-card>
+            </v-container>
+            <v-container v-else>
+                <v-card>
+                    <v-card-text>Lass uns dein erstes
+                        <router-link :to="{ name: 'createSchema'}">Schema erstellen</router-link>
+                    </v-card-text>
+                </v-card>
+            </v-container>
         </v-col>
         <v-col lg="3" class="ml-5">
             <v-card class="p-3">
