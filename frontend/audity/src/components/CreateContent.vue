@@ -30,7 +30,7 @@
                             :get-child-payload="getChildPayloadTest"
                             @drop="onDrop($event)">
                             <div class="p-3" v-for="type in selectedSchema.types" :key="type.id">
-                                <type :id="type.id" :label="type.name" @newdata="handleData($event, type)"></type>
+                                <type :id="type.id" :label="type.name" @textInput="handleData($event, type)"></type>
                             </div>
                     </Container>
                 </v-card>
@@ -86,7 +86,7 @@
     import axios from "axios";
 
 export default {
-    name: 'Seite',
+    name: 'CreateContent',
     components: {Container, Draggable, Type},
     data: () => ({
         creator: '1',
