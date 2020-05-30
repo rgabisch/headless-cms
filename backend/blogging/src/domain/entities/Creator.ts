@@ -70,12 +70,19 @@ class Creator {
     }
 
     getSpaces(): Space[] | undefined{
-        const spaces = this.spaces.values
+        
+        var spaces = new Array();
+        var i;
+        for (i = 0; i < this.spaces.size; i++) {
+            var key = Array.from(this.spaces.keys())[i];
+            var val1 = this.spaces.get(key);  
+            spaces.push(val1);
+        }
 
         if(!spaces)
             return undefined;
 
-        return spaces.arguments;
+        return spaces;
     }
 
     getContent(id: string, spaceId: string): Content | undefined {

@@ -10,20 +10,19 @@ class ListAllContentsUseCase {
     async execute(command: ListAllSpacesCommand): Promise<ListedAllSpacesEvent> {
         const creator = await this.creatorRepository.findBy(command.creatorId);
 
-        console.log(creator)
         if (!creator) {
             throw new UnassignedIdException();
         }
 
         //get all spaces
         const spaces = <Space[]>creator.getSpaces();
-        return new ListedAllSpacesEvent(spaces);
+        return new ListedAllSpacesEvent(this.map(spaces));
     }
 
-    private map(contents: Content[]) {
-        return contents.map(content => ({
-            id: content.id,
-            name: content.name
+    private map(spaces: Space[]) {
+        return spaces.map(space => ({
+            id: space.id,
+            name: space.name
         }));
     }
 

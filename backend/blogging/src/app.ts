@@ -24,11 +24,11 @@ const port = 3000;
 const creatorRepository = new InMemoryCreatorRepository();
 creatorRepository.add(new Creator('1', new Map(), new Map()));
 
-const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()));
+const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
+const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()), listAllSpacesUseCase);
 const schemaController = new SchemaController(new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory()));
 const writeContentUseCase = new WriteContentUseCase(creatorRepository, new GlobalUniqueIdGenerator(), new TypeFactory());
 const listAllContentsUseCase = new ListAllContentsUseCase(creatorRepository);
-const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
 const contentController = new ContentController(writeContentUseCase, listAllContentsUseCase);
 //const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
