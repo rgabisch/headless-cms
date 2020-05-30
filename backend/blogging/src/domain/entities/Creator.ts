@@ -69,8 +69,8 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
-    getSpaces(): Space[] | undefined{
-        
+    getSpaces(): Space[]{
+
         var spaces = new Array();
         var i;
         for (i = 0; i < this.spaces.size; i++) {
@@ -78,9 +78,6 @@ class Creator {
             var val1 = this.spaces.get(key);  
             spaces.push(val1);
         }
-
-        if(!spaces)
-            return undefined;
 
         return spaces;
     }

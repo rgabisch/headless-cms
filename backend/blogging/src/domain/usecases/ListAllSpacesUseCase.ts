@@ -1,9 +1,8 @@
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
-import Content from "../entities/Space";
 import Space from "../entities/Space";
 
-class ListAllContentsUseCase {
+class ListAllSpacesUseCase {
     constructor(private creatorRepository: CreatorRepository) {
     }
 
@@ -39,4 +38,4 @@ export class ListedAllSpacesEvent {
 }
 
 
-export default ListAllContentsUseCase;
+export default ListAllSpacesUseCase;
