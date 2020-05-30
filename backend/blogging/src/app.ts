@@ -15,6 +15,7 @@ import TypeFactory from "./domain/factories/TypeFactory";
 import ContentController from "./infastructure/controller/ContentController";
 import WriteContentUseCase from "./domain/usecases/WriteContentUseCase";
 import ListAllContentsUseCase from "./domain/usecases/ListAllContentsUseCase";
+import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 import ViewContentUseCase from "./domain/usecases/ViewContentUseCase";
 import ViewSchemaUseCase from "./domain/usecases/ViewSchemaUseCase"
 
@@ -25,11 +26,11 @@ const port = 3000;
 const creatorRepository = new InMemoryCreatorRepository();
 creatorRepository.add(new Creator('1', new Map(), new Map()));
 
+const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
+const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()), listAllSpacesUseCase);
 const viewSchemaUseCase = new ViewSchemaUseCase(creatorRepository)
 const defineSchemaUseCase = new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory())
 const schemaController = new SchemaController(defineSchemaUseCase, viewSchemaUseCase);
-
-const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()));
 const writeContentUseCase = new WriteContentUseCase(creatorRepository, new GlobalUniqueIdGenerator(), new TypeFactory());
 const listAllContentsUseCase = new ListAllContentsUseCase(creatorRepository);
 const viewContentUseCase = new ViewContentUseCase(creatorRepository);

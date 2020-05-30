@@ -69,6 +69,19 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
+    getSpaces(): Space[]{
+
+        var spaces = new Array();
+        var i;
+        for (i = 0; i < this.spaces.size; i++) {
+            var key = Array.from(this.spaces.keys())[i];
+            var val1 = this.spaces.get(key);  
+            spaces.push(val1);
+        }
+
+        return spaces;
+    }
+
     getContent(id: string, spaceId: string): Content | undefined {
         const space = this.getSpace(spaceId);
 
