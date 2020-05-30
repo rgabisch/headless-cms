@@ -33,6 +33,11 @@
         <v-card>
           <v-card-subtitle>Übersicht</v-card-subtitle>
           <v-col lg="12">
+            <ul class="list-group">
+            <li class="list-group-item clearfix task" v-for="space in spaces" :key="space.name">
+                {{ space.name }}
+            </li>
+        </ul>
           </v-col>
         </v-card>
       </v-col>
@@ -60,7 +65,8 @@ export default {
     spaceName: "",
     //Replace creator ID with LoggedIn user
     creator: "1",
-    dataChecker: ''
+    dataChecker: '',
+    spaces:''
   }),
   methods: {
     addSpaceLocal(){
@@ -91,6 +97,8 @@ export default {
 
         // delete User-Input
         this.spaceName = ""
+        // refresh list
+        this.getData();
     },
 
 
@@ -100,22 +108,23 @@ export default {
 
 
     getData() {
-      axios.get("http://localhost:3000/spaces").then(response => {
-        this.spaces = response.data.name;
-      });
-    }
+      axios.get("http://localhost:3000/spaces",{headers: {'creatorId':1}})
+        .then(response => {this.spaces = response.data})
+        .catch(function(error){
+          console.log(error);
+          
+        });
+    },
 
   
 
 
-  }
-  // [JNR] take back when server supports GET
-  /*
+  },
+
     // when the comonent is displayed, call this method to show all spaces
     mounted(){
         this.getData();
     }
-  */
 };
 </script>
 <style scoped>
