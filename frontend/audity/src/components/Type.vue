@@ -6,7 +6,7 @@
             <v-text-field
                     placeholder=""
                     outlined
-                    v-model="test"
+                    v-model="textInput"
             ></v-text-field>
         </v-card>
     </div>
@@ -44,12 +44,12 @@
             rules: {
                 required: [value => !!value || "Required"]
             },
-            test: ''
+            textInput: ''
         }),
         watch: {
-            test: {
+            handleTextInput: {
                 handler: function() {
-                    this.$emit('newdata', this.test);
+                    this.$emit('textInput', this.textInput);
                 },
                 deep: true
             }

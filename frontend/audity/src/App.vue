@@ -1,18 +1,26 @@
 <template>
     <v-app>
 		<!-- Takes component based on route -->
-		<router-view/>
-		<nav-bar/>
+		<router-view v-if ="user"></router-view>
+		<Login v-else></Login>
+		<nav-bar v-if="user"></nav-bar>
 	</v-app>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue'
+import { mapGetters } from "vuex";
 
 export default {
 	name: 'App',
 	components: {
 		NavBar
+	},
+	computed: {
+		// map `this.user` to `this.$store.getters.user`
+		...mapGetters({
+			user: "user"
+		})
 	}
 }
 </script>

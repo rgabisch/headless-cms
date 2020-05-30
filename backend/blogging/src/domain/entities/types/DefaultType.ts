@@ -1,8 +1,8 @@
 import Type from "../Type";
 
 class DefaultType extends Type {
-    constructor() {
-        super('default');
+    constructor(id: string) {
+        super(id);
     }
 }
 

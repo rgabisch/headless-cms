@@ -1,7 +1,7 @@
 import {assert, expect, should} from 'chai';
 import Creator from "../../../src/domain/entities/Creator";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
-import Schema, {TypeDefinition, TypeMapping} from "../../../src/domain/entities/Schema";
+import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 import Content from "../../../src/domain/entities/Content";
 import {UndefinedSchemaException} from "../../../src/domain/exceptions/UndefinedSchemaException";
 import Space from "../../../src/domain/entities/Space";
@@ -96,7 +96,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.open(new Space('1', creator.id, 'name'));
             const undefinedSchema = new Schema('unit-test', 'podcast', new TypeDefinition([]));
-            const content = new Content('1', 'my first podcast', undefinedSchema, new TypeMapping([]));
+            const content = new Content('1', 'my first podcast', undefinedSchema, new TypeMappings([]));
 
             try {
                 creator.write(content, space);
@@ -111,7 +111,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
             creator.open(new Space('1', creatorId, 'name'));
-            const content = new Content('1', 'my first podcast', schema, new TypeMapping([]));
+            const content = new Content('1', 'my first podcast', schema, new TypeMappings([]));
             creator.write(content, space);
 
             const expected = creator.getContent(content.id, '1');

@@ -4,7 +4,7 @@ import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import IdGenerator from "../../shared/IdGenerator";
 import Content from "../entities/Content";
-import {TypeMapping} from "../entities/Schema";
+import {TypeMappings} from "../entities/Schema";
 import TypeFactory from "../factories/TypeFactory";
 import Space from "../entities/Space";
 
@@ -38,7 +38,7 @@ class WriteContentUseCase {
             this.idGenerator.generate(),
             command.contentName,
             creator.getSchemaBy(command.schemaId),
-            new TypeMapping(typeMapping)
+            new TypeMappings(typeMapping)
         );
 
         creator.write(content, space);
