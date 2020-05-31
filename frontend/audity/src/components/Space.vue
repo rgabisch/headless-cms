@@ -18,30 +18,27 @@
         <br>
         <div v-if="dataChecker == 'created'">
             <div id="alert" class="alert alert-success">
-          <strong>Erfolg!</strong> Dein Space wurde erstellt!
+          <strong>Erfolg!</strong> Dein Baustein wurde erstellt!
         </div>
         </div>
 
         <div v-else-if="dataChecker == 'fail'">
           <div id="alert" class="alert alert-danger">
-            <strong>Error!</strong> Es ist ein Fehler aufgetreten bei dem Erstellen eines Spaces!
+            <strong>Error!</strong> Es ist ein Fehler aufgetreten bei dem Erstellen eines neuen Elements!
           </div>
         </div>
-
-
         <br>
         <v-card>
           <v-card-subtitle>Übersicht</v-card-subtitle>
+          <v-card-text v-if="spaces == ''"><strong>Hinweis: </strong>Erstelle einen Space um in dieser Liste deine Spaces zu sehen.</v-card-text>
           <v-col lg="12">
-            <ul class="list-group">
             <li class="list-group-item clearfix task" v-for="space in spaces" :key="space.name">
-                {{ space.name }}
+                <a :href="'/spaces/' + space.id + '/contents'">{{ space.name }}</a>
             </li>
-        </ul>
+     
           </v-col>
         </v-card>
       </v-col>
-
       <v-col lg="3" class="ml-5">
         <v-card class="p-3">
           <v-card-title>Was ist ein Space?</v-card-title>
@@ -69,16 +66,6 @@ export default {
     spaces:''
   }),
   methods: {
-    addSpaceLocal(){
-            console.log('Add:' + this.spaceName);
-            this.spaces.push({
-                name: this.spaceName
-            })
-            this.spaceName = "";
-            
-    },
-
-
     addSpace() {
       let Space = {
         name: this.spaceName,
