@@ -1,20 +1,22 @@
 <template>
     <v-app>
-		<!-- Takes component based on route -->
-		<router-view v-if ="user"></router-view>
-		<Login v-else></Login>
-		<nav-bar v-if="user"></nav-bar>
+		<div>
+			<main class="py-4">
+				<router-view></router-view>
+			</main>
+		</div>
 	</v-app>
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
+//import NavBar from './components/NavBar.vue'
+//import Login from "./views/Login";
+//import Dashboard from "./components/Dashboard";
 import { mapGetters } from "vuex";
 
 export default {
 	name: 'App',
 	components: {
-		NavBar
 	},
 	computed: {
 		// map `this.user` to `this.$store.getters.user`
