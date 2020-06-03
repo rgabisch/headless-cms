@@ -1,7 +1,7 @@
 // Load Firebase modules
 import * as admin from 'firebase-admin'
 
-const serviceAccount = require('./serviceaccount.json')
+import serviceAccount from './serviceAccount'
 
 /*
 A Class to initialize a connection to the fire(data)base
