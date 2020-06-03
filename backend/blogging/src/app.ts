@@ -18,14 +18,18 @@ import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 import ViewContentUseCase from "./domain/usecases/ViewContentUseCase";
 import ViewSchemaUseCase from "./domain/usecases/ViewSchemaUseCase"
 import CreatorRepositoryFactory from "./infastructure/repositories/CreatorRepositoryFactory";
+import EnvironmentFactory from "./infastructure/environment/EnvironmentFactory";
+import Environment from "./infastructure/environment/Environment";
 
 const app = express();
 const port = 3000;
 
 const creatorRepositoryFactory = new CreatorRepositoryFactory();
-const creatorRepository = creatorRepositoryFactory.buildBy(process.env.NODE_ENV ?? "development");
+const environmentFactory = new EnvironmentFactory();
+const environment = environmentFactory.buildBy(process.env.NODE_ENV);
+const creatorRepository = creatorRepositoryFactory.buildBy(environment);
 
-if (process.env.NODE_ENV == "development") {
+if (process.env.NODE_ENV == Environment.DEV) {
     (creatorRepository as InMemoryCreatorRepository).add(new Creator('1', new Map(), new Map()));
 }
 
