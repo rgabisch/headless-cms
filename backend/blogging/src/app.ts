@@ -20,6 +20,7 @@ const controllerFactory = new ControllerFactory(new GlobalUniqueIdGenerator(), c
 const spaceController = controllerFactory.buildForSpace();
 const schemaController = controllerFactory.buildForSchema();
 const contentController = controllerFactory.buildForContent();
+const creatorController = controllerFactory.buildForCreator();
 
 if (process.env.NODE_ENV == Environment.DEV) {
     (creatorRepository as InMemoryCreatorRepository).add(new Creator('1', new Map(), new Map()));
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());
+app.use('/creators', creatorController.routes());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
@@ -38,7 +40,5 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
-
-app.get('/', (req, res) => res.send('Hello World!'));
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));
