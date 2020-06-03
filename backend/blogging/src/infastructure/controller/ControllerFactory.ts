@@ -8,7 +8,7 @@ import SpaceControllerBuilder from "../builder/SpaceControllerBuilder";
 import SchemaControllerBuilder from "../builder/SchemaControllerBuilder";
 import ContentControllerBuilder from "../builder/ContentControllerBuilder";
 
-export class ControllerFactory {
+class ControllerFactory {
     private readonly space: SpaceController;
     private readonly schema: SchemaController;
     private readonly content: ContentController;
@@ -44,3 +44,5 @@ export class ControllerFactory {
         return this.content;
     }
 }
+
+export default ControllerFactory;

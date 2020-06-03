@@ -7,7 +7,7 @@ import TypeFactory from "./domain/factories/TypeFactory";
 import CreatorRepositoryFactory from "./infastructure/repositories/CreatorRepositoryFactory";
 import EnvironmentFactory from "./infastructure/environment/EnvironmentFactory";
 import Environment from "./infastructure/environment/Environment";
-import {ControllerFactory} from "./infastructure/controller/ControllerFactory";
+import ControllerFactory from "./infastructure/controller/ControllerFactory";
 
 const app = express();
 const port = 3000;
