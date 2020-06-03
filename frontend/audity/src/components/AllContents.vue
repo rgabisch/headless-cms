@@ -36,17 +36,24 @@
 
     export default {
         name: "AllContents",
+        props: ['sid'],
         data: () => ({
-            contents: null
+            contents: []
         }),
+        computed: {
+            spaceId() {
+                return this.sid
+            }
+        },
         mounted() {
             axios
-                .get('http://localhost:3000/contents/spaces/a8a42e70-a127-11ea-9054-05581f9d528d', {headers: {'creatorId':1}})
+                .get(`http://localhost:3000/contents/spaces/${this.spaceId}`, {headers: {'creatorId':1}})
                 .then(response => (this.contents = response.data))
                 .catch(function (error) {
                     console.log(error);
                     alert(error)
                 });
+            //TODO getSpaceById() for {{ Space name }}
         }
     }
 </script>
