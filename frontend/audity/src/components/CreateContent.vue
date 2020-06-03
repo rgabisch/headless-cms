@@ -29,9 +29,9 @@
                             group-name="1"
                             :get-child-payload="getChildPayloadTest"
                             @drop="onDrop($event)">
-                            <div class="p-3" v-for="type in selectedSchema.types" :key="type.id">
-                                <type :id="type.id" :label="type.name" @textInput="handleData($event, type)"></type>
-                            </div>
+                        <div class="p-3" v-for="type in selectedSchema.types" :key="type.id">
+                            <type :id="type.id" :label="type.name" @textInput="handleData($event, type)"></type>
+                        </div>
                     </Container>
                 </v-card>
                 <v-card>
@@ -85,121 +85,117 @@
     import Type from './Type.vue'
     import axios from "axios";
 
-export default {
-    name: 'CreateContent',
-    components: {Container, Draggable, Type},
-    data: () => ({
-        creator: '1',
-        name: '',
-        schemas: [
-            {
-                'schemaId': '1',
-                'creatorId': '1',
-                'name': 'Podcast',
-                'types': [
-                    {
-                        'id': '1',
-                        'name': 'Podcast Title'
-                    },
-                    {
-                        'id': '1',
-                        'name': 'Description'
-                    },
-                    {
-                        'id': '6',
-                        'name': 'Podcast'
-                    }
-                ]
-            },
-            {
-                'creatorId': '1',
-                'name': 'Post',
-                'types': [
-                    {
-                        'id': '1',
-                        'name': 'Title'
-                    },
-                    {
-                        'id': '1',
-                        'name': 'Description'
-                    }
-                ]
-            },
-            {
-                'creatorId': '1',
-                'name': 'Vodcast',
-                'types': [
-                    {
-                        'id': '1',
-                        'name': 'Vodcast Title'
-                    },
-                    {
-                        'id': '1',
-                        'name': 'Description'
-                    },
-                    {
-                        'id': '6',
-                        'name': 'Vodcast'
-                    }
-                ]
-            },
-        ],
-        spaces: [
-            {
-                'name': 'Java & Script Podcast',
-                'id': '1',
-            },
-            {
-                'name': 'Another Space',
-                'id': '2',
-            },
-            {
-                'name': 'One more Space',
-                'id': '3',
+    export default {
+        name: 'CreateContent',
+        components: {Container, Draggable, Type},
+        data: () => ({
+            creator: '1',
+            name: '',
+            schemas: [
+                {
+                    'schemaId': '1',
+                    'creatorId': '1',
+                    'name': 'Podcast',
+                    'types': [
+                        {
+                            'id': '1',
+                            'name': 'Podcast Title'
+                        },
+                        {
+                            'id': '1',
+                            'name': 'Description'
+                        },
+                        {
+                            'id': '6',
+                            'name': 'Podcast'
+                        }
+                    ]
+                },
+                {
+                    'creatorId': '1',
+                    'name': 'Post',
+                    'types': [
+                        {
+                            'id': '1',
+                            'name': 'Title'
+                        },
+                        {
+                            'id': '1',
+                            'name': 'Description'
+                        }
+                    ]
+                },
+                {
+                    'creatorId': '1',
+                    'name': 'Vodcast',
+                    'types': [
+                        {
+                            'id': '1',
+                            'name': 'Vodcast Title'
+                        },
+                        {
+                            'id': '1',
+                            'name': 'Description'
+                        },
+                        {
+                            'id': '6',
+                            'name': 'Vodcast'
+                        }
+                    ]
+                },
+            ],
+            spaces: [],
+            selectedSchema : {},
+            selectedSpace : {},
+            cardTitle: 'Drop here',
+            formValid: false,
+            rules: {
+                required: [value => !!value || "Required"]
             }
-        ],
-        selectedSchema : {},
-        selectedSpace : {},
-        cardTitle: 'Drop here',
-        formValid: false,
-        rules: {
-            required: [value => !!value || "Required"]
+        }),
+        methods: {
+            onDrop (dropResult) {
+                this.cardTitle = dropResult.payload.name
+                this.selectedSchema = JSON.parse(JSON.stringify(dropResult.payload));
+                for (let i = 0; i < this.selectedSchema.types.length; i++) {
+                    this.selectedSchema.types[i].content = ''
+                }
+            },
+            getChildPayloadSchemas (index) {
+                return this.schemas[index]
+            },
+            getChildPayloadTest () {
+                return this.selectedSchema
+            },
+            createContent() {
+                let Content = {
+                    name: this.name,
+                    schemaId: this.selectedSchema.id,
+                    creatorId: this.creator,
+                    content: this.selectedSchema.types
+                }
+                axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
+                    .then((response) => {
+                        console.log(response);
+                    }, (error) => {
+                        console.log(error);
+                    });
+            },
+            handleData: function(e, type) {
+                type.content = e
+            },
+            getSpaces() {
+                axios.get("http://localhost:3000/spaces",{headers: {'creatorId':1}})
+                    .then(response => {this.spaces = response.data})
+                    .catch(function(error){
+                        console.log(error);
+                    });
+            },
+            //TODO getSchemas() {} when implemented in backend
+        },
+        mounted() {
+            this.$refs.form.validate();
+            this.getSpaces();
         }
-    }),
-    methods: {
-        onDrop (dropResult) {
-            this.cardTitle = dropResult.payload.name
-            this.selectedSchema = JSON.parse(JSON.stringify(dropResult.payload));
-            for (let i = 0; i < this.selectedSchema.types.length; i++) {
-                this.selectedSchema.types[i].content = ''
-            }
-        },
-        getChildPayloadSchemas (index) {
-            return this.schemas[index]
-        },
-        getChildPayloadTest () {
-            return this.selectedSchema
-        },
-        createContent() {
-            let Content = {
-                //name: this.name,
-                schemaId: this.selectedSchema.schemaId,
-                creatorId: this.creator,
-                content: this.selectedSchema.types
-            }
-            axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
-                .then((response) => {
-                    console.log(response);
-                }, (error) => {
-                    console.log(error);
-                });
-        },
-        handleData: function(e, type) {
-            type.content = e
-        }
-    },
-    mounted() {
-        this.$refs.form.validate();
     }
-}
 </script>

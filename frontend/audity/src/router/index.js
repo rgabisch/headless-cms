@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -34,15 +35,13 @@ const routes = [
                 component: () => import('../components/CreateContent'),
             },
             {
-                //path: '/spaces/:sid/contents',
-                path: '/spaces/a8a42e70-a127-11ea-9054-05581f9d528d/contents',
+                path: '/spaces/:sid/contents',
                 name: 'listAllContents',
                 props: true,
                 component: () => import('../components/AllContents'),
             },
             {
-                //path: '/spaces/:sid/contents/:cid',
-                path: '/spaces/a8a42e70-a127-11ea-9054-05581f9d528d/contents/:cid',
+                path: '/spaces/:sid/contents/:cid',
                 name: 'content',
                 props: true,
                 component: () => import('../components/Content')
@@ -73,6 +72,7 @@ const router = new VueRouter({
     routes
 })
 
+
 router.beforeEach((to, from, next) =>{
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const currentUser = firebase.auth().currentUser;
@@ -81,7 +81,4 @@ router.beforeEach((to, from, next) =>{
     }else{
         next();
     }
-
-});
-
 export default router

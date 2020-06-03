@@ -35,7 +35,7 @@
 
     export default {
         name: "Content",
-        props: ['cid'],
+        props: ['sid','cid'],
         data: () => ({
             content: '',
 
@@ -43,12 +43,14 @@
         computed: {
             contentId() {
                 return this.cid
-            }
+            },
+            spaceId() {
+                return this.sid
+            },
         },
         mounted() {
-            axios
-                .get('http://localhost:3000/contents/'+ this.contentId +'/spaces/a8a42e70-a127-11ea-9054-05581f9d528d',
-                    {headers: {'creatorId':1}})
+            axios.get(`http://localhost:3000/contents/${this.contentId}/spaces/${this.spaceId}`,
+                {headers: {'creatorId':1}})
                 .then(response => (this.content = response.data))
                 .catch(function (error) {
                     console.log(error);
