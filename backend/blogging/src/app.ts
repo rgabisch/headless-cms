@@ -4,7 +4,6 @@ import bodyParser from 'body-parser'
 import SpaceController from "./infastructure/controller/RepositoryController";
 import OpenSpaceUseCase from "./domain/usecases/OpenSpaceUseCase";
 import InMemorySpaceRepository from "./infastructure/repositories/InMemorySpaceRepository";
-//import FireBaseSpaceRepository from "./infastructure/repositories/FireBaseSpaceRepository";
 import GlobalUniqueIdGenerator from "./shared/GlobalUniqueIdGenerator";
 import SchemaController from "./infastructure/controller/SchemaController";
 import DefineSchemaUseCase from "./domain/usecases/DefineSchemaUseCase";
@@ -18,17 +17,24 @@ import ListAllContentsUseCase from "./domain/usecases/ListAllContentsUseCase";
 import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 import ViewContentUseCase from "./domain/usecases/ViewContentUseCase";
 import ViewSchemaUseCase from "./domain/usecases/ViewSchemaUseCase"
+import {CreatorRepository} from "./domain/repositories/CreatorRepository";
+import FireBaseCreatorRepository from "./infastructure/repositories/FireBaseCreatorRepository";
 
 const app = express();
 const port = 3000;
 
+const environmentByRepository = new Map<string, CreatorRepository>().set("development", new InMemoryCreatorRepository())
+                                                                    .set("production", new FireBaseCreatorRepository());
 
-const creatorRepository = new InMemoryCreatorRepository();
-creatorRepository.add(new Creator('1', new Map(), new Map()));
+const creatorRepository = <CreatorRepository>environmentByRepository.get(process.env.NODE_ENV ?? "development");
+
+if (process.env.NODE_ENV == "development") {
+    (creatorRepository as InMemoryCreatorRepository).add(new Creator('1', new Map(), new Map()));
+}
 
 const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
 const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()), listAllSpacesUseCase);
-const viewSchemaUseCase = new ViewSchemaUseCase(creatorRepository)
+const viewSchemaUseCase = new ViewSchemaUseCase(creatorRepository);
 const defineSchemaUseCase = new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory())
 const schemaController = new SchemaController(defineSchemaUseCase, viewSchemaUseCase);
 const writeContentUseCase = new WriteContentUseCase(creatorRepository, new GlobalUniqueIdGenerator(), new TypeFactory());
