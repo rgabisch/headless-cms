@@ -2,10 +2,11 @@ import {assert} from 'chai';
 
 import CreateCreatorUseCase from "../../../src/domain/usecases/CreateCreatorUseCase";
 import CreateCreatorCommand from "../../../src/domain/commands/CreateCreatorCommand";
-import {AssignedIdException} from "../../../src/domain/exceptions/AssignedIdException";
+import AssignedIdException from "../../../src/domain/exceptions/AssignedIdException";
 import CreateCreatorEvent from "../../../src/domain/events/CreateCreatorEvent";
 import {CreatorRepository} from "../../../src/domain/repositories/CreatorRepository";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
+import Creator from "../../../src/domain/entities/Creator";
 
 suite('Create Creator Use Case', () => {
 
@@ -20,9 +21,11 @@ suite('Create Creator Use Case', () => {
         });
 
         test('given an assigned id -> throws an exception', async () => {
-            let exception;
-            const command = new CreateCreatorCommand('1');
+            const assignedId = '1';
+            await creatorRepository.add(new Creator(assignedId, new Map(), new Map()));
+            const command = new CreateCreatorCommand(assignedId);
 
+            let exception;
             try {
                 await testSubject.execute(command);
             } catch (e) {
@@ -33,6 +36,7 @@ suite('Create Creator Use Case', () => {
         });
 
         test('given an unassigned id -> create an creator', async () => {
+            await creatorRepository.add(new Creator('1', new Map(), new Map()));
             const unassignedId = '2';
             const command = new CreateCreatorCommand(unassignedId);
 
@@ -45,6 +49,7 @@ suite('Create Creator Use Case', () => {
         });
 
         test('given an unassigned id -> stores creator in the repository', async () => {
+            await creatorRepository.add(new Creator('1', new Map(), new Map()));
             const unassignedId = '2';
             const command = new CreateCreatorCommand(unassignedId);
 

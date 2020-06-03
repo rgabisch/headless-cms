@@ -1,6 +1,8 @@
 import CreateCreatorCommand from "../commands/CreateCreatorCommand";
 import CreateCreatorEvent from "../events/CreateCreatorEvent";
 import {CreatorRepository} from "../repositories/CreatorRepository";
+import AssignedIdException from "../exceptions/AssignedIdException";
+import Creator from "../entities/Creator";
 
 class CreateCreatorUseCase {
 
@@ -8,7 +10,14 @@ class CreateCreatorUseCase {
     }
 
     async execute(command: CreateCreatorCommand): Promise<CreateCreatorEvent> {
-        return new CreateCreatorEvent('test')
+        const creator = await this.creatorRepository.findBy(command.id);
+
+        if (creator)
+            throw new AssignedIdException();
+
+        await this.creatorRepository.add(new Creator(command.id, new Map(), new Map()))
+
+        return new CreateCreatorEvent(command.id);
     }
 
 }
