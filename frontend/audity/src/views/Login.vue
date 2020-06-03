@@ -18,6 +18,7 @@
                                             name="email"
                                             value
                                             required
+                                            autocomplete="on"
                                             autofocus
                                             v-model="form.email"
                                     />
@@ -34,6 +35,7 @@
                                             class="form-control"
                                             name="password"
                                             required
+                                            autocomplete="on"
                                             v-model="form.password"
                                     />
                                 </div>
@@ -53,7 +55,7 @@
 </template>
 
 <script>
-    import firebase from "firebase";
+    import firebase from 'firebase/app';
 
     export default {
         data() {

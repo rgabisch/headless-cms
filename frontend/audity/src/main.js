@@ -4,7 +4,8 @@ import VueRouter from 'vue-router';
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 import router from './router'
 import axios from 'axios';
-import * as firebase from "firebase";
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/analytics';
 import store from "./store";
 

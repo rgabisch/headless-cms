@@ -7,7 +7,7 @@
   >
       <v-list>
         <v-list-item>
-          <v-list-item-content>{{ user.data.email }}</v-list-item-content>
+          <v-list-item-content v-if="user.data.email != undefined">{{ user.data.email }}</v-list-item-content>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>Dashboard</v-list-item-content>
@@ -31,7 +31,7 @@
 
 <script>
   import { mapGetters } from "vuex";
-  import firebase from "firebase";
+  import firebase from 'firebase/app';
 export default {
     name: 'NavBar',
     computed: {
