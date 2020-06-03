@@ -33,15 +33,13 @@ const routes = [
                 component: () => import('../components/CreateContent'),
             },
             {
-                //path: '/spaces/:sid/contents',
-                path: '/spaces/a8a42e70-a127-11ea-9054-05581f9d528d/contents',
+                path: '/spaces/:sid/contents',
                 name: 'listAllContents',
                 props: true,
                 component: () => import('../components/AllContents'),
             },
             {
-                //path: '/spaces/:sid/contents/:cid',
-                path: '/spaces/a8a42e70-a127-11ea-9054-05581f9d528d/contents/:cid',
+                path: '/spaces/:sid/contents/:cid',
                 name: 'content',
                 props: true,
                 component: () => import('../components/Content')
