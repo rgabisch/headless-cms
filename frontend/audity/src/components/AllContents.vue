@@ -47,7 +47,7 @@
         },
         mounted() {
             axios
-                .get('http://localhost:3000/contents/spaces/'+ this.spaceId, {headers: {'creatorId':1}})
+                .get(`http://localhost:3000/contents/spaces/${this.spaceId}`, {headers: {'creatorId':1}})
                 .then(response => (this.contents = response.data))
                 .catch(function (error) {
                     console.log(error);
