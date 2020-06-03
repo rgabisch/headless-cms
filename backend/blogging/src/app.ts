@@ -17,16 +17,13 @@ import ListAllContentsUseCase from "./domain/usecases/ListAllContentsUseCase";
 import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 import ViewContentUseCase from "./domain/usecases/ViewContentUseCase";
 import ViewSchemaUseCase from "./domain/usecases/ViewSchemaUseCase"
-import {CreatorRepository} from "./domain/repositories/CreatorRepository";
-import FireBaseCreatorRepository from "./infastructure/repositories/FireBaseCreatorRepository";
+import CreatorRepositoryFactory from "./infastructure/repositories/CreatorRepositoryFactory";
 
 const app = express();
 const port = 3000;
 
-const environmentByRepository = new Map<string, CreatorRepository>().set("development", new InMemoryCreatorRepository())
-                                                                    .set("production", new FireBaseCreatorRepository());
-
-const creatorRepository = <CreatorRepository>environmentByRepository.get(process.env.NODE_ENV ?? "development");
+const creatorRepositoryFactory = new CreatorRepositoryFactory();
+const creatorRepository = creatorRepositoryFactory.buildBy(process.env.NODE_ENV ?? "development");
 
 if (process.env.NODE_ENV == "development") {
     (creatorRepository as InMemoryCreatorRepository).add(new Creator('1', new Map(), new Map()));
@@ -41,7 +38,6 @@ const writeContentUseCase = new WriteContentUseCase(creatorRepository, new Globa
 const listAllContentsUseCase = new ListAllContentsUseCase(creatorRepository);
 const viewContentUseCase = new ViewContentUseCase(creatorRepository);
 const contentController = new ContentController(writeContentUseCase, listAllContentsUseCase, viewContentUseCase);
-//const spaceController = new SpaceController(new OpenSpaceUseCase(new FireBaseSpaceRepository(), new GlobalUniqueIdGenerator()));
 
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
