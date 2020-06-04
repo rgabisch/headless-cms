@@ -42,9 +42,9 @@
         <v-card class="p-3">
           <v-card-title>Was ist ein Space?</v-card-title>
           <v-card-text>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-            sed diam nonumy eirmod tempor invidunt ut labore et dolore
-            magna aliquyam.
+            Auf dieser Übersicht findest du deine Spaces. 
+            Spaces kannst du dir wie Projektordner vorstellen. Wenn du einen Projektordner auswählst,
+            kannst du dir die darin enthaltenen Seten anschauen und verwalten.
           </v-card-text>
         </v-card>
       </v-col>

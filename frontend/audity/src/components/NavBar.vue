@@ -9,12 +9,19 @@
         <v-list-item>
           <v-list-item-content v-if="user.data.email != undefined">{{ user.data.email }}</v-list-item-content>
         </v-list-item>
-        <v-list-item>
-          <v-list-item-content>Dashboard</v-list-item-content>
-        </v-list-item>
-        <v-list-item>
+        <v-list-item :to="dashboard">
           <v-list-item-content>
-            <v-treeview :items="items"></v-treeview>
+            Dashboard
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item >
+          <v-list-item-content >
+            <v-treeview :items="items">
+              <template slot="label" slot-scope="props" activatable color="warning" >
+                <router-link :to="props.item.to" v-if="props.item.to">{{ props.item.name }}</router-link>
+                <span v-else>{{ props.item.name }}</span>
+            </template>
+            </v-treeview>
           </v-list-item-content>
         </v-list-item>
         <v-list-item>
@@ -42,32 +49,42 @@ export default {
     },
     data: () => ({
       drawer: true,
+      dashboard: '/',
       items: [
         {
           id: 1,
           name: 'Spaces',
           children: [
-            {id: 2, name: 'Placeholder'},
-            {id: 3, name: 'Placeholder'},
-            {id: 4, name: 'Placeholder'},
+            {
+              id: 2, 
+              name: 'Übersicht',
+              to: '/spaces'},
+            {
+              id: 3,
+              name: 'Erstellen',
+              to: '/spaces'
+            },
           ],
         },
         {
           id: 2,
           name: 'Seiten',
           children: [
-            {id: 2, name: 'Placeholder'},
-            {id: 3, name: 'Placeholder'},
-            {id: 4, name: 'Placeholder'},
+            {
+              id: 2, 
+              name: 'Erstellen',
+              to: '/create-content',
+            }
           ],
         },
         {
           id: 3,
           name: 'Contenttypen',
           children: [
-            {id: 2, name: 'Podcast'},
-            {id: 3, name: 'Placeholder'},
-            {id: 4, name: 'Placeholder'},
+            {
+              id: 2, 
+              name: 'Erstellen',
+              to: '/create-contenttyp'},
           ],
         }
       ]}),
