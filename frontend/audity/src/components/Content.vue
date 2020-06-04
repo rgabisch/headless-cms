@@ -1,6 +1,5 @@
 <template>
     <v-row>
-        <v-col lg="2"></v-col>
         <v-col>
             <h1>{{content.name}}</h1>
             <p>{{content.schema.name}}</p>

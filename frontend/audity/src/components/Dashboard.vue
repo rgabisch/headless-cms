@@ -1,7 +1,5 @@
 <template>
         <v-row>
-            <NavBar></NavBar>
-            <v-col lg="2"></v-col>
             <v-col>
                 <v-row>
                     <v-col>
@@ -76,10 +74,10 @@
 
 <script>
     import { mapGetters } from "vuex";
-    import NavBar from "./NavBar";
+
     export default {
         components: {
-           NavBar
+
         },
         name: 'Dashboard',
 
