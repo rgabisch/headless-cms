@@ -1,7 +1,7 @@
 <template>
     <v-row>
       <v-col>
-        <v-card class="p-3 mt-3">
+        <v-card class="p-3">
           <h1>Space erstellen</h1>
           <p>Zurück</p>
           <v-form>
@@ -119,5 +119,8 @@ export default {
 .btn-primary:active,
 .btn-primary:visited {
   background-color: rgb(235, 117, 14) !important;
+}
+#error_padding{
+  margin-top: -12px;
 }
 </style>
