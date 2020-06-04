@@ -1,6 +1,5 @@
 <template>
     <v-row>
-        <v-col lg="2"></v-col>
         <v-col>
             <h1>Schemas</h1>
             <v-container v-if="schemas.length">

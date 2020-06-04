@@ -1,11 +1,5 @@
 <template>
-    <v-app>
-		<div>
-			<main class="py-4">
-				<router-view></router-view>
-			</main>
-		</div>
-	</v-app>
+	<router-view/>
 </template>
 
 <script>

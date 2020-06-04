@@ -1,6 +1,5 @@
 <template>
     <v-row>
-        <v-col lg="2"></v-col>
         <v-col>
             <h1>Seite erstellen</h1>
             <p>Zurück</p>
