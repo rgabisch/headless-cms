@@ -28,11 +28,6 @@ if (process.env.NODE_ENV == Environment.DEV) {
 
 app.use(bodyParser.json());
 
-app.use('/spaces', spaceController.routes());
-app.use('/schemas', schemaController.routes());
-app.use('/contents', contentController.routes());
-app.use('/creators', creatorController.routes());
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -40,5 +35,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
+
+app.use('/spaces', spaceController.routes());
+app.use('/schemas', schemaController.routes());
+app.use('/contents', contentController.routes());
+app.use('/creators', creatorController.routes());
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));
