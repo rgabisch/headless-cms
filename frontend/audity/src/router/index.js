@@ -10,10 +10,14 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: () => import('../views/Login')
+        component: () => import('../views/Login'),
+        meta: {
+            requiresVisitor: true
+        }
     },
-    { path: '/',
-        component: () => import('../App'),
+    {   path: '/',
+        name: 'index',
+        component: () => import('../views/Index'),
         meta: {
             requiresAuth: true
         },
@@ -75,10 +79,18 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) =>{
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor);
     const currentUser = firebase.auth().currentUser;
-    if (requiresAuth && !currentUser){
-        next();
-    }else{
+
+    if (requiresAuth && !currentUser) {
+        next('login');
+    }
+    else if (requiresVisitor && currentUser) {
+        next('/');
+    }
+    else {
         next();
     }
-export default router
+})
+
+export default router;

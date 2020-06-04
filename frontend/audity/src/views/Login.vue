@@ -74,7 +74,7 @@
                     .signInWithEmailAndPassword(this.form.email, this.form.password)
                     .then(data => {
                         console.log(data);
-                        this.$router.replace({ name: "Dashboard" });
+                        this.$router.replace({ path: '/' });
                     })
                     .catch(err => {
                         this.error = err.message;
