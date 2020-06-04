@@ -53,6 +53,16 @@ class Creator {
         return <Schema>schema;
     }
 
+    getSchemas(): Schema[]{
+        const schemas = new Array();
+        for (var i = 0; i < this.schemas.size; i++) {
+            var key = Array.from(this.schemas.keys())[i];
+            var val1 = this.schemas.get(key);  
+            schemas.push(val1);
+        }
+        return schemas
+    }
+
     hasOpens(spaceId: string): boolean {
         return !!this.spaces.get(spaceId);
     }

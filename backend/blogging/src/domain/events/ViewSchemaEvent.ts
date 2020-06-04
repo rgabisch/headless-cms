@@ -1,6 +1,8 @@
+
+import Schema from '../entities/Schema';
+
 class ViewSchemaEvent {
-    constructor(readonly id: string,
-                readonly name: string) {
+    constructor(readonly schema: Schema) {
     }
 }
 

@@ -11,6 +11,7 @@ import DefineSchemaUseCase from "./domain/usecases/DefineSchemaUseCase";
 import InMemoryCreatorRepository from "./infastructure/repositories/InMemoryCreatorRepository";
 import InMemoryTypeRepository from "./infastructure/repositories/InMemoryTypeRepository";
 import Creator from "./domain/entities/Creator";
+import Schema from "./domain/entities/Schema";
 import TypeFactory from "./domain/factories/TypeFactory";
 import ContentController from "./infastructure/controller/ContentController";
 import WriteContentUseCase from "./domain/usecases/WriteContentUseCase";
@@ -18,19 +19,38 @@ import ListAllContentsUseCase from "./domain/usecases/ListAllContentsUseCase";
 import ListAllSpacesUseCase from "./domain/usecases/ListAllSpacesUseCase";
 import ViewContentUseCase from "./domain/usecases/ViewContentUseCase";
 import ViewSchemaUseCase from "./domain/usecases/ViewSchemaUseCase"
+import ListAllSchemasUseCase from "./domain/usecases/ListAllSchemasUseCase"
+import { TypeDefinition } from './domain/entities/Schema';
 
 const app = express();
 const port = 3000;
 
 
+// Create a new Creator
 const creatorRepository = new InMemoryCreatorRepository();
-creatorRepository.add(new Creator('1', new Map(), new Map()));
+const one_creator = new Creator('1', new Map(), new Map())
+creatorRepository.add(one_creator);
+
+// Create a new Type 'Number'
+const typeFactory = new TypeFactory()
+const type_number = typeFactory.createBy("Number")
+
+// Create two Schemas
+const type_1 = new TypeDefinition([{type: type_number, name:"Count"}])
+const type_2 = new TypeDefinition([{type: type_number, name:"Alter"},{type: type_number, name:"Count"}])
+const one_schema = new Schema("2", "test_schema", type_1)
+const second_schema = new Schema("3", "test_schema_2", type_2)
+
+// Define the Schemas to the Creator
+one_creator.define(one_schema)
+one_creator.define(second_schema)
 
 const listAllSpacesUseCase = new ListAllSpacesUseCase(creatorRepository);
 const spaceController = new SpaceController(new OpenSpaceUseCase(new InMemorySpaceRepository(), creatorRepository, new GlobalUniqueIdGenerator()), listAllSpacesUseCase);
 const viewSchemaUseCase = new ViewSchemaUseCase(creatorRepository)
 const defineSchemaUseCase = new DefineSchemaUseCase(new GlobalUniqueIdGenerator(), creatorRepository, new InMemoryTypeRepository(), new TypeFactory())
-const schemaController = new SchemaController(defineSchemaUseCase, viewSchemaUseCase);
+const listAllSchemasUseCase = new ListAllSchemasUseCase(creatorRepository)
+const schemaController = new SchemaController(defineSchemaUseCase, viewSchemaUseCase, listAllSchemasUseCase);
 const writeContentUseCase = new WriteContentUseCase(creatorRepository, new GlobalUniqueIdGenerator(), new TypeFactory());
 const listAllContentsUseCase = new ListAllContentsUseCase(creatorRepository);
 const viewContentUseCase = new ViewContentUseCase(creatorRepository);

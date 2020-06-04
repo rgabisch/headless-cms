@@ -1,20 +1,20 @@
 import {CreatorRepository} from "../repositories/CreatorRepository";
-import ViewSchemaCommand from "../commands/ViewSchemaCommand";
-import ViewSchemaEvent from "../events/ViewSchemaEvent";
+import ListAllSchemasCommand from "../commands/ListAllSchemasCommand";
+import ListAllSchemasEvent from "../events/ListAllSchemasEvent";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 class ViewSchemaUseCase{
     constructor(private creatorRepository: CreatorRepository){
     }
 
-    async execute(command: ViewSchemaCommand): Promise<ViewSchemaEvent>{
+    async execute(command: ListAllSchemasCommand): Promise<ListAllSchemasEvent>{
         const creator = await this.creatorRepository.findBy(command.creatorId)
 
         if (!creator)
             throw new UnassignedIdException();
 
-        const schema = creator.getSchemaBy(command.schemaId)
-        return new ViewSchemaEvent(schema)
+        const schemas = creator.getSchemas()
+        return new ListAllSchemasEvent(schemas)
     }
 }
 
