@@ -90,59 +90,7 @@
         data: () => ({
             creator: '1',
             name: '',
-            schemas: [
-                {
-                    'schemaId': '1',
-                    'creatorId': '1',
-                    'name': 'Podcast',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Podcast Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        },
-                        {
-                            'id': '6',
-                            'name': 'Podcast'
-                        }
-                    ]
-                },
-                {
-                    'creatorId': '1',
-                    'name': 'Post',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        }
-                    ]
-                },
-                {
-                    'creatorId': '1',
-                    'name': 'Vodcast',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Vodcast Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        },
-                        {
-                            'id': '6',
-                            'name': 'Vodcast'
-                        }
-                    ]
-                },
-            ],
+            schemas: [],
             spaces: [],
             selectedSchema : {},
             selectedSpace : {},
@@ -171,8 +119,10 @@
                     name: this.name,
                     schemaId: this.selectedSchema.id,
                     creatorId: this.creator,
-                    content: this.selectedSchema.types
+                    // TODO when types are implemented
+                    content: this.selectedSchema.typeDefinition
                 }
+
                 axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
                     .then((response) => {
                         console.log(response);
@@ -190,11 +140,18 @@
                         console.log(error);
                     });
             },
-            //TODO getSchemas() {} when implemented in backend
+            getSchemas() {
+                axios.get("http://localhost:3000/schemas",{headers: {'creatorId':1}})
+                    .then(response => {this.schemas = response.data.schemas})
+                    .catch(function(error){
+                        console.log(error);
+                    });
+            }
         },
         mounted() {
             this.$refs.form.validate();
             this.getSpaces();
+            this.getSchemas();
         }
     }
 </script>

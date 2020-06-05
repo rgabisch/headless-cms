@@ -6,7 +6,7 @@
                 <v-card v-for="schema in schemas"
                         :key="schema.id"
                         class="mt-3"
-                        :to="{ name: 'schema', params: { id: schema.schemaId }}"
+                        :to="{ name: 'schema', params: { id: schema.id }}"
                 >
                     <v-card-title>{{schema.name}}</v-card-title>
                 </v-card>
@@ -24,76 +24,27 @@
                 <v-card-title>Aktionen</v-card-title>
             </v-card>
             <v-card class="p-3 mt-3">
-                {{schemas}}
+
             </v-card>
         </v-col>
     </v-row>
 </template>
 
 <script>
-    //import axios from "axios";
+    import axios from "axios";
 
     export default {
         name: "AllSchemas",
         data: () => ({
-            schemas: [
-                {
-                    'schemaId': '1',
-                    'creatorId': '1',
-                    'name': 'Podcast',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Podcast Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        },
-                        {
-                            'id': '6',
-                            'name': 'Podcast'
-                        }
-                    ]
-                },
-                {
-                    'schemaId': '2',
-                    'creatorId': '1',
-                    'name': 'Post',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        }
-                    ]
-                },
-                {
-                    'schemaId': '3',
-                    'creatorId': '1',
-                    'name': 'Vodcast',
-                    'types': [
-                        {
-                            'id': '1',
-                            'name': 'Vodcast Title'
-                        },
-                        {
-                            'id': '1',
-                            'name': 'Description'
-                        },
-                        {
-                            'id': '6',
-                            'name': 'Vodcast'
-                        }
-                    ]
-                },
-            ]
+            schemas : []
         }),
         mounted() {
-            //axios
+            axios.get("http://localhost:3000/schemas",{headers: {'creatorId':1}})
+                .then(response => {this.schemas = response.data.schemas})
+                .catch(function(error){
+                    console.log(error);
+
+                });
 
         }
     }
