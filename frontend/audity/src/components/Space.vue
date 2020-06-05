@@ -1,7 +1,7 @@
 <template>
     <v-row>
       <v-col>
-        <v-card class="p-3 mt-3">
+        <v-card class="p-3">
           <h1>Space erstellen</h1>
           <p>Zurück</p>
           <v-form>
@@ -42,9 +42,9 @@
         <v-card class="p-3">
           <v-card-title>Was ist ein Space?</v-card-title>
           <v-card-text>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-            sed diam nonumy eirmod tempor invidunt ut labore et dolore
-            magna aliquyam.
+            Auf dieser Übersicht findest du deine Spaces. 
+            Spaces kannst du dir wie Projektordner vorstellen. Wenn du einen Projektordner auswählst,
+            kannst du dir die darin enthaltenen Seten anschauen und verwalten.
           </v-card-text>
         </v-card>
       </v-col>
@@ -119,5 +119,8 @@ export default {
 .btn-primary:active,
 .btn-primary:visited {
   background-color: rgb(235, 117, 14) !important;
+}
+#error_padding{
+  margin-top: -12px;
 }
 </style>
