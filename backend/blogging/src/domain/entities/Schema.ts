@@ -5,7 +5,7 @@ import Type from "./Type";
 class Schema {
     constructor(readonly id: string,
                 readonly name: string,
-                private typeDefinition: TypeDefinition) {
+                readonly typeDefinition: TypeDefinition) {
         if (id.trim() === '')
             throw new EmptyValueException();
 

@@ -3,10 +3,13 @@ import {DefineSchemaCommand} from "../../domain/commands/DefineSchemaCommand";
 import DefineSchemaUseCase from "../../domain/usecases/DefineSchemaUseCase";
 import ViewSchemaUseCase from "../../domain/usecases/ViewSchemaUseCase";
 import ViewSchemaCommand from '../../domain/commands/ViewSchemaCommand';
+import ListAllSchemasCommand from '../../domain/commands/ListAllSchemasCommand';
+import ListAllSchemasUseCase from '../../domain/usecases/ListAllSchemasUseCase';
 
 class SchemaController {
     constructor(private defineSchemaUseCase: DefineSchemaUseCase,
-                private viewSchemaUseCase: ViewSchemaUseCase) {
+                private viewSchemaUseCase: ViewSchemaUseCase,
+                private listAllSchemasUseCase: ListAllSchemasUseCase) {
     }
 
     routes(): express.Router {
@@ -14,7 +17,6 @@ class SchemaController {
 
         router.post('/', async (req, res) => {
             const command = new DefineSchemaCommand(req.body.creatorId, req.body.name, req.body.types);
-
             try {
                 const definedSchemaEvent = await this.defineSchemaUseCase.execute(command);
                 res.send(definedSchemaEvent);
@@ -23,9 +25,19 @@ class SchemaController {
             }
         });
 
-        router.get('/:schemaId/creator/:creatorId', async (req,res) =>{
-            const command = new ViewSchemaCommand(req.params.creatorId, req.params.schemaId)
+        router.get('/', async (req,res) =>{
+            const command = new ListAllSchemasCommand(req.get('creatorId') ?? '')
+            try{
+                const listAllSchemasEvent = await this.listAllSchemasUseCase.execute(command);
+                res.send(listAllSchemasEvent)
+            } catch(e){
+                res.status(404).send('404 - No Schema found')
+            }
 
+        })
+
+        router.get('/:schemaId', async (req,res) =>{
+            const command = new ViewSchemaCommand(req.get('creatorId') ?? '', req.params.schemaId)
             try{
                 const viewSchemaEvent = await this.viewSchemaUseCase.execute(command);
                 res.send(viewSchemaEvent)
@@ -34,6 +46,8 @@ class SchemaController {
             }
 
         })
+
+       
 
         return router;
     }

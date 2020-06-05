@@ -17,15 +17,12 @@ class DefineSchemaUseCase {
 
     async execute(command: DefineSchemaCommand): Promise<DefinedSchemaEvent> {
         const creator = await this.creatorRepository.findBy(command.creatorId);
-
         if (!creator) {
             throw new UnassignedIdException();
         }
-
         if (await this.containsUnassignedIds(command.types)) {
             throw new UnassignedIdException();
         }
-
 
         const mappedCommandToTypeDefinition = command.types.map(type => ({
             type: this.typeFactory.createBy(type.id),
