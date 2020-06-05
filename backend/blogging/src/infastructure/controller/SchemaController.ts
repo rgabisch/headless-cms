@@ -26,7 +26,7 @@ class SchemaController {
         });
 
         router.get('/', async (req,res) =>{
-            const command = new ListAllSchemasCommand(req.get('creatorId') ?? '1')
+            const command = new ListAllSchemasCommand(req.get('creatorId') ?? '')
             try{
                 const listAllSchemasEvent = await this.listAllSchemasUseCase.execute(command);
                 res.send(listAllSchemasEvent)
@@ -37,7 +37,7 @@ class SchemaController {
         })
 
         router.get('/:schemaId', async (req,res) =>{
-            const command = new ViewSchemaCommand(req.get('creatorId') ?? '1', req.params.schemaId)
+            const command = new ViewSchemaCommand(req.get('creatorId') ?? '', req.params.schemaId)
             try{
                 const viewSchemaEvent = await this.viewSchemaUseCase.execute(command);
                 res.send(viewSchemaEvent)
