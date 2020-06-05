@@ -122,8 +122,7 @@
                     // TODO when types are implemented
                     content: this.selectedSchema.typeDefinition
                 }
-                console.log(Content)
-                console.log(this.selectedSpace)
+
                 axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
                     .then((response) => {
                         console.log(response);
