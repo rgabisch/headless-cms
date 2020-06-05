@@ -30,4 +30,4 @@ jobs:
       run: npm test
     
     - name: build module
-      run: npm run tsc
+      run: npm run build

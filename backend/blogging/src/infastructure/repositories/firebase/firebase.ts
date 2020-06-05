@@ -1,7 +1,7 @@
 // Load Firebase modules
 import * as admin from 'firebase-admin'
-
-const serviceAccount = require('./serviceaccount.json')
+import serviceAccount from './serviceaccount.json'
+import {Storage} from '@google-cloud/storage';
 
 /*
 A Class to initialize a connection to the fire(data)base
@@ -12,16 +12,25 @@ class Firebase {
 
     // Root-Destination (e.g. 'Space', 'Type', ...)
     root: string;
+    storage: any;
 
     // Constructor to initialize the database connection
     constructor(root: string) {
 
         admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-            databaseURL: "https://headless-cms-15c61.firebaseio.com"
+            credential: admin.credential.cert({
+                clientEmail: serviceAccount.client_email,
+                privateKey: serviceAccount.private_key,
+                projectId: serviceAccount.project_id
+            }),
+            databaseURL: "https://headless-cms-15c61.firebaseio.com",
+            storageBucket: "headless-cms-15c61.appspot.com"
         });
 
-        this.root = root
+        this.root = root;
+        const storage = new Storage({keyFilename: "./serviceaccount.json"});
+        this.storage = storage.bucket("headless-cms-15c61.appspot.com")
+
     }
 
 
@@ -47,6 +56,26 @@ class Firebase {
 
 
     /*
+    Download Data from the Storage
+
+    param:
+        filename (string) : download data with given filename
+
+    return:
+        object : the data stored in storage
+    */
+    async storage_get(filename: string) {
+        if (await this.storage_exists(filename)) {
+            let data = await this.storage.file(this.root + "/" + filename).download()
+            return data
+        } else {
+            console.log(`[ERROR]: Read Storage - Object with Filename ${filename} doesn't exists`)
+        }
+
+    }
+
+
+    /*
     Insert Data into the reference
 
     param:
@@ -63,6 +92,30 @@ class Firebase {
             }
         } else {
             console.log(`[ERROR]: Insert - ID can't be empty`)
+        }
+    }
+
+    /*
+    Insert Data into the Storage
+
+    param:
+        filename (string): the new given id/filename
+        key_values (buffer or string): the data to be stored
+    */
+
+    async storage_add(filename: string, key_values: any) {
+        if (filename.trim() != "") {
+            if (await this.storage_exists(filename)) {
+                console.log(`[ERROR]: Insert - Object with Filename ${filename} already exists`)
+            } else {
+                this.storage.file(this.root + "/" + filename).save(key_values, function (err: any) {
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+            }
+        } else {
+            console.log(`[ERROR]: Insert - Filename can't be empty`)
         }
     }
 
@@ -88,6 +141,29 @@ class Firebase {
 
 
     /*
+ Remove Data from the Storage
+
+ param:
+     filename (string): the object to be removed
+ */
+    async storage_remove(filename: string) {
+        if (filename.trim() != "") {
+            if (!await this.storage_exists(filename)) {
+                console.log(`[ERROR]: Remove - Object with Filename ${filename} doesn't exist`)
+            } else {
+                this.storage.file(this.root + "/" + filename).delete(function (err: any, apiResponse: any) {
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+            }
+        } else {
+            console.log(`[ERROR]: Remove - Filename can't be empty`)
+        }
+    }
+
+
+    /*
     Update Data within the reference
 
     param:
@@ -104,6 +180,30 @@ class Firebase {
             }
         } else {
             console.log(`[ERROR]: Update - ID can't be empty`)
+        }
+    }
+
+    /*
+  Update existing Data in the the Storage
+
+  param:
+      filename (string): the new given id/filename
+      key_values (buffer or string): the data to be stored
+  */
+
+    async storage_update(filename: string, key_values: any) {
+        if (filename.trim() != "") {
+            if (!await this.storage_exists(filename)) {
+                console.log(`[ERROR]: Remove - Object with Filename ${filename} doesn't exist`)
+            } else {
+                this.storage.file(this.root + "/" + filename).save(key_values, function (err: any) {
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+            }
+        } else {
+            console.log(`[ERROR]: Insert - Filename can't be empty`)
         }
     }
 
@@ -145,8 +245,23 @@ class Firebase {
     async exists(ref: admin.database.Reference): Promise<any> {
         return (await ref.once('value')).exists()
     }
-}
 
+    /*
+ Look up if any Object(s) exists in the Storage
+
+ param:
+     filename (string): filename of the Object
+
+ Return:
+     true : if any object(s) exists
+     false: if any object(s) doesn't exists
+ */
+    async storage_exists(filename: string) {
+        let data = await this.storage.file(this.root + "/" + filename).exists()
+        return data[0]
+    }
+
+}
 
 export default Firebase
 

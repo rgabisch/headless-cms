@@ -4,19 +4,22 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "tsc": "tsc",
-    "dev": "nodemon -e js,ts src/app.ts",
+    "build": "tsc",
     "test": "mocha -r ts-node/register --ui tdd test/**/*.ts",
-    "prestart": "tsc",
-    "start": "node ./dist/app.js"
+    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts src/app.ts",
+    "prestart:dev": "npm run build",
+    "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
+    "prestart:prod": "npm run build",
+    "start:prod": "cross-env NODE_ENV=production node ./dist/app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^5.0.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "uuid": "^8.0.0",
-    "firebase-admin": "latest"
+    "firebase-admin": "latest",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
@@ -25,6 +28,7 @@
     "@types/node": "^14.0.1",
     "@types/uuid": "^7.0.3",
     "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.4",
     "ts-node": "^8.10.1",

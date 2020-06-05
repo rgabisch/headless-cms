@@ -27,14 +27,20 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
+
+// Initialize the app only when we are sure Firebase Auth object is ready to use
+// Now when refreshing the page, or trying to access view from url, won't redirect to /login
+let app = '';
+
 firebase.auth().onAuthStateChanged(user => {
   store.dispatch("fetchUser", user);
+
+  if(!app) {
+    app = new Vue({
+      router,
+      vuetify,
+      store,
+      render: h => h(App),
+    }).$mount('#app')
+  }
 });
-
-
-new Vue({
-  router,
-  vuetify,
-  store,
-  render: h => h(App),
-}).$mount('#app')

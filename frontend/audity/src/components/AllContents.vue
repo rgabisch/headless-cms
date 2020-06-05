@@ -1,6 +1,5 @@
 <template>
     <v-row>
-        <v-col lg="2"></v-col>
         <v-col>
             <h1>{Space name}</h1>
             <v-container v-if="contents.length">

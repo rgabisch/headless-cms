@@ -1,6 +1,5 @@
 <template>
     <v-row>
-        <v-col lg="2"></v-col>
         <v-col>
             <h1>{{schema.name}}</h1>
             <v-card class="p-3 mt-3 text-center">
