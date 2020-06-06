@@ -9,6 +9,7 @@ import SchemaControllerBuilder from "../builder/SchemaControllerBuilder";
 import ContentControllerBuilder from "../builder/ContentControllerBuilder";
 import CreatorController from "./CreatorController";
 import CreatorControllerBuilder from "../builder/CreatorControllerBuilder";
+import DateGenerator from "../../shared/DateGenerator";
 
 class ControllerFactory {
     private readonly spaceController: SpaceController;
@@ -18,6 +19,7 @@ class ControllerFactory {
 
     constructor(private idGenerator: IdGenerator,
                 private creatorRepository: CreatorRepository,
+                private dateGenerator: DateGenerator,
                 private typeFactory: TypeFactory) {
         this.spaceController = new SpaceControllerBuilder().withIdGenerator(idGenerator)
                                                            .withCreatorRepository(creatorRepository)
@@ -32,6 +34,7 @@ class ControllerFactory {
         this.contentController = new ContentControllerBuilder().withIdGenerator(idGenerator)
                                                                .withCreatorRepository(creatorRepository)
                                                                .withTypeFactory(typeFactory)
+                                                               .withDateGenerator(dateGenerator)
                                                                .build();
 
         this.creatorController = new CreatorControllerBuilder().withIdGenerator(idGenerator)

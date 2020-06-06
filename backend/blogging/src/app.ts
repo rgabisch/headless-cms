@@ -9,6 +9,7 @@ import CreatorRepositoryFactory from "./infastructure/repositories/CreatorReposi
 import EnvironmentFactory from "./infastructure/environment/EnvironmentFactory";
 import Environment from "./infastructure/environment/Environment";
 import ControllerFactory from "./infastructure/controller/ControllerFactory";
+import CurrentDateGenerator from "./shared/CurrentDateGenerator";
 
 
 const app = express();
@@ -18,7 +19,7 @@ const creatorRepositoryFactory = new CreatorRepositoryFactory();
 const environmentFactory = new EnvironmentFactory();
 const environment = environmentFactory.buildBy(process.env.NODE_ENV);
 const creatorRepository = creatorRepositoryFactory.buildBy(environment);
-const controllerFactory = new ControllerFactory(new GlobalUniqueIdGenerator(), creatorRepository, new TypeFactory());
+const controllerFactory = new ControllerFactory(new GlobalUniqueIdGenerator(), creatorRepository, new CurrentDateGenerator(), new TypeFactory());
 const spaceController = controllerFactory.buildForSpace();
 const schemaController = controllerFactory.buildForSchema();
 const contentController = controllerFactory.buildForContent();

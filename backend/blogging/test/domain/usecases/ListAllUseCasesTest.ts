@@ -66,7 +66,7 @@ suite('List All Content Use Cases', () => {
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('4', 'Podcast', new TypeDefinition([]));
             const typeMapping = new TypeMappings([]);
-            const content = new Content('3', 'my first podcast', schema, typeMapping);
+            const content = new Content('3', 'my first podcast', schema, new Date(), typeMapping);
             space.add(content);
             creator.open(space);
             await creatorRepository.add(creator);
