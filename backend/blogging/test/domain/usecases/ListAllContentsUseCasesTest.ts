@@ -1,5 +1,4 @@
 import ListAllContentsOfASpaceUseCase, {
-    ListAllContentsCommand,
     ListedAllContentsEvent
 } from "../../../src/domain/usecases/ListAllContentsUseCase";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
@@ -9,6 +8,7 @@ import Creator from "../../../src/domain/entities/Creator";
 import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";
 import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
+import {ListAllContentsCommand} from "../../../src/domain/commands/ListAllContentsCommand";
 
 suite('List All Content Use Cases', () => {
 
@@ -62,11 +62,12 @@ suite('List All Content Use Cases', () => {
         });
 
         test('given an assigned creator id and spade id with content in this space -> returns an event with content', async () => {
+            const creationDate = new Date();
             const creator = new Creator('1', new Map(), new Map());
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('4', 'Podcast', new TypeDefinition([]));
             const typeMapping = new TypeMappings([]);
-            const content = new Content('3', 'my first podcast', schema, typeMapping);
+            const content = new Content('3', 'my first podcast', schema, creationDate, typeMapping);
             space.add(content);
             creator.open(space);
             await creatorRepository.add(creator);
@@ -74,7 +75,7 @@ suite('List All Content Use Cases', () => {
 
             const event = await testSubject.execute(command);
 
-            assert.deepEqual(event, new ListedAllContentsEvent([{id: content.id, name: content.name}]));
+            assert.deepEqual(event, new ListedAllContentsEvent([{id: content.id, name: content.name, creationDate}]));
         });
     });
 

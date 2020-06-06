@@ -1,6 +1,7 @@
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
+import {ListAllContentsCommand} from "../commands/ListAllContentsCommand";
 
 class ListAllContentsUseCase {
     constructor(private creatorRepository: CreatorRepository) {
@@ -24,18 +25,14 @@ class ListAllContentsUseCase {
     private map(contents: Content[]) {
         return contents.map(content => ({
             id: content.id,
-            name: content.name
+            name: content.name,
+            creationDate: content.creationDate
         }));
     }
 }
 
-export class ListAllContentsCommand {
-    constructor(public creatorId: string, public spaceId: string) {
-    }
-}
-
 export class ListedAllContentsEvent {
-    constructor(readonly content: { id: string, name: string }[]) {
+    constructor(readonly content: { id: string, name: string, creationDate: Date }[]) {
     }
 }
 

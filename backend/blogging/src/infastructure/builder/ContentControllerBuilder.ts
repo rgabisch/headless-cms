@@ -7,7 +7,12 @@ import ViewContentUseCase from "../../domain/usecases/ViewContentUseCase";
 class ContentControllerBuilder extends ControllerBuilder<ContentController> {
 
     build(): ContentController {
-        const writeContentUseCase = new WriteContentUseCase(this.creatorRepository, this.idGenerator, this.typeFactory);
+        const writeContentUseCase = new WriteContentUseCase(
+            this.creatorRepository,
+            this.idGenerator,
+            this.typeFactory,
+            this.dateGenerator
+        );
         const listAllContentsUseCase = new ListAllContentsUseCase(this.creatorRepository);
         const viewContentUseCase = new ViewContentUseCase(this.creatorRepository);
         return new ContentController(writeContentUseCase, listAllContentsUseCase, viewContentUseCase);

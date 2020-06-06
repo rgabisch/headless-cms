@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
 import WriteContentUseCase from "../../../src/domain/usecases/WriteContentUseCase";
 import WriteContentCommand from "../../../src/domain/commands/WriteContentCommand";
@@ -10,8 +10,9 @@ import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities
 import Content from "../../../src/domain/entities/Content";
 import Type from "../../../src/domain/entities/Type";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
-import assert = require("assert");
 import Space from "../../../src/domain/entities/Space";
+import DateGenerator from "../../../src/shared/DateGenerator";
+import StaticDateGenerator from "../../../src/shared/StaticDateGenerator";
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -49,6 +50,7 @@ class FakeTypeFactory extends TypeFactory {
 }
 
 let creator: Creator;
+let dateGenerator = new StaticDateGenerator(new Date());
 
 suite('Write Content Use Case', () => {
 
@@ -58,7 +60,12 @@ suite('Write Content Use Case', () => {
             name: typeName
         }]))), new Map());
         creatorRepository = new InMemoryCreatorRepository();
-        testSubject = new WriteContentUseCase(creatorRepository, new StaticIdGenerator(contentId), new FakeTypeFactory());
+        testSubject = new WriteContentUseCase(
+            creatorRepository,
+            new StaticIdGenerator(contentId),
+            new FakeTypeFactory(),
+            dateGenerator
+        );
     });
 
     test('given empty schema id -> throw exception for empty id', async () => {
@@ -197,11 +204,17 @@ suite('Write Content Use Case', () => {
         const writtenContentEvent = await testSubject.execute(command);
         assert.deepStrictEqual(
             writtenContentEvent,
-            new WrittenContentEvent(contentId, creatorId, [{
-                typeId: typeId,
-                name: typeName,
-                content: content
-            }]))
+            new WrittenContentEvent(
+                contentId,
+                creatorId,
+                dateGenerator.generate(),
+                [{
+                    typeId: typeId,
+                    name: typeName,
+                    content: content
+                }]
+            )
+        )
     });
 
     test('given schema id, creator id, content -> stores content', async () => {
@@ -214,22 +227,8 @@ suite('Write Content Use Case', () => {
         }]);
 
         await testSubject.execute(command);
-        const actual = (<Creator>await creatorRepository.findBy(creatorId)).getContent(contentId, spaceId);
-        assert.deepStrictEqual(
-            actual,
-            new Content(
-                contentId,
-                'my first podcast',
-                new Schema(schemaId, schemaName, new TypeDefinition([{
-                    type: new FakeType(typeId),
-                    name: typeName
-                }])),
-                new TypeMappings([{
-                    type: new FakeType(typeId),
-                    name: typeName,
-                    content: 'unit test'
-                }])
-            )
-        );
+
+        const actual = (<Creator>await creatorRepository.findBy(creatorId));
+        assert.isTrue(actual.hasWritten(contentId, spaceId));
     });
 });

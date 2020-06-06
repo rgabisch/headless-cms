@@ -7,11 +7,13 @@ import Content from "../entities/Content";
 import {TypeMappings} from "../entities/Schema";
 import TypeFactory from "../factories/TypeFactory";
 import Space from "../entities/Space";
+import DateGenerator from "../../shared/DateGenerator";
 
 class WriteContentUseCase {
     constructor(private creatorRepository: CreatorRepository,
                 private idGenerator: IdGenerator,
-                private typeFactory: TypeFactory) {
+                private typeFactory: TypeFactory,
+                private dateGenerator: DateGenerator) {
     }
 
     async execute(command: WriteContentCommand): Promise<WrittenContentEvent> {
@@ -38,6 +40,7 @@ class WriteContentUseCase {
             this.idGenerator.generate(),
             command.contentName,
             creator.getSchemaBy(command.schemaId),
+            this.dateGenerator.generate(),
             new TypeMappings(typeMapping)
         );
 
@@ -48,6 +51,7 @@ class WriteContentUseCase {
         return new WrittenContentEvent(
             content.id,
             creator.id,
+            content.creationDate,
             command.content
         );
     }

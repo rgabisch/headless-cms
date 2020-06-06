@@ -68,7 +68,7 @@ suite('View Content Use Case', () => {
             const creator = new Creator('1', new Map(), new Map());
             const space = new Space('2', creator.id, 'My Podcast');
             const schema = new Schema('1', 'podcast', new TypeDefinition([]));
-            const content = new Content('3', 'my first podcast', schema, new TypeMappings([]));
+            const content = new Content('3', 'my first podcast', schema, new Date(), new TypeMappings([]));
             creator.open(space);
             creator.define(schema);
             creator.write(content, space);
@@ -82,6 +82,7 @@ suite('View Content Use Case', () => {
                 new ViewContentEvent(
                     content.id,
                     content.name,
+                    content.creationDate,
                     {
                         id: schema.id,
                         name: schema.name

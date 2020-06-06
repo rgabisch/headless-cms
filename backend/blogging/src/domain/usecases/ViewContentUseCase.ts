@@ -26,6 +26,7 @@ class ViewContentUseCase {
         return {
             id: content.id,
             name: content.name,
+            creationDate: content.creationDate,
             schema: {
                 id: content.schemaId,
                 name: content.schemaName
