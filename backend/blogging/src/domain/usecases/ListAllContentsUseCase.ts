@@ -1,6 +1,7 @@
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
+import {ListAllContentsCommand} from "../commands/ListAllContentsCommand";
 
 class ListAllContentsUseCase {
     constructor(private creatorRepository: CreatorRepository) {
@@ -27,11 +28,6 @@ class ListAllContentsUseCase {
             name: content.name,
             creationDate: content.creationDate
         }));
-    }
-}
-
-export class ListAllContentsCommand {
-    constructor(public creatorId: string, public spaceId: string) {
     }
 }
 

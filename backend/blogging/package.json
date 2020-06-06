@@ -19,6 +19,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "firebase-admin": "latest",
+    "moment": "^2.26.0",
     "uuid": "^8.0.0"
   },
   "devDependencies": {

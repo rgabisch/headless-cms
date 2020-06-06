@@ -1,5 +1,4 @@
 import ListAllContentsOfASpaceUseCase, {
-    ListAllContentsCommand,
     ListedAllContentsEvent
 } from "../../../src/domain/usecases/ListAllContentsUseCase";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
@@ -9,6 +8,7 @@ import Creator from "../../../src/domain/entities/Creator";
 import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";
 import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
+import {ListAllContentsCommand} from "../../../src/domain/commands/ListAllContentsCommand";
 
 suite('List All Content Use Cases', () => {
 
