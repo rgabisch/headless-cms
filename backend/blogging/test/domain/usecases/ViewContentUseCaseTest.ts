@@ -82,6 +82,7 @@ suite('View Content Use Case', () => {
                 new ViewContentEvent(
                     content.id,
                     content.name,
+                    content.creationDate,
                     {
                         id: schema.id,
                         name: schema.name
