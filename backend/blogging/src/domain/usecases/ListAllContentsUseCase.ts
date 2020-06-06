@@ -24,7 +24,8 @@ class ListAllContentsUseCase {
     private map(contents: Content[]) {
         return contents.map(content => ({
             id: content.id,
-            name: content.name
+            name: content.name,
+            creationDate: content.creationDate
         }));
     }
 }
@@ -35,7 +36,7 @@ export class ListAllContentsCommand {
 }
 
 export class ListedAllContentsEvent {
-    constructor(readonly content: { id: string, name: string }[]) {
+    constructor(readonly content: { id: string, name: string, creationDate: Date }[]) {
     }
 }
 
