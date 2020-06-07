@@ -14,6 +14,7 @@ suite('List All Content Use Cases', () => {
 
     let creatorRepository: InMemoryCreatorRepository;
     let testSubject: ListAllContentsOfASpaceUseCase;
+    const dateFormat = "DD.MM.YY HH:mm";
 
     setup(() => {
         creatorRepository = new InMemoryCreatorRepository();
@@ -22,7 +23,7 @@ suite('List All Content Use Cases', () => {
 
     suite('when execute', () => {
         test('given an unassigned creator id -> throws exception', async () => {
-            const command = new ListAllContentsCommand('1', '1');
+            const command = new ListAllContentsCommand('1', '1', dateFormat);
 
             let exception;
             try {
@@ -37,7 +38,7 @@ suite('List All Content Use Cases', () => {
         test('given an unassigned space id -> throws exception', async () => {
             const creator = new Creator('1', new Map(), new Map());
             await creatorRepository.add(creator);
-            const command = new ListAllContentsCommand(creator.id, '1');
+            const command = new ListAllContentsCommand(creator.id, '1', dateFormat);
 
             let exception;
             try {
@@ -54,7 +55,7 @@ suite('List All Content Use Cases', () => {
             const space = new Space('2', creator.id, 'My Podcast');
             creator.open(space);
             await creatorRepository.add(creator);
-            const command = new ListAllContentsCommand(creator.id, space.id);
+            const command = new ListAllContentsCommand(creator.id, space.id, dateFormat);
 
             const event = await testSubject.execute(command);
 
@@ -71,7 +72,7 @@ suite('List All Content Use Cases', () => {
             space.add(content);
             creator.open(space);
             await creatorRepository.add(creator);
-            const command = new ListAllContentsCommand(creator.id, space.id);
+            const command = new ListAllContentsCommand(creator.id, space.id, dateFormat);
 
             const event = await testSubject.execute(command);
 

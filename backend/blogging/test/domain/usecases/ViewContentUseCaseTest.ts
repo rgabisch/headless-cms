@@ -13,6 +13,8 @@ suite('View Content Use Case', () => {
 
     let creatorRepository: InMemoryCreatorRepository;
     let testSubject: ViewContentUseCase;
+    const dateFormat = "DD.MM.YY HH:mm";
+
     setup(() => {
         creatorRepository = new InMemoryCreatorRepository();
         testSubject = new ViewContentUseCase(creatorRepository);
@@ -20,7 +22,7 @@ suite('View Content Use Case', () => {
 
     suite('when execute', () => {
         test('given unassigned creator id -> throws exception', async () => {
-            const command = new ViewContentCommand('1', '2', '3');
+            const command = new ViewContentCommand('1', '2', '3', dateFormat);
 
             let exception;
             try {
@@ -35,7 +37,7 @@ suite('View Content Use Case', () => {
         test('given unassigned space id -> throws exception', async () => {
             const creator = new Creator('1', new Map(), new Map());
             await creatorRepository.add(creator);
-            const command = new ViewContentCommand(creator.id, '2', '3');
+            const command = new ViewContentCommand(creator.id, '2', '3', dateFormat);
 
             let exception;
             try {
@@ -52,7 +54,7 @@ suite('View Content Use Case', () => {
             const space = new Space('2', creator.id, 'My Podcast');
             creator.open(space);
             await creatorRepository.add(creator);
-            const command = new ViewContentCommand(creator.id, space.id, '1');
+            const command = new ViewContentCommand(creator.id, space.id, '1', dateFormat);
 
             let exception;
             try {
@@ -73,7 +75,7 @@ suite('View Content Use Case', () => {
             creator.define(schema);
             creator.write(content, space);
             await creatorRepository.add(creator);
-            const command = new ViewContentCommand(creator.id, space.id, content.id);
+            const command = new ViewContentCommand(creator.id, space.id, content.id, dateFormat);
 
             const event = await testSubject.execute(command);
 

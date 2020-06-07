@@ -49,6 +49,8 @@ class FakeTypeFactory extends TypeFactory {
     }
 }
 
+const dateFormat = "DD.MM.YY HH:mm";
+
 let creator: Creator;
 let dateGenerator = new StaticDateGenerator(new Date());
 
@@ -71,10 +73,11 @@ suite('Write Content Use Case', () => {
     test('given empty schema id -> throw exception for empty id', async () => {
         let exception;
         const command = new WriteContentCommand(emptySchemaId, creatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -88,10 +91,11 @@ suite('Write Content Use Case', () => {
     test('given schema id made of whitespace -> throw exception for empty id', async () => {
         let exception;
         const command = new WriteContentCommand(whitespaceSchemaId, creatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -105,10 +109,11 @@ suite('Write Content Use Case', () => {
     test('given empty creator id -> throw exception for empty id', async () => {
         let exception;
         const command = new WriteContentCommand(schemaId, emptyCreatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -122,10 +127,11 @@ suite('Write Content Use Case', () => {
     test('given creator id made of whitespace -> throw exception for empty id', async () => {
         let exception;
         const command = new WriteContentCommand(schemaId, whitespaceCreatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -139,10 +145,11 @@ suite('Write Content Use Case', () => {
     test('given unassigned creator id -> throw exception for unassigned id', async () => {
         let exception;
         const command = new WriteContentCommand(schemaId, unassignedCreatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -159,10 +166,11 @@ suite('Write Content Use Case', () => {
 
         let exception;
         const command = new WriteContentCommand(unassignedSchemaId, creatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: typeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -177,10 +185,11 @@ suite('Write Content Use Case', () => {
     test('given type not included in the schema -> throw exception', async () => {
         let exception;
         const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
-            typeId: unassignedTypeId,
-            name: schemaName,
-            content: ''
-        }]);
+                typeId: unassignedTypeId,
+                name: schemaName,
+                content: ''
+            }],
+            dateFormat);
 
         try {
             await testSubject.execute(command)
@@ -196,10 +205,11 @@ suite('Write Content Use Case', () => {
         creator.open(new Space('1', '1', 'my personal podcast'));
         await creatorRepository.add(creator);
         const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: typeName,
-            content: content
-        }]);
+                typeId: typeId,
+                name: typeName,
+                content: content
+            }],
+            dateFormat);
 
         const writtenContentEvent = await testSubject.execute(command);
         assert.deepStrictEqual(
@@ -221,10 +231,11 @@ suite('Write Content Use Case', () => {
         await creatorRepository.add(creator);
         creator.open(new Space('1', '1', 'my personal podcast'));
         const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
-            typeId: typeId,
-            name: typeName,
-            content: 'unit test'
-        }]);
+                typeId: typeId,
+                name: typeName,
+                content: 'unit test'
+            }],
+            dateFormat);
 
         await testSubject.execute(command);
 
