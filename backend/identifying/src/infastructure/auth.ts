@@ -1,5 +1,3 @@
-import { auth } from "firebase-admin";
-
 const firebase = require('firebase')
 
 var firebaseConfig = {
