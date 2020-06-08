@@ -8,7 +8,27 @@ abstract class Type {
     }
 }
 
-class AudioFile extends Type {
+class TextType extends Type {
+
+}
+
+class RichTextType extends Type {
+
+}
+
+class NumberType extends Type {
+
+}
+
+class DateType extends Type {
+
+}
+
+class ImageType extends Type {
+
+}
+
+class AudioType extends Type {
 
 }
 
