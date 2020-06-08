@@ -18,6 +18,7 @@
     "@google-cloud/storage": "^5.0.1",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "firebase": "^7.15.0",
     "firebase-admin": "latest",
     "moment": "^2.26.0",
     "uuid": "^8.0.0"
