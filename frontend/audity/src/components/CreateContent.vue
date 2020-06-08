@@ -120,7 +120,23 @@
                     schemaId: this.selectedSchema.id,
                     creatorId: this.creator,
                     // TODO when types are implemented
-                    content: this.selectedSchema.typeDefinition
+                    content: [
+        {
+         "typeId": "1", 
+          "name": "Podcast Title",     
+          "content": "Test Podcast Title"  
+         },
+         {
+           "typeId": "1", 
+            "name": "Description",     
+            "content": "Blabala blablaaa bbballlaa"  
+          },
+          {
+             "typeId": "6", 
+              "name": "Podcast",     
+               "content": "podcast.mp3"  
+           }
+]
                 }
 
                 axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
