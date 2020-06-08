@@ -1,9 +1,13 @@
 <template>
     <v-row>
         <v-col>
+            <v-card class="p-3">
             <h1>{{content.name}}</h1>
             <p>{{content.schema.name}}</p>
-            <v-card class="p-3 mt-3 text-center">
+            </v-card>
+            <br>
+            <v-card class="p-3 mt-3">
+                <v-card-subtitle>Inhalt hinzufügen</v-card-subtitle>
                 <div class="p-3" v-for="map in content.mapping" :key="map.type.name">
                     <v-card>
                         <v-card-subtitle>{{map.type.name}}</v-card-subtitle>
