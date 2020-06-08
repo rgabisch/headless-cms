@@ -1,15 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser'
-import GlobalUniqueIdGenerator from "./shared/GlobalUniqueIdGenerator";
-import InMemoryCreatorRepository from "./infastructure/repositories/InMemoryCreatorRepository";
-import Creator from "./domain/entities/Creator";
-import Schema, {TypeDefinition} from "./domain/entities/Schema";
-import TypeFactory from "./domain/factories/TypeFactory";
-import CreatorRepositoryFactory from "./infastructure/repositories/CreatorRepositoryFactory";
-import EnvironmentFactory from "./infastructure/environment/EnvironmentFactory";
-import Environment from "./infastructure/environment/Environment";
-import ControllerFactory from "./infastructure/controller/ControllerFactory";
-import CurrentDateGenerator from "./shared/CurrentDateGenerator";
+import GlobalUniqueIdGenerator from "./blogging/src/shared/GlobalUniqueIdGenerator";
+import InMemoryCreatorRepository from "./blogging/src/infastructure/repositories/InMemoryCreatorRepository";
+import Creator from "./blogging/src/domain/entities/Creator";
+import Schema, {TypeDefinition} from "./blogging/src/domain/entities/Schema";
+import TypeFactory from "./blogging/src/domain/factories/TypeFactory";
+import CreatorRepositoryFactory from "./blogging/src/infastructure/repositories/CreatorRepositoryFactory";
+import EnvironmentFactory from "./blogging/src/infastructure/environment/EnvironmentFactory";
+import Environment from "./blogging/src/infastructure/environment/Environment";
+import ControllerFactory from "./blogging/src/infastructure/controller/ControllerFactory";
+import CurrentDateGenerator from "./blogging/src/shared/CurrentDateGenerator";
 
 
 const app = express();

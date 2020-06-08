@@ -2,11 +2,11 @@
   "name": "blogging",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.ts",
+  "main": "app.ts",
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register --ui tdd test/**/*.ts",
-    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts src/app.ts",
+    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ../app.ts",
     "prestart:dev": "npm run build",
     "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
     "prestart:prod": "npm run build",
