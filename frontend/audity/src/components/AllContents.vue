@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col>
-            <h1>{Space name}</h1>
+            <h1>{{spacename}}</h1>
             <v-container v-if="contents.length">
                 <v-card v-for="content in contents"
                         :key="content.id"
@@ -37,7 +37,8 @@
         name: "AllContents",
         props: ['sid'],
         data: () => ({
-            contents: []
+            contents: [],
+            spacename: 'undefined',
         }),
         computed: {
             spaceId() {
@@ -52,7 +53,12 @@
                     console.log(error);
                     alert(error)
                 });
+            
             //TODO getSpaceById() for {{ Space name }}
+            this.spacename = (this.$store.getters.spaceID);
+            console.log((this.$store.getters.spaceID));
+            
+            
         }
     }
 </script>

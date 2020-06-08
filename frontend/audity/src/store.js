@@ -6,12 +6,19 @@ export default new Vuex.Store({
         user: {
             loggedIn: false,
             data: null
+        },
+        space: {
+            name: '',
+            id: '2334454554325'
         }
     },
     getters: {
         user(state){
             return state.user
-        }
+        },
+        spaceID: state => {
+            return state.space.id
+          }
     },
     mutations: {
         SET_LOGGED_IN(state, value) {
@@ -19,7 +26,14 @@ export default new Vuex.Store({
         },
         SET_USER(state, data) {
             state.user.data = data;
-        }
+        },
+        SET_SPACEID(state, idnr) {
+            state.space.id = idnr;            
+        },
+        increment (state) {
+            // mutate state
+            state.space.id++
+        },
     },
     actions: {
         fetchUser({ commit }, user) {
@@ -32,6 +46,12 @@ export default new Vuex.Store({
             } else {
                 commit("SET_USER", null);
             }
+        },
+        SET_SPACEID(context, payload) {
+            setTimeout(() => {
+                context.commit('SET_SPACEID', payload)
+        }, 2000);
         }
+
     }
 });

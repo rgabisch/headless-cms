@@ -31,12 +31,25 @@
           <v-card-subtitle>Übersicht</v-card-subtitle>
           <v-card-text v-if="spaces == ''"><strong>Hinweis: </strong>Erstelle einen Space um in dieser Liste deine Spaces zu sehen.</v-card-text>
           <v-col lg="12">
-            <li class="list-group-item clearfix task" v-for="space in spaces" :key="space.name">
-                <a :href="'/spaces/' + space.id + '/contents'">{{ space.name }}</a>
-            </li>
+            <v-list-item v-for="space in spaces"
+                        :key="space.id"
+                        class="mt-3"
+                        :to="{ name: 'listAllContents', params: { sid: space.id }}"
+                        @click="commitID(space.name)"
+                        color="warning"
+            >
+          <v-list-item-content>
+            <v-list-item-title v-text="space.name"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
      
           </v-col>
         </v-card>
+
+        <v-container v-if="spaces.length">
+                
+            </v-container>
+
       </v-col>
       <v-col lg="3" class="ml-5">
         <v-card class="p-3">
@@ -62,7 +75,8 @@ export default {
     //Replace creator ID with LoggedIn user
     creator: "1",
     dataChecker: '',
-    spaces:''
+
+    spaces:'',
   }),
   methods: {
     addSpace() {
@@ -90,6 +104,10 @@ export default {
 
     deleteSpace() {
       //To Do
+    },
+
+    commitID(name) {
+      this.$store.commit("SET_SPACEID", name);      
     },
 
 
