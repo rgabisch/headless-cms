@@ -10,6 +10,11 @@ import EnvironmentFactory from "./blogging/src/infastructure/environment/Environ
 import Environment from "./blogging/src/infastructure/environment/Environment";
 import ControllerFactory from "./blogging/src/infastructure/controller/ControllerFactory";
 import CurrentDateGenerator from "./blogging/src/shared/CurrentDateGenerator";
+import IdentifyingController from "./identifying/src/infastructure/IdentifyingController";
+import SignInUseCase from "./identifying/src/domain/usecases/SignInUseCase";
+import FireBaseUserRepository from "./identifying/src/infastructure/FireBaseUserRepository";
+import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
+import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
 
 
 const app = express();
@@ -24,6 +29,9 @@ const spaceController = controllerFactory.buildForSpace();
 const schemaController = controllerFactory.buildForSchema();
 const contentController = controllerFactory.buildForContent();
 const creatorController = controllerFactory.buildForCreator();
+
+const userRepository = process.env.NODE_ENV == Environment.DEV ? new InMemoryUserRepository() : new FireBaseUserRepository();
+const identifyingController = new IdentifyingController(new SignInUseCase(userRepository), new SignUpUseCase(userRepository));
 
 
 if (process.env.NODE_ENV == Environment.DEV) {
@@ -61,5 +69,6 @@ app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());
 app.use('/creators', creatorController.routes());
+app.use('/users', identifyingController.routes());
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));

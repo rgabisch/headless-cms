@@ -81,12 +81,12 @@
     /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "./blogging/**/*",
-    "./identifying/**/*",
-    "./app.ts"
+    "blogging/src/**/*",
+    "identifying/src/**/*",
+    "app.ts"
   ],
   "exclude": [
-    "./node_modules",
-    "./**/test/**/*"
+    "node_modules",
+    "**/test/**/*"
   ]
 }
