@@ -2,8 +2,8 @@
     <v-row>
       <v-col>
         <v-card class="p-3">
-          <h1>Space erstellen</h1>
-          <p>Zurück</p>
+          <h1>Deine Spaces</h1>
+          <br>
           <v-form>
             <v-text-field
                         label="Name des Spaces"
@@ -11,7 +11,7 @@
                         dense
                         v-model="spaceName"
             ></v-text-field>
-            <v-btn id="submit-btn" class="mr-4" @click="addSpace">submit</v-btn>
+            <v-btn id="submit-btn" class="mr-4" @click="addSpace">Space erstellen</v-btn>
           </v-form>
         </v-card>
         <br>
@@ -32,10 +32,10 @@
           <v-card-text v-if="spaces == ''"><strong>Hinweis: </strong>Erstelle einen Space um in dieser Liste deine Spaces zu sehen.</v-card-text>
           <v-col lg="12">
             <v-list-item v-for="space in spaces"
-                        :key="space.id"
+                        :key="space.name"
                         class="mt-3"
                         :to="{ name: 'listAllContents', params: { sid: space.id }}"
-                        @click="commitID(space.name)"
+                        v-on:click.capture="commitID(space.name)"
                         color="warning"
             >
           <v-list-item-content>
@@ -45,12 +45,8 @@
      
           </v-col>
         </v-card>
-
-        <v-container v-if="spaces.length">
-                
-            </v-container>
-
       </v-col>
+
       <v-col lg="3" class="ml-5">
         <v-card class="p-3">
           <v-card-title>Was ist ein Space?</v-card-title>
