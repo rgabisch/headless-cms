@@ -108,6 +108,22 @@ class Creator {
         return space.getAll();
     }
 
+    getContentFromAllSpaces(): Content[] | undefined {
+
+        var collectedSpaces: Content[] | undefined = [];
+        const iterator = this.spaces.keys();
+
+        while(iterator.next().value != undefined){
+            var array = this.spaces.get(iterator.next().value)?.getAll()
+            array?.forEach(element => {
+                collectedSpaces?.push(element)
+            });
+        }
+
+        return collectedSpaces;
+
+    }
+
     hasWritten(contentId: string, spaceId: string): boolean {
         const space = this.spaces.get(spaceId);
 
