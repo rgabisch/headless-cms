@@ -3,6 +3,6 @@ import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
 import {ListAllContentsCommand} from "../commands/ListAllContentsCommand";
 
-class ListAllContentsUseCase {}
+class ListAllContentsUsersUseCase {}
 
-export default ListAllContentsUsersCommand
+export default ListAllContentsUsersUseCase

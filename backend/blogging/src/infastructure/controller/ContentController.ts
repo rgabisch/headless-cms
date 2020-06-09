@@ -10,6 +10,7 @@ import moment from "moment";
 import {WrittenContentEvent} from "../../domain/events/WriteContentEvent";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
+import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
@@ -66,6 +67,11 @@ class ContentController {
         });
 
         router.get('/', async (req, res) => {
+
+            const command = new ListAllContentsfromSpacesCommand(
+                req.get('creatorId') ?? "",
+                <string | undefined>req.query.dateFormat);
+
             try {
                 const writtenContentEvent = await this.listAllContentsUsersUseCase.execute();
 
