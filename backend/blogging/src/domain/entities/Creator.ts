@@ -111,13 +111,17 @@ class Creator {
     getContentFromAllSpaces(): Content[] | undefined {
 
         var collectedSpaces: Content[] | undefined = [];
+        const mapSize = this.spaces.size
+        var count = 0
+
         const iterator = this.spaces.keys();
 
-        while(iterator.next().value != undefined){
+        while(count < mapSize){
             var array = this.spaces.get(iterator.next().value)?.getAll()
             array?.forEach(element => {
                 collectedSpaces?.push(element)
-            });
+            })
+            count++;
         }
 
         return collectedSpaces;
