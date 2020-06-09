@@ -73,7 +73,7 @@ class ContentController {
                 <string | undefined>req.query.dateFormat);
 
             try {
-                const writtenContentEvent = await this.listAllContentsUsersUseCase.execute();
+                const writtenContentEvent = await this.listAllContentsUsersUseCase.execute(command);
 
                 const response = writtenContentEvent.content
                                                     .map(({id, name, creationDate}) => ({
