@@ -9,10 +9,12 @@ import ViewContentCommand from "../../domain/commands/ViewContentCommand";
 import moment from "moment";
 import {WrittenContentEvent} from "../../domain/events/WriteContentEvent";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
+import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
                 private listAllContentsUseCase: ListAllContentsUseCase,
+                private listAllContentsUsersUseCase: ListAllContentsUsersUseCase,
                 private viewContentUseCase: ViewContentUseCase) {
     }
 
@@ -61,9 +63,23 @@ class ContentController {
                 } catch (e) {
                     res.status(400).send('post body is invalid');
                 }
+        });
+
+        router.get('/', async (req, res) => {
+            try {
+                const writtenContentEvent = await this.listAllContentsUsersUseCase.execute();
+
+                const response = writtenContentEvent.content
+                                                    .map(({id, name, creationDate}) => ({
+                                                        id,
+                                                        name,
+                                                        creationDate: this.format(creationDate, command.dateFormat)
+                                                    }));
+                res.send(response);
+            } catch(e) {
+                res.status(400)
             }
-        )
-        ;
+        })
 
         router.get('/:contentId/spaces/:spaceId', async (req, res) => {
             const command = new ViewContentCommand(
