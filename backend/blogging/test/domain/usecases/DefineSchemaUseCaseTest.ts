@@ -8,7 +8,7 @@ import Creator from "../../../src/domain/entities/Creator";
 import MoreThan50CharactersException from "../../../src/domain/exceptions/MoreThan50CharactersException";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
 import InMemoryTypeRepository from "../../../src/infastructure/repositories/InMemoryTypeRepository";
-import Type from "../../../src/domain/entities/Type";
+import Type, {TypeId} from "../../../src/domain/entities/Type";
 import {DefinedSchemaEvent} from "../../../src/domain/events/DefineSchemaEvent";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
 import Schema, {TypeDefinition} from "../../../src/domain/entities/Schema";
@@ -35,18 +35,6 @@ const types = [{id: '1', name: 'guest description'}];
 
 let creatorRepository: InMemoryCreatorRepository;
 
-class FakeType extends Type {
-    constructor(id: string) {
-        super(id);
-    }
-}
-
-class FakeTypeFactory extends TypeFactory {
-    createBy(id: string): Type {
-        return new FakeType(id);
-    }
-}
-
 suite('Define Schema Use Case', () => {
 
     setup(async () => {
@@ -54,9 +42,9 @@ suite('Define Schema Use Case', () => {
         await creatorRepository.add(new Creator(creatorId, new Map(), new Map()));
 
         const typeRepository = new InMemoryTypeRepository();
-        await typeRepository.add(new FakeType(typeId));
+        await typeRepository.add(new Type(TypeId.Text));
 
-        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, typeRepository, new FakeTypeFactory());
+        testSubject = new DefineSchemaUseCase(new StaticIdGenerator(schemaId), creatorRepository, typeRepository, new TypeFactory());
     });
 
     suite('when execute', () => {
@@ -159,7 +147,7 @@ suite('Define Schema Use Case', () => {
             const expected = new Creator(
                 creatorId,
                 new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
-                    type: new FakeType('1'),
+                    type: new Type(TypeId.Text),
                     name: 'guest description'
                 }]))),
                 new Map()
