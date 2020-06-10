@@ -313,5 +313,36 @@ suite('Creator Entity', () => {
 
             assert.deepStrictEqual(found, schema);
         });
-    })
+    });
+
+    suite('get all schemas', () => {
+        const otherSchema = new Schema('2', 'podcast', new TypeDefinition([]));
+
+        test('given no schema -> returns no schema', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const schemas = creator.getSchemas();
+
+            assert.isEmpty(schemas);
+        });
+
+        test('given one schema -> returns schemas', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.define(schema);
+
+            const schemas = creator.getSchemas();
+
+            assert.sameMembers(schemas, [schema]);
+        });
+
+        test('given multiple schemas -> returns schemas', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.define(schema);
+            creator.define(otherSchema);
+
+            const schemas = creator.getSchemas();
+
+            assert.sameMembers(schemas, [schema, otherSchema]);
+        });
+    });
 });
