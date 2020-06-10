@@ -14,7 +14,7 @@ class ListAllSpacesUseCase {
         }
 
         //get all spaces
-        const spaces = <Space[]>creator.getSpaces();
+        const spaces = <Space[]>creator.getAllSpaces();
         return new ListedAllSpacesEvent(this.map(spaces));
     }
 

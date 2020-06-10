@@ -9,10 +9,13 @@ import ViewContentCommand from "../../domain/commands/ViewContentCommand";
 import moment from "moment";
 import {WrittenContentEvent} from "../../domain/events/WriteContentEvent";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
+import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
+import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
                 private listAllContentsUseCase: ListAllContentsUseCase,
+                private listAllContentsUsersUseCase: ListAllContentsUsersUseCase,
                 private viewContentUseCase: ViewContentUseCase) {
     }
 
@@ -43,27 +46,49 @@ class ContentController {
         });
 
         router.get('/spaces/:spaceId', async (req, res) => {
-                const command = new ListAllContentsCommand(
-                    req.get('creatorId') ?? "",
-                    req.params.spaceId,
-                    <string | undefined>req.query.dateFormat);
+            const command = new ListAllContentsCommand(
+                req.get('creatorId') ?? "",
+                req.params.spaceId,
+                <string | undefined>req.query.dateFormat);
 
-                try {
-                    const writtenContentEvent = await this.listAllContentsUseCase.execute(command);
+            try {
+                const writtenContentEvent = await this.listAllContentsUseCase.execute(command);
 
-                    const response = writtenContentEvent.content
-                                                        .map(({id, name, creationDate}) => ({
-                                                            id,
-                                                            name,
-                                                            creationDate: this.format(creationDate, command.dateFormat)
-                                                        }));
-                    res.send(response);
-                } catch (e) {
-                    res.status(400).send('post body is invalid');
-                }
+                const response = writtenContentEvent.content
+                                                    .map(({id, name, creationDate}) => ({
+                                                        id,
+                                                        name,
+                                                        creationDate: this.format(creationDate, command.dateFormat)
+                                                    }));
+                res.send(response);
+            } catch (e) {
+                res.status(400).send('post body is invalid');
             }
-        )
-        ;
+        });
+
+        router.get('/', async (req, res) => {
+
+            const command = new ListAllContentsfromSpacesCommand(
+                req.get('creatorId') ?? "",
+                <string | undefined>req.query.dateFormat);
+
+            try {
+                const writtenContentEvent = await this.listAllContentsUsersUseCase.execute(command);
+
+                const response = writtenContentEvent.spaces.map(space => ({
+                    space: space.space,
+                    content: space.contents.map(content => ({
+                        id: content.id,
+                        name: content.name,
+                        creationDate: this.format(content.creationDate, command.dateFormat)
+                    }))
+                }));
+
+                res.send(response);
+            } catch (e) {
+                res.status(400)
+            }
+        });
 
         router.get('/:contentId/spaces/:spaceId', async (req, res) => {
             const command = new ViewContentCommand(
