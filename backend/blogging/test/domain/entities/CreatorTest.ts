@@ -9,8 +9,14 @@ import Space from "../../../src/domain/entities/Space";
 suite('Creator Entity', () => {
     const creatorId = '16543';
     const schemaId = '53632';
-    const space = new Space('1', creatorId, 'name');
+    let space: Space;
     const schema = new Schema(schemaId, 'podcast', new TypeDefinition([]));
+    const content = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
+    const otherContent = new Content('2', 'my second podcast', schema, new Date(), new TypeMappings([]));
+
+    setup(() => {
+        space = new Space('1', creatorId, 'name');
+    });
 
     suite('constructor', () => {
         test('given empty id -> throws exception for empty value', () => {
@@ -123,11 +129,41 @@ suite('Creator Entity', () => {
         });
     });
 
+    suite('get contents of one space', () => {
+
+        test('given creator without spaces -> returns no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const contents = creator.getContentsOf('1');
+
+            assert.isEmpty(contents);
+        });
+
+        test('given creator with spaces without content -> returns no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+
+            const contents = creator.getContentsOf(space.id);
+
+            assert.isEmpty(contents);
+        });
+
+        test('given creator with spaces and content -> returns content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.define(schema);
+            creator.open(space);
+            creator.write(content, space);
+            creator.write(otherContent, space);
+
+            const contents = creator.getContentsOf(space.id);
+
+            assert.sameMembers(contents, [content, otherContent]);
+        });
+    });
+
     suite('get content of all spaces', () => {
 
         const secondSpace = new Space('2', creatorId, 'other name');
-        const firstContent = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
-        const secondContent = new Content('2', 'my second podcast', schema, new Date(), new TypeMappings([]));
 
         test('given creator without spaces -> returns no content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
@@ -152,12 +188,12 @@ suite('Creator Entity', () => {
             creator.open(space);
             creator.open(secondSpace);
             creator.define(schema);
-            creator.write(firstContent, space);
-            creator.write(secondContent, secondSpace);
+            creator.write(content, space);
+            creator.write(otherContent, secondSpace);
 
             const allContents = creator.getAllContents();
 
-            assert.sameMembers(allContents, [firstContent, secondContent]);
+            assert.sameMembers(allContents, [content, otherContent]);
         });
     });
 });
