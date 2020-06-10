@@ -1,4 +1,4 @@
-import {assert, expect, should} from 'chai';
+import {assert} from 'chai';
 import Creator from "../../../src/domain/entities/Creator";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
 import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
@@ -121,5 +121,43 @@ suite('Creator Entity', () => {
                 expected
             );
         });
-    })
+    });
+
+    suite('get content of all spaces', () => {
+
+        const secondSpace = new Space('2', creatorId, 'other name');
+        const firstContent = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
+        const secondContent = new Content('2', 'my second podcast', schema, new Date(), new TypeMappings([]));
+
+        test('given creator without spaces -> returns no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const allContents = creator.getAllContents();
+
+            assert.isEmpty(allContents);
+        });
+
+        test('given creator without content in spaces -> returns no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+            creator.open(secondSpace);
+
+            const allContents = creator.getAllContents();
+
+            assert.isEmpty(allContents);
+        });
+
+        test('given creator with content in spaces -> returns content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+            creator.open(secondSpace);
+            creator.define(schema);
+            creator.write(firstContent, space);
+            creator.write(secondContent, secondSpace);
+
+            const allContents = creator.getAllContents();
+
+            assert.sameMembers(allContents, [firstContent, secondContent]);
+        });
+    });
 });

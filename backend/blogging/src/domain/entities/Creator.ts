@@ -53,11 +53,11 @@ class Creator {
         return <Schema>schema;
     }
 
-    getSchemas(): Schema[]{
+    getSchemas(): Schema[] {
         const schemas = new Array();
         for (var i = 0; i < this.schemas.size; i++) {
             var key = Array.from(this.schemas.keys())[i];
-            var val1 = this.schemas.get(key);  
+            var val1 = this.schemas.get(key);
             schemas.push(val1);
         }
         return schemas
@@ -79,13 +79,13 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
-    getSpaces(): Space[]{
+    getSpaces(): Space[] {
 
         var spaces = new Array();
         var i;
         for (i = 0; i < this.spaces.size; i++) {
             var key = Array.from(this.spaces.keys())[i];
-            var val1 = this.spaces.get(key);  
+            var val1 = this.spaces.get(key);
             spaces.push(val1);
         }
 
@@ -99,33 +99,25 @@ class Creator {
             return space.get(id);
     }
 
-    getContentsOf(spaceId: string): Content[] | undefined {
+    getContentsOf(spaceId: string): Content[] {
         const space = this.spaces.get(spaceId);
 
         if (!space)
-            return undefined;
+            return [];
 
         return space.getAll();
     }
 
-    getContentFromAllSpaces(): Content[] | undefined {
+    getAllContents(): Content[] {
+        const spaceIds = this.spaces.keys();
 
-        var collectedSpaces: Content[] | undefined = [];
-        const mapSize = this.spaces.size
-        var count = 0
-
-        const iterator = this.spaces.keys();
-
-        while(count < mapSize){
-            var array = this.spaces.get(iterator.next().value)?.getAll()
-            array?.forEach(element => {
-                collectedSpaces?.push(element)
-            })
-            count++;
+        const allContents: Content[] = [];
+        for (let spaceId of spaceIds) {
+            const content = this.getContentsOf(spaceId);
+            Array.prototype.push.apply(allContents, content);
         }
 
-        return collectedSpaces;
-
+        return allContents;
     }
 
     hasWritten(contentId: string, spaceId: string): boolean {

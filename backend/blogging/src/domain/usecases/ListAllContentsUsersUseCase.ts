@@ -14,7 +14,7 @@ class ListAllContentsUsersUseCase {
             throw new UnassignedIdException();
         }
 
-        const contents = <Content[]>creator.getContentFromAllSpaces();
+        const contents = <Content[]>creator.getAllContents();
 
         return new ListedAllContentsSpacesEvent(this.map(contents));
     }
