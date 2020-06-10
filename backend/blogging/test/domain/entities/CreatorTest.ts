@@ -244,5 +244,36 @@ suite('Creator Entity', () => {
 
             assert.deepStrictEqual(found, space);
         });
-    })
+    });
+
+    suite('get all spaces', () => {
+        const otherSpace = new Space('2', creatorId, 'other space');
+
+        test('given creator without a space -> returns no space', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const spaces = creator.getSpaces();
+
+            assert.isEmpty(spaces);
+        });
+
+        test('given creator with one space -> returns one space', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+
+            const spaces = creator.getSpaces();
+
+            assert.sameMembers(spaces, [space]);
+        });
+
+        test('given creator with multiple spaces -> returns multiple spaces', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+            creator.open(otherSpace);
+
+            const spaces = creator.getSpaces();
+
+            assert.sameMembers(spaces, [space, otherSpace]);
+        });
+    });
 });
