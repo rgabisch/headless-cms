@@ -226,4 +226,23 @@ suite('Creator Entity', () => {
             assert.sameMembers(allContents, [content, otherContent]);
         });
     });
+
+    suite('get one space', () => {
+        test('given creator without a space -> returns no space', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const found = creator.getSpace('1');
+
+            assert.isUndefined(found);
+        });
+
+        test('given creator with a space -> returns a space', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+
+            const found = creator.getSpace(space.id);
+
+            assert.deepStrictEqual(found, space);
+        });
+    })
 });
