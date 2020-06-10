@@ -129,6 +129,36 @@ suite('Creator Entity', () => {
         });
     });
 
+    suite('get one content', () => {
+        test('given creator without a space -> return no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const found = creator.getContent('1', '1');
+
+            assert.isUndefined(found);
+        });
+
+        test('given creator with space without content -> return no content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+
+            const found = creator.getContent('1', space.id);
+
+            assert.isUndefined(found);
+        });
+
+        test('given creator with space and content -> return content', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(space);
+            creator.define(schema);
+            creator.write(content, space);
+
+            const found = creator.getContent(content.id, space.id);
+
+            assert.deepStrictEqual(found, content);
+        });
+    });
+
     suite('get contents of one space', () => {
 
         test('given creator without spaces -> returns no content', () => {
