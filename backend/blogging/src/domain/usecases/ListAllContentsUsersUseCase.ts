@@ -2,6 +2,7 @@ import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
 import {ListAllContentsfromSpacesCommand} from "../commands/ListAllContentsfromSpacesCommand";
+import Space from "../entities/Space";
 
 class ListAllContentsUsersUseCase {
     constructor(private creatorRepository: CreatorRepository) {
@@ -14,22 +15,32 @@ class ListAllContentsUsersUseCase {
             throw new UnassignedIdException();
         }
 
-        const contents = <Content[]>creator.getAllContents();
+        const spaces = creator.getAllSpaces();
 
-        return new ListedAllContentsSpacesEvent(this.map(contents));
+        return new ListedAllContentsSpacesEvent(this.mapSpaces(spaces));
     }
 
-    private map(contents: Content[]) {
+    private mapContents(contents: Content[]) {
         return contents.map(content => ({
             id: content.id,
             name: content.name,
             creationDate: content.creationDate
         }));
     }
+
+    private mapSpaces(spaces: Space[]) {
+        return spaces.map(space => ({
+            space: {
+                id: space.id,
+                name: space.name
+            },
+            contents: this.mapContents(space.getAll())
+        }));
+    }
 }
 
 export class ListedAllContentsSpacesEvent {
-    constructor(readonly content: { id: string, name: string, creationDate: Date }[]) {
+    constructor(readonly spaces: { space: { id: string, name: string }, contents: { id: string, name: string, creationDate: Date }[] }[]) {
     }
 }
 
