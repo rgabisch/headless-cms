@@ -252,7 +252,7 @@ suite('Creator Entity', () => {
         test('given creator without a space -> returns no space', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
 
-            const spaces = creator.getSpaces();
+            const spaces = creator.getAllSpaces();
 
             assert.isEmpty(spaces);
         });
@@ -261,7 +261,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.open(space);
 
-            const spaces = creator.getSpaces();
+            const spaces = creator.getAllSpaces();
 
             assert.sameMembers(spaces, [space]);
         });
@@ -271,9 +271,47 @@ suite('Creator Entity', () => {
             creator.open(space);
             creator.open(otherSpace);
 
-            const spaces = creator.getSpaces();
+            const spaces = creator.getAllSpaces();
 
             assert.sameMembers(spaces, [space, otherSpace]);
         });
     });
+
+    suite('get one schema', () => {
+        test('given no schema and search by id -> throws exception', () => {
+            let exception;
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            try {
+                creator.getSchemaBy('1');
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.equal(exception.name, UndefinedSchemaException.name);
+            }
+        });
+
+        test('given schema and search with an unassigned id -> throws exception', () => {
+            let exception;
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.define(schema);
+
+            try {
+                creator.getSchemaBy('unassigned');
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.equal(exception.name, UndefinedSchemaException.name);
+            }
+        });
+
+        test('given schema and search with an assigned id -> returns schema', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.define(schema);
+
+            const found = creator.getSchemaBy(schema.id);
+
+            assert.deepStrictEqual(found, schema);
+        });
+    })
 });
