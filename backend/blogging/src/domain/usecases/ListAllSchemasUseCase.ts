@@ -13,7 +13,7 @@ class ViewSchemaUseCase{
         if (!creator)
             throw new UnassignedIdException();
 
-        const schemas = creator.getSchemas()
+        const schemas = creator.getAllSchemas()
         return new ListAllSchemasEvent(schemas)
     }
 }

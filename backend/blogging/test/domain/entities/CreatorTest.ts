@@ -321,7 +321,7 @@ suite('Creator Entity', () => {
         test('given no schema -> returns no schema', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
 
-            const schemas = creator.getSchemas();
+            const schemas = creator.getAllSchemas();
 
             assert.isEmpty(schemas);
         });
@@ -330,7 +330,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
 
-            const schemas = creator.getSchemas();
+            const schemas = creator.getAllSchemas();
 
             assert.sameMembers(schemas, [schema]);
         });
@@ -340,7 +340,7 @@ suite('Creator Entity', () => {
             creator.define(schema);
             creator.define(otherSchema);
 
-            const schemas = creator.getSchemas();
+            const schemas = creator.getAllSchemas();
 
             assert.sameMembers(schemas, [schema, otherSchema]);
         });

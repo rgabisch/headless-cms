@@ -53,14 +53,8 @@ class Creator {
         return <Schema>schema;
     }
 
-    getSchemas(): Schema[] {
-        const schemas = new Array();
-        for (var i = 0; i < this.schemas.size; i++) {
-            var key = Array.from(this.schemas.keys())[i];
-            var val1 = this.schemas.get(key);
-            schemas.push(val1);
-        }
-        return schemas
+    getAllSchemas(): Schema[] {
+        return Array.from(this.schemas.values());
     }
 
     hasOpens(spaceId: string): boolean {
@@ -79,28 +73,21 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
-    getSpaces(): Space[] {
-
-        var spaces = new Array();
-        var i;
-        for (i = 0; i < this.spaces.size; i++) {
-            var key = Array.from(this.spaces.keys())[i];
-            var val1 = this.spaces.get(key);
-            spaces.push(val1);
-        }
-
-        return spaces;
+    getAllSpaces(): Space[] {
+        return Array.from(this.spaces.values());
     }
 
     getContent(id: string, spaceId: string): Content | undefined {
         const space = this.getSpace(spaceId);
 
-        if (space)
-            return space.get(id);
+        if (!space)
+            return undefined;
+
+        return space.get(id);
     }
 
     getContentsOf(spaceId: string): Content[] {
-        const space = this.spaces.get(spaceId);
+        const space = this.getSpace(spaceId);
 
         if (!space)
             return [];
@@ -109,19 +96,12 @@ class Creator {
     }
 
     getAllContents(): Content[] {
-        const spaceIds = this.spaces.keys();
-
-        const allContents: Content[] = [];
-        for (let spaceId of spaceIds) {
-            const content = this.getContentsOf(spaceId);
-            Array.prototype.push.apply(allContents, content);
-        }
-
-        return allContents;
+        const spaces = this.getAllSpaces();
+        return spaces.flatMap(space => space.getAll());
     }
 
     hasWritten(contentId: string, spaceId: string): boolean {
-        const space = this.spaces.get(spaceId);
+        const space = this.getSpace(spaceId);
 
         if (!space)
             return false;
