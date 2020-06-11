@@ -1,4 +1,4 @@
 export class SignInEvent{
-    constructor(readonly creatorId: string){
+    constructor(readonly Authorization: string){
     }
 }

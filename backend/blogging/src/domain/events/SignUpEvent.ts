@@ -1,4 +1,4 @@
 export class SignUpEvent{
-    constructor(readonly creatorId: string){
+    constructor(readonly Authorization: string){
     }
 }

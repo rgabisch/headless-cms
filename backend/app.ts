@@ -15,6 +15,8 @@ import SignInUseCase from "./identifying/src/domain/usecases/SignInUseCase";
 import FireBaseUserRepository from "./identifying/src/infastructure/FireBaseUserRepository";
 import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
 import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
+import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
+import { resolveSoa } from 'dns';
 
 
 const app = express();
@@ -30,8 +32,9 @@ const schemaController = controllerFactory.buildForSchema();
 const contentController = controllerFactory.buildForContent();
 const creatorController = controllerFactory.buildForCreator();
 
-const userRepository = process.env.NODE_ENV == Environment.DEV ? new InMemoryUserRepository() : new FireBaseUserRepository();
-const identifyingController = new IdentifyingController(new SignInUseCase(userRepository), new SignUpUseCase(userRepository));
+const fireBaseUserRepository = new FireBaseUserRepository();
+const userRepository = process.env.NODE_ENV == Environment.DEV ? new InMemoryUserRepository() : fireBaseUserRepository;
+const identifyingController = new IdentifyingController(new SignInUseCase(fireBaseUserRepository), new SignUpUseCase(fireBaseUserRepository, new CreateCreatorUseCase(creatorRepository)));
 
 
 if (process.env.NODE_ENV == Environment.DEV) {
@@ -60,15 +63,23 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, creatorId');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, creatorId, cryptedJWT');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
-
+app.use('', identifyingController.routes());
+app.use((req, res, next) =>{
+    const authorization = req.get('Authorization')
+    const promise = fireBaseUserRepository.authToken(authorization || "")
+    promise.then((encryptedAuthorization) => {
+        req.headers.creatorId = encryptedAuthorization.user_id
+        next()})
+    .catch((error) => {res.status(401).send(error)})
+})
 app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());
 app.use('/creators', creatorController.routes());
-app.use('/users', identifyingController.routes());
+
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));

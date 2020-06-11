@@ -2,10 +2,11 @@ import {SignInCommand} from "../../../../blogging/src/domain/commands/SignInComm
 import {signIn} from '../../infastructure/auth'
 import {SignInEvent} from "../../../../blogging/src/domain/events/SignInEvent";
 import UserRepository from "../UserRepository";
+import FireBaseUserRepository from "../../infastructure/FireBaseUserRepository"
 
 class SignInUseCase {
 
-    constructor(private userRepository: UserRepository) {
+    constructor(private userRepository: FireBaseUserRepository) {
     }
 
     async execute(signInCommand: SignInCommand) {
@@ -14,7 +15,7 @@ class SignInUseCase {
         if (!user)
             console.log('Somethign went wrong, look up the firebase log')
 
-        return new SignInEvent(user.user.uid)
+        return new SignInEvent(user.user.xa)
     }
 
 }

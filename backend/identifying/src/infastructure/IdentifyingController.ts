@@ -25,7 +25,7 @@ class IdentifyingController {
 
         router.post('/signup', async (req, res) => {
             const command = new SignUpCommand(req.body.email, req.body.pass);
-
+            console.log(command)
             try {
                 const signUpEvent = await this.signUpUseCase.execute(command);
                 res.send(signUpEvent)
