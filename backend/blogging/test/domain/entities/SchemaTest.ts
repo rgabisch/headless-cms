@@ -1,18 +1,12 @@
 import {assert} from 'chai';
 import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
-import Type from "../../../src/domain/entities/Type";
+import Type, {TypeId} from "../../../src/domain/entities/Type";
 
-
-class FakeType extends Type {
-    constructor(id: string) {
-        super(id);
-    }
-}
 
 suite('Schema Entity', () => {
     suite('validate if it not fit in with mapping', () => {
-        const type = new FakeType('5');
-        const otherType = new FakeType('9');
+        const type = new Type(TypeId.Date);
+        const otherType = new Type(TypeId.Audio);
 
         test('given empty mapping when schema is not empty -> return true', () => {
             const mapping = new TypeMappings([]);

@@ -1,4 +1,4 @@
-import {expect, assert} from "chai";
+import {assert, expect} from "chai";
 import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
 import WriteContentUseCase from "../../../src/domain/usecases/WriteContentUseCase";
 import WriteContentCommand from "../../../src/domain/commands/WriteContentCommand";
@@ -6,13 +6,11 @@ import {WrittenContentEvent} from "../../../src/domain/events/WriteContentEvent"
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
-import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
-import Content from "../../../src/domain/entities/Content";
-import Type from "../../../src/domain/entities/Type";
-import TypeFactory from "../../../src/domain/factories/TypeFactory";
+import Schema, {TypeDefinition} from "../../../src/domain/entities/Schema";
+import Type, {TypeId} from "../../../src/domain/entities/Type";
 import Space from "../../../src/domain/entities/Space";
-import DateGenerator from "../../../src/shared/DateGenerator";
 import StaticDateGenerator from "../../../src/shared/StaticDateGenerator";
+import TypeFactory from "../../../src/domain/factories/TypeFactory";
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -37,18 +35,6 @@ const typeName = 'unit-test';
 
 const spaceId = '1';
 
-class FakeType extends Type {
-    constructor(id: string) {
-        super(id);
-    }
-}
-
-class FakeTypeFactory extends TypeFactory {
-    createBy(id: string): Type {
-        return new FakeType(id);
-    }
-}
-
 const dateFormat = "DD.MM.YY HH:mm";
 
 let creator: Creator;
@@ -58,14 +44,14 @@ suite('Write Content Use Case', () => {
 
     setup(() => {
         creator = new Creator(creatorId, new Map<string, Schema>().set(schemaId, new Schema(schemaId, schemaName, new TypeDefinition([{
-            type: new FakeType(typeId),
+            type: new Type(TypeId.Text),
             name: typeName
         }]))), new Map());
         creatorRepository = new InMemoryCreatorRepository();
         testSubject = new WriteContentUseCase(
             creatorRepository,
             new StaticIdGenerator(contentId),
-            new FakeTypeFactory(),
+            new TypeFactory(),
             dateGenerator
         );
     });
