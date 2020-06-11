@@ -166,7 +166,7 @@ suite('Type', () => {
     suite('when validate if it is an audio', () => {
         const text = new Type(TypeId.Audio);
 
-        test('it isn audio', () => {
+        test('it is an audio', () => {
             const isAudio = text.isAudio();
 
             assert.isTrue(isAudio);
@@ -206,7 +206,7 @@ suite('Type', () => {
     suite('when validate if it is an image', () => {
         const text = new Type(TypeId.Image);
 
-        test('it isn image', () => {
+        test('it is an image', () => {
             const isImage = text.isImage();
 
             assert.isTrue(isImage);
