@@ -36,8 +36,9 @@ class SpaceController {
         // /:spaceId returns content -> included in ContentController
 
         router.get('/', async (req, res) => {
+            console.log(req.headers)
             console.log(req.get('creatorId'))
-            const command = new ListAllSpacesCommand(req.get('creatorId') ?? "");
+            const command = new ListAllSpacesCommand(req.header('creatorId') ?? "");
 
             try {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);

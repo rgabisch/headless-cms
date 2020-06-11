@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import UserRepository from "../domain/UserRepository";
+import admin from 'firebase-admin'
 
 class FireBaseUserRepository implements UserRepository {
 
@@ -16,6 +17,7 @@ class FireBaseUserRepository implements UserRepository {
         };
 
         firebase.initializeApp(config);
+        admin.initializeApp(config, 'auth')
     }
 
     async signIn(email: string, password: string): Promise<any> {
@@ -26,6 +28,11 @@ class FireBaseUserRepository implements UserRepository {
     async signUp(email: string, password: string): Promise<any> {
         const auth = firebase.auth();
         return await auth.createUserWithEmailAndPassword(email, password)
+    }
+
+    async authToken(cryptedJWT: string): Promise<any> {
+        const auth = admin.auth();
+        return await auth.verifyIdToken(cryptedJWT)
     }
 }
 
