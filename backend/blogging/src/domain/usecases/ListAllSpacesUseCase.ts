@@ -13,8 +13,8 @@ class ListAllSpacesUseCase {
             throw new UnassignedIdException();
         }
 
-        //get all spaces
-        const spaces = <Space[]>creator.getSpaces();
+        const spaces = creator.getSpaces();
+
         return new ListedAllSpacesEvent(this.map(spaces));
     }
 

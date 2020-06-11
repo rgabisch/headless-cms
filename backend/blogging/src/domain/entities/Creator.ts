@@ -53,11 +53,11 @@ class Creator {
         return <Schema>schema;
     }
 
-    getSchemas(): Schema[]{
+    getSchemas(): Schema[] {
         const schemas = new Array();
         for (var i = 0; i < this.schemas.size; i++) {
             var key = Array.from(this.schemas.keys())[i];
-            var val1 = this.schemas.get(key);  
+            var val1 = this.schemas.get(key);
             schemas.push(val1);
         }
         return schemas
@@ -79,17 +79,9 @@ class Creator {
         return this.spaces.get(spaceId);
     }
 
-    getSpaces(): Space[]{
-
-        var spaces = new Array();
-        var i;
-        for (i = 0; i < this.spaces.size; i++) {
-            var key = Array.from(this.spaces.keys())[i];
-            var val1 = this.spaces.get(key);  
-            spaces.push(val1);
-        }
-
-        return spaces;
+    getSpaces(): Space[] {
+        console.log(this.spaces);
+        return Array.from(this.spaces.values());
     }
 
     getContent(id: string, spaceId: string): Content | undefined {
