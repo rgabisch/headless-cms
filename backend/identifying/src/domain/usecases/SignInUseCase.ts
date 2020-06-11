@@ -6,7 +6,7 @@ import FireBaseUserRepository from "../../infastructure/FireBaseUserRepository"
 
 class SignInUseCase {
 
-    constructor(private userRepository: FireBaseUserRepository) {
+    constructor(private userRepository: UserRepository) {
     }
 
     async execute(signInCommand: SignInCommand) {

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha -r ts-node/register --ui tdd test/**/*.ts",
-    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ../app.ts",
+    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
     "prestart:dev": "npm run build",
     "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
     "prestart:prod": "npm run build",

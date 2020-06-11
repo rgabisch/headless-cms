@@ -16,7 +16,7 @@ import FireBaseUserRepository from "./identifying/src/infastructure/FireBaseUser
 import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
 import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
 import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
-import { resolveSoa } from 'dns';
+import {resolveSoa} from 'dns';
 
 
 const app = express();
@@ -34,7 +34,7 @@ const creatorController = controllerFactory.buildForCreator();
 
 const fireBaseUserRepository = new FireBaseUserRepository();
 const userRepository = process.env.NODE_ENV == Environment.DEV ? new InMemoryUserRepository() : fireBaseUserRepository;
-const identifyingController = new IdentifyingController(new SignInUseCase(fireBaseUserRepository), new SignUpUseCase(fireBaseUserRepository, new CreateCreatorUseCase(creatorRepository)));
+const identifyingController = new IdentifyingController(new SignInUseCase(userRepository), new SignUpUseCase(userRepository, new CreateCreatorUseCase(creatorRepository)));
 
 
 if (process.env.NODE_ENV == Environment.DEV) {
@@ -68,14 +68,25 @@ app.use((req, res, next) => {
     next();
 });
 app.use('', identifyingController.routes());
-app.use((req, res, next) =>{
-    const authorization = req.get('Authorization')
-    const promise = fireBaseUserRepository.authToken(authorization || "")
-    promise.then((encryptedAuthorization) => {
-        req.headers.creatorId = encryptedAuthorization.user_id
-        next()})
-    .catch((error) => {res.status(401).send(error)})
-})
+
+app.use(async (req, res, next) => {
+    const authorization = req.get('Authorization') ?? '';
+
+    if (process.env.NODE_ENV == Environment.DEV) {
+        req.headers._creatorId = authorization;
+        return next();
+    } else {
+        try {
+            const token = await fireBaseUserRepository.authToken(authorization);
+            req.headers._creatorId = token.user_id;
+            return next();
+        } catch (e) {
+            res.status(401).send(e);
+            next(e)
+        }
+    }
+});
+
 app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());

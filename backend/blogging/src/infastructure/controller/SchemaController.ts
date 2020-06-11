@@ -25,29 +25,28 @@ class SchemaController {
             }
         });
 
-        router.get('/', async (req,res) =>{
-            const command = new ListAllSchemasCommand(req.get('creatorId') ?? '')
-            try{
+        router.get('/', async (req, res) => {
+            const command = new ListAllSchemasCommand(<string>req.headers._creatorId);
+            try {
                 const listAllSchemasEvent = await this.listAllSchemasUseCase.execute(command);
                 res.send(listAllSchemasEvent)
-            } catch(e){
+            } catch (e) {
                 res.status(404).send('404 - No Schema found')
             }
 
         })
 
-        router.get('/:schemaId', async (req,res) =>{
-            const command = new ViewSchemaCommand(req.get('creatorId') ?? '', req.params.schemaId)
-            try{
+        router.get('/:schemaId', async (req, res) => {
+            const command = new ViewSchemaCommand(<string>req.headers._creatorId, req.params.schemaId)
+            try {
                 const viewSchemaEvent = await this.viewSchemaUseCase.execute(command);
                 res.send(viewSchemaEvent)
-            } catch(e){
+            } catch (e) {
                 res.status(404).send('404 - No Schema found')
             }
 
         })
 
-       
 
         return router;
     }

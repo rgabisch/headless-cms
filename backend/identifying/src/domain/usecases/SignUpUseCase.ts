@@ -8,7 +8,7 @@ import FireBaseUserRepository from "../../infastructure/FireBaseUserRepository"
 
 class SignUpUseCase {
 
-    constructor(private userRepository: FireBaseUserRepository,
+    constructor(private userRepository: UserRepository,
                 private createCreatorUseCase: CreateCreatorUseCase) {
     }
 
