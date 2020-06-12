@@ -17,7 +17,7 @@
                         v-model="selectedSpace"
                 ></v-select>
 
-                <v-card class="p-3 mt-3 text-center" >
+                <v-card class="p-3 mt-3 text-center">
                     <v-card-title>{{ cardTitle }}</v-card-title>
                     <Container
                             class="drop-container"
@@ -76,10 +76,10 @@
 </template>
 <script>
 
-    import { Container, Draggable } from 'vue-smooth-dnd'
+    import {Container, Draggable} from 'vue-smooth-dnd'
     import { mapGetters } from "vuex";
     import Type from './Type.vue'
-    import axios from "axios";
+    import store from '../store';
 
     export default {
         name: 'CreateContent',
@@ -111,56 +111,41 @@
             getChildPayloadTest () {
                 return this.selectedSchema
             },
-            createContent() {
+            async createContent() {
                 let Content = {
                     name: this.name,
                     schemaId: this.selectedSchema.id,
                     creatorId: this.creator,
                     // TODO when types are implemented
                     content: [
-        {
-         "typeId": "1", 
-          "name": "Podcast Title",     
-          "content": "Test Podcast Title"  
-         },
-         {
-           "typeId": "1", 
-            "name": "Description",     
-            "content": "Blabala blablaaa bbballlaa"  
-          },
-          {
-             "typeId": "6", 
-              "name": "Podcast",     
-               "content": "podcast.mp3"  
-           }
-]
+                        {
+                            "typeId": "1",
+                            "name": "Podcast Title",
+                            "content": "Test Podcast Title"
+                        },
+                        {
+                            "typeId": "1",
+                            "name": "Description",
+                            "content": "Blabala blablaaa bbballlaa"
+                        },
+                        {
+                            "typeId": "6",
+                            "name": "Podcast",
+                            "content": "podcast.mp3"
+                        }
+                    ]
                 }
 
-                axios.post('http://localhost:3000/contents/spaces/' + this.selectedSpace, Content)
-                    .then((response) => {
-                        console.log(response);
-                    }, (error) => {
-                        console.log(error);
-                    });
+                await store.dispatch('writeContent', {space: this.selectedSpace, content: Content});
             },
             handleData: function(e, type) {
                 type.content = e
             },
-            getSpaces() {
-                axios.get("http://localhost:3000/spaces",{headers: {'creatorId':1}})
-                    .then(response => {
-                        this.spaces = response.data
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+            async getSpaces() {
+                this.spaces = await store.dispatch('listAllSpaces');
             },
-            getSchemas() {
-                axios.get("http://localhost:3000/schemas",{headers: {'creatorId':1}})
-                    .then(response => {this.schemas = response.data.schemas})
-                    .catch(function(error){
-                        console.log(error);
-                    });
+            async getSchemas() {
+                this.schemas = await store.dispatch('listAllSchemas');
             }
         },
         mounted() {

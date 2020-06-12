@@ -1,12 +1,24 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
+        service: {
+            url: 'http://localhost:3000',
+            config: {
+                headers: {
+                    Authorization: undefined
+                }
+            }
+        },
+        authentication: {
+            isLoggedIn: false,
+            token: undefined
+        },
         user: {
-            loggedIn: false,
-            data: null
+            email: undefined
         },
         space: {
             name: '',
@@ -21,8 +33,14 @@ export default new Vuex.Store({
         }
     },
     getters: {
-        user(state){
-            return state.user
+        isLoggedIn(state) {
+            return state.authentication.isLoggedIn;
+        },
+        token(state) {
+            return state.authentication.token
+        },
+        usersEmail(state) {
+            return state.user.email
         },
         spaceID: state => {
             return state.space.id
@@ -35,16 +53,21 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        SET_LOGGED_IN(state, value) {
-            state.user.loggedIn = value;
+        setToken(state, token) {
+            state.authentication.token = token;
+            state.service.config.headers.Authorization = token;
         },
-        SET_USER(state, data) {
-            state.user.data = data;
+        setLoggedIn(state, value) {
+            state.authentication.isLoggedIn = value;
+        },
+        setUserEmail(state, email) {
+            state.user.email = email;
+            console.log(`SET_USER_EMAIL: ${email}`)
         },
         SET_SPACEID(state, idnr) {
-            state.space.id = idnr;            
+            state.space.id = idnr;
         },
-        increment (state) {
+        increment(state) {
             // mutate state
             state.space.id++
         },
@@ -57,21 +80,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        fetchUser({ commit }, user) {
-            commit("SET_LOGGED_IN", user !== null);
-            if (user) {
-                commit("SET_USER", {
-                    displayName: user.displayName,
-                    email: user.email
-                });
-            } else {
-                commit("SET_USER", null);
-            }
-        },
         SET_SPACEID(context, payload) {
             setTimeout(() => {
                 context.commit('SET_SPACEID', payload)
-        }, 2000);
+            }, 2000);
         },
         SET_CONTENT(context, payload){
             context.commit('SET_CONTENT', payload)
@@ -79,6 +91,77 @@ export default new Vuex.Store({
         SET_CONTENTTYPNAME(context, payload){
             context.commit('SET_CONTENTTYPNAME', payload)
         }
+        },
+        async listAllSpaces({state}) {
+            const response = await axios.get(
+                `${state.service.url}/spaces`,
+                state.service.config
+            );
 
-    }
+            return response.data;
+        },
+        async listAllSchemas({state}) {
+            const response = await axios.get(
+                `${state.service.url}/schemas`,
+                state.service.config
+            );
+
+            return response.data.schemas;
+        },
+        async openSpace({state}, name) {
+            await axios.post(
+                `${state.service.url}/spaces`,
+                {name, userid: state.authentication.token},
+                state.service.config
+            );
+        },
+        async writeContent({state}, payload) {
+            payload.creator.creatorId = state.authentication.token;
+
+            await axios.post(
+                `${state.service.url}/contents/spaces/${payload.space}`,
+                payload.content,
+                state.service.config
+            )
+        },
+        async viewSpace({state}, space) {
+            const response = await axios.get(
+                `${state.service.url}/contents/spaces/${space}`,
+                state.service.config
+            );
+            return response.data;
+        },
+        async defineSchema({state}, schema) {
+            schema.creatorId = state.authentication.token;
+            await axios.post(`${state.service.url}/schemas`, schema);
+        },
+        async viewSchema({state}, schema) {
+            const response = await axios.get(
+                `${state.service.url}/schemas/${schema}`,
+                state.service.config
+            );
+            return response.data.schema;
+        },
+        async viewContent({state}, {content, space}) {
+            const response = await axios.get(
+                `${state.service.url}/${content}/spaces/${space}`,
+                state.service.config
+            );
+            return response.data;
+        },
+        async login({state, commit}, {email, password}) {
+            const response = await axios.post(
+                `${state.service.url}/signin`,
+                {
+                    email,
+                    password
+                },
+                state.service.config);
+
+            const token = response.data.Authorization;
+
+            commit("setToken", token);
+            commit("setLoggedIn", true);
+            commit("setUserEmail", email);
+        }
 });

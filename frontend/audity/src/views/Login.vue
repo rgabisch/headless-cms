@@ -43,7 +43,9 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary text-orange" style="background-color: #FF8E3C; color: black">Login</button>
+                                    <button type="submit" class="btn btn-primary text-orange"
+                                            style="background-color: #FF8E3C; color: black">Login
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -55,7 +57,7 @@
 </template>
 
 <script>
-    import firebase from 'firebase/app';
+    import store from "../store";
 
     export default {
         data() {
@@ -68,17 +70,16 @@
             };
         },
         methods: {
-            submit() {
-                firebase
-                    .auth()
-                    .signInWithEmailAndPassword(this.form.email, this.form.password)
-                    .then(data => {
-                        console.log(data);
-                        this.$router.replace({ path: '/' });
-                    })
-                    .catch(err => {
-                        this.error = err.message;
+            async submit() {
+                try {
+                    await store.dispatch('login', {
+                        email: this.form.email,
+                        password: this.form.password
                     });
+                    await this.$router.replace({path: '/'});
+                } catch (e) {
+                    console.log(e);
+                }
             }
         }
     };
