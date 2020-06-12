@@ -34,7 +34,8 @@ const creatorController = controllerFactory.buildForCreator();
 
 const fireBaseUserRepository = new FireBaseUserRepository();
 const userRepository = process.env.NODE_ENV == Environment.DEV ? new InMemoryUserRepository() : fireBaseUserRepository;
-const identifyingController = new IdentifyingController(new SignInUseCase(userRepository), new SignUpUseCase(userRepository, new CreateCreatorUseCase(creatorRepository)));
+let signUpUseCase = new SignUpUseCase(userRepository, new CreateCreatorUseCase(creatorRepository));
+const identifyingController = new IdentifyingController(new SignInUseCase(userRepository), signUpUseCase);
 
 
 if (process.env.NODE_ENV == Environment.DEV) {
@@ -56,6 +57,8 @@ if (process.env.NODE_ENV == Environment.DEV) {
     one_creator.define(second_schema);
 
     (creatorRepository as InMemoryCreatorRepository).add(one_creator);
+
+    signUpUseCase.execute({email: 'test@mail.de', pass: 'test'});
 }
 
 app.use(bodyParser.json());

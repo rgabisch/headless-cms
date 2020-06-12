@@ -25,7 +25,7 @@ class ContentController {
         router.post('/spaces/:spaceId/', async (req, res) => {
             const command = new WriteContentCommand(
                 req.body.schemaId,
-                req.body.creatorId,
+                <string>req.headers._creatorId,
                 req.params.spaceId,
                 req.body.name,
                 req.body.content,
@@ -47,7 +47,7 @@ class ContentController {
 
         router.get('/spaces/:spaceId', async (req, res) => {
             const command = new ListAllContentsCommand(
-                req.get('creatorId') ?? "",
+                <string>req.headers._creatorId,
                 req.params.spaceId,
                 <string | undefined>req.query.dateFormat);
 
@@ -114,6 +114,7 @@ class ContentController {
 
         return router;
     }
+
 
     private format(from: Date, to: string): string {
         return moment(from).format(to)

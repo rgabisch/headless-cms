@@ -21,6 +21,7 @@ class SchemaController {
                 const definedSchemaEvent = await this.defineSchemaUseCase.execute(command);
                 res.send(definedSchemaEvent);
             } catch (e) {
+                console.log(e.name)
                 res.status(400).send('post body is invalid');
             }
         });
