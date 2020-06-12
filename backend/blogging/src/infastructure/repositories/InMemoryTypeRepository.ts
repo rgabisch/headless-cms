@@ -1,20 +1,13 @@
 import {TypeRepository} from "../../domain/repositories/TypeRepository";
+import TypeFactory from "../../domain/factories/TypeFactory";
 import Type from "../../domain/entities/Type";
-import DefaultType from "../../domain/entities/types/DefaultType";
 
 class InMemoryTypeRepository implements TypeRepository {
-    private types = new Map()
-        .set('1', new DefaultType('1'))
-        .set('2', new DefaultType('2'))
-        .set('3', new DefaultType('3'))
-        .set('4', new DefaultType('4'))
-        .set('5', new DefaultType('5'))
-        .set('6', new DefaultType('6'))
-        .set('7', new DefaultType('7'))
-        .set('8', new DefaultType('8'));
+
+    private typeFactory = new TypeFactory();
 
     async findBy(id: string): Promise<Type | undefined> {
-        return this.types.get(id);
+        return this.typeFactory.createBy(id);
     }
 
     async findAllBy(ids: string[]): Promise<(Type | undefined)[]> {
@@ -28,7 +21,7 @@ class InMemoryTypeRepository implements TypeRepository {
     }
 
     async add(type: Type) {
-        this.types.set(type.id, type);
+        // is not supported
     }
 }
 
