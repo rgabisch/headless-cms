@@ -31,21 +31,15 @@
 </template>
 
 <script>
-    import axios from "axios";
+    import store from '../store'
 
     export default {
         name: "AllSchemas",
         data: () => ({
-            schemas : []
+            schemas: []
         }),
-        mounted() {
-            axios.get("http://localhost:3000/schemas",{headers: {'creatorId':1}})
-                .then(response => {this.schemas = response.data.schemas})
-                .catch(function(error){
-                    console.log(error);
-
-                });
-
+        async mounted() {
+            this.schemas = await store.dispatch('listAllSchemas')
         }
     }
 </script>

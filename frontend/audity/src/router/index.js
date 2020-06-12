@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -22,7 +20,6 @@ const routes = [
             requiresAuth: true
         },
         children: [
-
             {
                 path: '',
                 name: 'Dashboard',
@@ -80,15 +77,18 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) =>{
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor);
-    const currentUser = firebase.auth().currentUser;
+    const isLoggedIn = store.getters.isLoggedIn;
 
-    if (requiresAuth && !currentUser) {
+    if (requiresAuth && !isLoggedIn) {
+        console.log(`in router; is not logged in = ${isLoggedIn}`)
         next('login');
     }
-    else if (requiresVisitor && currentUser) {
+    else if (requiresVisitor && isLoggedIn) {
+        console.log(`in router; is logged in = ${isLoggedIn}`)
         next('/');
     }
     else {
+        console.log(`requires no auth`)
         next();
     }
 })

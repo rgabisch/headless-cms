@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import store from "../store";
 
 export default {
   name: "Content",
@@ -43,16 +43,11 @@ export default {
       return this.sid;
     }
   },
-  mounted() {
-    axios
-      .get(
-        `http://localhost:3000/contents/${this.contentId}/spaces/${this.spaceId}`,
-        { headers: { creatorId: 1 } }
-      )
-      .then(response => (this.content = response.data))
-      .catch(function(error) {
-        console.log(error);
-      });
+  async mounted() {
+    this.content = await store.dispatch(
+            'viewContent',
+            {content: this.contentId, space: this.spaceId}
+    );
   }
 };
 </script>

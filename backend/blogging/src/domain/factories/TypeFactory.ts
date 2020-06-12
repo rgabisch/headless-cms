@@ -1,7 +1,9 @@
 import Type, {TypeId} from "../entities/Type";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 class TypeFactory {
-
+    constructor() {
+    }
     private idByType =
         new Map<string, Type>()
             .set(TypeId.Text, new Type(TypeId.Text))
@@ -15,7 +17,7 @@ class TypeFactory {
         const type = this.idByType.get(id);
 
         if (!type)
-            throw new Error('id is not defined');
+            throw new UnassignedIdException();
 
         return type;
     }
