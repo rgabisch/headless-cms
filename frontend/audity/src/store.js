@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+
 Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
@@ -10,6 +11,13 @@ export default new Vuex.Store({
         space: {
             name: '',
             id: '2334454554325'
+        },
+        content: {
+            name: '',
+            spaceName: ''
+        },
+        contentyp: {
+            name:''
         }
     },
     getters: {
@@ -18,7 +26,13 @@ export default new Vuex.Store({
         },
         spaceID: state => {
             return state.space.id
-          }
+          },
+        content(state){
+            return state.content
+        },
+        contenttyp(state){
+            return state.contentyp
+        }
     },
     mutations: {
         SET_LOGGED_IN(state, value) {
@@ -34,6 +48,13 @@ export default new Vuex.Store({
             // mutate state
             state.space.id++
         },
+        SET_CONTENT(state, createPageInfo){
+            state.content.name = createPageInfo[0];
+            state.content.spaceName = createPageInfo[1];
+        },
+        SET_CONTENTTYPNAME(state, contenttypName){
+            state.contentyp.name = contenttypName
+        }
     },
     actions: {
         fetchUser({ commit }, user) {
@@ -51,6 +72,12 @@ export default new Vuex.Store({
             setTimeout(() => {
                 context.commit('SET_SPACEID', payload)
         }, 2000);
+        },
+        SET_CONTENT(context, payload){
+            context.commit('SET_CONTENT', payload)
+        },
+        SET_CONTENTTYPNAME(context, payload){
+            context.commit('SET_CONTENTTYPNAME', payload)
         }
 
     }

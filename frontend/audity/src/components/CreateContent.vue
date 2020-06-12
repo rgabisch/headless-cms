@@ -12,12 +12,8 @@
                         :rules="rules.required"
                 ></v-text-field>
                 <v-select
-                        label="Veröffentlichen in Space"
-                        filled
-                        dense
                         :items="spaces"
                         item-text="name"
-                        item-value="id"
                         v-model="selectedSpace"
                 ></v-select>
 
@@ -81,6 +77,7 @@
 <script>
 
     import { Container, Draggable } from 'vue-smooth-dnd'
+    import { mapGetters } from "vuex";
     import Type from './Type.vue'
     import axios from "axios";
 
@@ -93,7 +90,7 @@
             schemas: [],
             spaces: [],
             selectedSchema : {},
-            selectedSpace : {},
+            selectedSpace : '',
             cardTitle: 'Drop here',
             formValid: false,
             rules: {
@@ -151,7 +148,9 @@
             },
             getSpaces() {
                 axios.get("http://localhost:3000/spaces",{headers: {'creatorId':1}})
-                    .then(response => {this.spaces = response.data})
+                    .then(response => {
+                        this.spaces = response.data
+                    })
                     .catch(function(error){
                         console.log(error);
                     });
@@ -168,6 +167,18 @@
             this.$refs.form.validate();
             this.getSpaces();
             this.getSchemas();
+
+            //Bekommt den Namen und der Seite und den Namen des Spaces aus Vuex
+            this.name = this.$store.getters.content.name
+            this.selectedSpace = this.$store.getters.content.spaceName
+
+        },
+
+        computed: {
+            // map `this.user` to `this.$store.getters.user`
+            ...mapGetters({
+                user: "user",
+            })
         }
     }
 </script>
