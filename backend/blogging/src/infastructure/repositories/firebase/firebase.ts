@@ -62,7 +62,7 @@ class Firebase {
         filename (string) : download data with given filename
 
     return:
-        object : the data stored in storage
+        data (Buffer) : the data stored in storage
     */
     async storage_get(filename: string) {
         if (await this.storage_exists(filename)) {
@@ -100,10 +100,10 @@ class Firebase {
 
     param:
         filename (string): the new given id/filename
-        key_values (buffer or string): the data to be stored
+        key_values (Buffer): the data to be stored
     */
 
-    async storage_add(filename: string, key_values: any) {
+    async storage_add(filename: string, key_values: Buffer) {
         if (filename.trim() != "") {
             if (await this.storage_exists(filename)) {
                 console.log(`[ERROR]: Insert - Object with Filename ${filename} already exists`)
@@ -188,10 +188,10 @@ class Firebase {
 
   param:
       filename (string): the new given id/filename
-      key_values (buffer or string): the data to be stored
+      key_values (Buffer): the data to be stored
   */
 
-    async storage_update(filename: string, key_values: any) {
+    async storage_update(filename: string, key_values: Buffer) {
         if (filename.trim() != "") {
             if (!await this.storage_exists(filename)) {
                 console.log(`[ERROR]: Remove - Object with Filename ${filename} doesn't exist`)
