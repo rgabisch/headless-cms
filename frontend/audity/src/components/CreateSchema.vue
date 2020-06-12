@@ -18,7 +18,7 @@
                                 group-name="draggable"
                                 :get-child-payload="getChildPayloadSelectedTypes"
                                 @drop="onDropCopy('selectedTypes', $event)">
-                            <Draggable v-for="type in selectedTypes" :key="type.id">
+                            <Draggable v-for="(type, index) in selectedTypes" :key="index">
                                 <div class="draggable-item pa-2">
                                     <span class="column-drag-handle">&#8645;</span>
                                     <v-text-field
@@ -84,7 +84,7 @@
 <script>
 
     import { Container, Draggable } from 'vue-smooth-dnd'
-    import axios from 'axios'
+    import store from '../store';
 
 export default {
   name: 'DefineSchema',
@@ -136,19 +136,15 @@ export default {
       getChildPayloadSelectedTypes (index) {
           return this.selectedTypes[index]
       },
-      createSchema() {
+      async createSchema() {
           if (this.formValid) {
               let Schema = {
                   creatorId: this.creator,
                   name: this.name,
                   types: this.selectedTypes
-              }
-              axios.post('http://localhost:3000/schemas', Schema)
-                      .then((response) => {
-                          console.log(response);
-                      }, (error) => {
-                          console.log(error);
-                      });
+              };
+              console.log(this.selectedTypes);
+              await store.dispatch('defineSchema', Schema)
           }
           else {
               alert('All required fields must be filled!');

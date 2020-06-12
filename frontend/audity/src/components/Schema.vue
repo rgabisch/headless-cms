@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import axios from "axios";
+    import store from '../store';
 
     export default {
         name: "Schema",
@@ -42,13 +42,7 @@
             }
         },
         mounted() {
-            axios.get(`http://localhost:3000/schemas/${this.schemaId}`,
-                {headers: {'creatorId':1}})
-                .then(response => (this.schema = response.data.schema))
-                .catch(function (error) {
-                    console.log(error);
-                });
-
+            this.schema = store.dispatch('viewSchema', this.schemaId);
         },
     }
 </script>

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import store from "../store";
 
 export default {
   name: "AllContents",
@@ -52,17 +52,8 @@ export default {
       return this.sid;
     }
   },
-  mounted() {
-    axios
-      .get(`http://localhost:3000/contents/spaces/${this.spaceId}`, {
-        headers: { creatorId: 1 }
-      })
-      .then(response => (this.contents = response.data))
-      .catch(function(error) {
-        console.log(error);
-        alert(error);
-      });
-
+  async mounted() {
+    this.contents = await store.dispatch('viewSpace', this.spaceId);
     //TODO getSpaceById() for {{ Space name }}
     this.spacename = this.$store.getters.spaceID;
     console.log(this.$store.getters.spaceID);

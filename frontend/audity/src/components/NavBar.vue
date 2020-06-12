@@ -10,7 +10,7 @@
     <v-list-item-icon>
           <v-icon>mdi-account</v-icon>
     </v-list-item-icon>
-          <v-list-item-content v-if="user.data.email != undefined">{{ user.data.email }}</v-list-item-content>
+          <v-list-item-content v-if="email != undefined">{{ email }}</v-list-item-content>
         </v-list-item>
 
 <v-divider id="spacer"></v-divider>
@@ -20,7 +20,7 @@
 
       <v-list-item-group v-model="item" color="warning">
         <v-list-item
-          v-for="(item, i) in links" 
+          v-for="(item, i) in links"
           style="text-decoration: none"
           :key="i"
           :to='item.to'
@@ -44,13 +44,13 @@
 
 <script>
   import { mapGetters } from "vuex";
-  import firebase from 'firebase/app';
+  // import firebase from 'firebase/app';
 export default {
     name: 'NavBar',
     computed: {
       // map `this.user` to `this.$store.getters.user`
       ...mapGetters({
-        user: "user"
+        email: "usersEmail"
       })
     },
     data: () => ({
@@ -61,30 +61,24 @@ export default {
         { text: 'Dashboard',
         icon: 'mdi-poll',
         to: '/'},
-        { text: 'Spaces', 
+        { text: 'Spaces',
         icon: 'mdi-folder',
         to: '/spaces' },
-        { text: 'Schema erstellen', 
+        { text: 'Schema erstellen',
         icon: 'mdi-gesture',
         to: '/create-contenttyp' },
-        { text: 'Seiten erstellen', 
+        { text: 'Seiten erstellen',
         icon: 'mdi-send',
         to: '/create-content' },
       ],
       }),
       methods: {
-    signOut() {
-
-      firebase
-              .auth()
-              .signOut()
-              .then(() => {
-                this.$router.replace({
+          signOut() {
+              this.$router.replace({
                   name: "login"
-                });
               });
+          }
       }
-  }
 }
 </script>
 <style>
@@ -96,5 +90,5 @@ export default {
     font-size: .875rem;
   }
 
-  
+
 </style>

@@ -59,7 +59,7 @@
 
 
 <script>
-import axios from "axios";
+import store from '../store';
 
 export default {
   name: "Space",
@@ -72,47 +72,26 @@ export default {
     spaces: ""
   }),
   methods: {
-    addSpace() {
-      let Space = {
-        name: this.spaceName,
-        userid: this.creator
-      };
-
-      console.log(JSON.stringify(Space));
-      axios.post("http://localhost:3000/spaces", Space).then(
-        response => {
-          console.log(response);
-          this.dataChecker = "created";
-        },
-        error => {
-          console.log(error);
-          this.dataChecker = "fail";
-        }
-      );
-
+    async addSpace() {
+      try {
+        await store.dispatch('openSpace', this.spaceName);
+        this.dataChecker = "created";
+      } catch (e) {
+        this.dataChecker = "fail";
+      }
       // delete User-Input
       this.spaceName = "";
       // refresh list
       this.getData();
     },
-
     deleteSpace() {
       //To Do
     },
-
     commitID(name) {
       this.$store.commit("SET_SPACEID", name);
     },
-
-    getData() {
-      axios
-        .get("http://localhost:3000/spaces", { headers: { creatorId: 1 } })
-        .then(response => {
-          this.spaces = response.data;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+    async getData() {
+      this.spaces = await store.dispatch('listAllSpaces');
     }
   },
 
