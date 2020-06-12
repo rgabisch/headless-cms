@@ -88,9 +88,8 @@ export default new Vuex.Store({
         SET_CONTENT(context, payload) {
             context.commit('SET_CONTENT', payload)
         },
-        SET_CONTENTTYPNAME(context, payload){
+        SET_CONTENTTYPNAME(context, payload) {
             context.commit('SET_CONTENTTYPNAME', payload)
-        }
         },
         async listAllSpaces({state}) {
             const response = await axios.get(
@@ -164,4 +163,5 @@ export default new Vuex.Store({
             commit("setLoggedIn", true);
             commit("setUserEmail", email);
         }
+    }
 });
