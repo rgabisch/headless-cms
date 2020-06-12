@@ -157,6 +157,9 @@ export default {
   },
   mounted() {
       this.$refs.form.validate();
+
+      //Bekommt den Namen des Contenttypen aus Vuex
+      this.name = this.$store.getters.contenttyp.name
   }
 }
 
