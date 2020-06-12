@@ -12,8 +12,12 @@
                         :rules="rules.required"
                 ></v-text-field>
                 <v-select
+                        label="Veröffentlichen in Space"
+                        filled
+                        dense
                         :items="spaces"
                         item-text="name"
+                        item-value="id"
                         v-model="selectedSpace"
                 ></v-select>
 
@@ -89,7 +93,7 @@
             name: '',
             schemas: [],
             spaces: [],
-            selectedSchema : {},
+            selectedSchema: {},
             selectedSpace : '',
             cardTitle: 'Drop here',
             formValid: false,
@@ -98,17 +102,17 @@
             }
         }),
         methods: {
-            onDrop (dropResult) {
-                this.cardTitle = dropResult.payload.name
+            onDrop(dropResult) {
+                this.cardTitle = dropResult.payload.name;
                 this.selectedSchema = JSON.parse(JSON.stringify(dropResult.payload));
                 for (let i = 0; i < this.selectedSchema.types.length; i++) {
                     this.selectedSchema.types[i].content = ''
                 }
             },
-            getChildPayloadSchemas (index) {
+            getChildPayloadSchemas(index) {
                 return this.schemas[index]
             },
-            getChildPayloadTest () {
+            getChildPayloadTest() {
                 return this.selectedSchema
             },
             async createContent() {
@@ -134,11 +138,11 @@
                             "content": "podcast.mp3"
                         }
                     ]
-                }
+                };
 
                 await store.dispatch('writeContent', {space: this.selectedSpace, content: Content});
             },
-            handleData: function(e, type) {
+            handleData: function (e, type) {
                 type.content = e
             },
             async getSpaces() {
@@ -154,7 +158,7 @@
             this.getSchemas();
 
             //Bekommt den Namen und der Seite und den Namen des Spaces aus Vuex
-            this.name = this.$store.getters.content.name
+            this.name = this.$store.getters.content.name;
             this.selectedSpace = this.$store.getters.content.spaceName
 
         },

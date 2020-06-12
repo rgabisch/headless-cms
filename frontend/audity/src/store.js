@@ -29,7 +29,7 @@ export default new Vuex.Store({
             spaceName: ''
         },
         contentyp: {
-            name:''
+            name: ''
         }
     },
     getters: {
@@ -44,11 +44,11 @@ export default new Vuex.Store({
         },
         spaceID: state => {
             return state.space.id
-          },
-        content(state){
+        },
+        content(state) {
             return state.content
         },
-        contenttyp(state){
+        contenttyp(state) {
             return state.contentyp
         }
     },
@@ -71,11 +71,11 @@ export default new Vuex.Store({
             // mutate state
             state.space.id++
         },
-        SET_CONTENT(state, createPageInfo){
+        SET_CONTENT(state, createPageInfo) {
             state.content.name = createPageInfo[0];
             state.content.spaceName = createPageInfo[1];
         },
-        SET_CONTENTTYPNAME(state, contenttypName){
+        SET_CONTENTTYPNAME(state, contenttypName) {
             state.contentyp.name = contenttypName
         }
     },
@@ -85,7 +85,7 @@ export default new Vuex.Store({
                 context.commit('SET_SPACEID', payload)
             }, 2000);
         },
-        SET_CONTENT(context, payload){
+        SET_CONTENT(context, payload) {
             context.commit('SET_CONTENT', payload)
         },
         SET_CONTENTTYPNAME(context, payload){
