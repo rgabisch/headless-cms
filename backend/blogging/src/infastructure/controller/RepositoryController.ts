@@ -12,7 +12,7 @@ class SpaceController {
 
     constructor(private openSpaceUseCase: OpenSpaceUseCase,
                 private listAllSpacesUseCase: ListAllSpacesUseCase) {
-                }
+    }
 
     routes(): express.Router {
         const router = express.Router();
@@ -32,18 +32,13 @@ class SpaceController {
             }
         });
 
-        // returns all spaces [requires creator id in header]
-        // /:spaceId returns content -> included in ContentController
-
         router.get('/', async (req, res) => {
-            console.log(req.get('creatorId'))
-            const command = new ListAllSpacesCommand(req.get('creatorId') ?? "");
+            const command = new ListAllSpacesCommand(<string>req.headers._creatorId);
 
             try {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
                 res.send(writtenSpacesEvent.content);
             } catch (e) {
-                console.log(e.name)
                 res.status(400).send('post body is invalid');
             }
 

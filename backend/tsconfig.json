@@ -18,7 +18,7 @@
     // "outFile": "./",                       /* Concatenate and emit output to single file. */
     "outDir": "./dist",
     /* Redirect output structure to the directory. */
-    "rootDir": "./src",
+    "rootDir": "./",
     /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
@@ -47,8 +47,10 @@
 
     /* Module Resolution Options */
     // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    "baseUrl": "./",                          /* Base directory to resolve non-absolute module names. */
-    "paths": {                                /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+    "baseUrl": "./backend",
+    /* Base directory to resolve non-absolute module names. */
+    "paths": {
+      /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
       "*": [
         "node_modules/*"
       ]
@@ -79,10 +81,12 @@
     /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "src/**/*"
-//    "src/**/*.js"
+    "blogging/src/**/*",
+    "identifying/src/**/*",
+    "app.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/test/**/*"
   ]
 }

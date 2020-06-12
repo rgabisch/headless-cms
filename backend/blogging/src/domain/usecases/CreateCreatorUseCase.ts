@@ -11,11 +11,13 @@ class CreateCreatorUseCase {
 
     async execute(command: CreateCreatorCommand): Promise<CreateCreatorEvent> {
         const creator = await this.creatorRepository.findBy(command.id);
-
+        console.log('ba')
         if (creator)
             throw new AssignedIdException();
 
-        await this.creatorRepository.add(new Creator(command.id, new Map(), new Map()))
+        console.log('bb')
+        await this.creatorRepository.add(new Creator(command.id, new Map(), new Map()));
+        console.log('bc')
 
         return new CreateCreatorEvent(command.id);
     }

@@ -1,6 +1,10 @@
 import express from 'express';
 import CreateCreatorUseCase from "../../domain/usecases/CreateCreatorUseCase";
 import CreateCreatorCommand from "../../domain/commands/CreateCreatorCommand";
+import { SignInCommand } from '../../domain/commands/SignInCommand';
+import SignInUseCase from '../../../../identifying/src/domain/usecases/SignInUseCase';
+import { SignUpCommand } from '../../domain/commands/SignUpCommand';
+import SignUpUseCase from '../../../../identifying/src/domain/usecases/SignUpUseCase';
 
 class CreatorController {
     constructor(private createCreatorUseCase: CreateCreatorUseCase) {

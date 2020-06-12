@@ -4,12 +4,13 @@ import FireBase from './firebase/firebase'
 
 class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
 
-    constructor(){
+    constructor() {
         super('Creator')
     }
 
     async findBy(id: string): Promise<Creator | undefined> {
-        return super.db_get(id)
+        const fromStore = await super.db_get(id);
+        return new Creator(fromStore.id, fromStore.schemas ?? new Map(), fromStore.spaces ?? new Map());
     }
 
     async add(creator: Creator) {

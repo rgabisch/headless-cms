@@ -2,6 +2,7 @@
 import * as admin from 'firebase-admin'
 import serviceAccount from './serviceaccount.json'
 import {Storage} from '@google-cloud/storage';
+import Creator from "../../../domain/entities/Creator";
 
 /*
 A Class to initialize a connection to the fire(data)base
@@ -47,11 +48,10 @@ class Firebase {
     async db_get(id: string = "") {
         let ref = this.ref(id)
         if (await this.exists(ref)) {
-            return (await ref.once('value')).val()
+            return (await ref.once('value')).val();
         } else {
             console.log(`[ERROR]: Read - Object with ID ${id} doesn't exists`)
         }
-
     }
 
 

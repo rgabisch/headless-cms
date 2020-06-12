@@ -92,7 +92,7 @@ class ContentController {
 
         router.get('/:contentId/spaces/:spaceId', async (req, res) => {
             const command = new ViewContentCommand(
-                req.get('creatorId') ?? "",
+                <string>req.headers._creatorId,
                 req.params.spaceId,
                 req.params.contentId,
                 <string | undefined>req.query.dateFormat
