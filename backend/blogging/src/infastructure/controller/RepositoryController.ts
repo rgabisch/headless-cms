@@ -34,7 +34,7 @@ class SpaceController {
 
         router.get('/', async (req, res) => {
             const command = new ListAllSpacesCommand(<string>req.headers._creatorId);
-
+            console.log(command);
             try {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
                 res.send(writtenSpacesEvent.content);
