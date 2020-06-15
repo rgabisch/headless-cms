@@ -1,0 +1,27 @@
+{
+  "name": "headless-cms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:frontend": "cd frontend/audity && npm install",
+    "install:backend": "cd backend && npm install",
+    "install": "npm run install:frontend && npm run install:backend",
+    "test": "cd backend && npm run test",
+    "start:backend:watch": "cd backend && npm run start:watch",
+    "start:backend:dev": "cd backend && npm run start:dev",
+    "start:backend:prod": "cd backend && npm run start:prod",
+    "start:frontend": "cd frontend/audity && npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rgabisch/headless-cms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rgabisch/headless-cms/issues"
+  },
+  "homepage": "https://github.com/rgabisch/headless-cms#readme"
+}
