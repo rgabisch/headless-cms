@@ -1,9 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser'
 import GlobalUniqueIdGenerator from "./blogging/src/shared/GlobalUniqueIdGenerator";
-import InMemoryCreatorRepository from "./blogging/src/infastructure/repositories/InMemoryCreatorRepository";
-import Creator from "./blogging/src/domain/entities/Creator";
-import Schema, {TypeDefinition} from "./blogging/src/domain/entities/Schema";
 import TypeFactory from "./blogging/src/domain/factories/TypeFactory";
 import CreatorRepositoryFactory from "./blogging/src/infastructure/repositories/CreatorRepositoryFactory";
 import EnvironmentFactory from "./blogging/src/infastructure/environment/EnvironmentFactory";
@@ -16,7 +13,6 @@ import FireBaseUserRepository from "./identifying/src/infastructure/FireBaseUser
 import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
 import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
 import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
-import {resolveSoa} from 'dns';
 
 
 const app = express();
