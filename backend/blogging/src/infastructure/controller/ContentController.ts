@@ -69,7 +69,7 @@ class ContentController {
         router.get('/', async (req, res) => {
 
             const command = new ListAllContentsfromSpacesCommand(
-                req.get('creatorId') ?? "",
+                <string>req.headers._creatorId,
                 <string | undefined>req.query.dateFormat);
 
             try {
