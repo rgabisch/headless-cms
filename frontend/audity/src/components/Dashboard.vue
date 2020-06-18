@@ -70,7 +70,6 @@
                             color="#FF8E3C"
                             id="submit-btn"
                             @click="addSpace"
-                            to="/spaces"
                     >
                         Erstellen
                     </v-btn>
@@ -97,7 +96,7 @@
 <script>
     import  { mapGetters } from "vuex";
     import SpaceOverview from "../components/SpaceOverview";
-    import axios from "axios";
+    import store from "../store";
 
     export default {
         components: {SpaceOverview},
@@ -112,34 +111,13 @@
         }),
         methods: {
             addSpace() {
-                let Space = {
-                    name: this.spaceName,
-                    userid: this.creator
-                };
-                console.log(JSON.stringify(Space));
-                axios.post("http://localhost:3000/spaces", Space).then(
-                    response => {
-                        console.log(response);
-                        this.dataChecker = "created";
-                    },
-                    error => {
-                        console.log(error);
-                        this.dataChecker = "fail";
-                    }
-                );
+                store.dispatch('openSpace', this.spaceName);
                 // delete User-Input
                 this.spaceName = "";
-                // refresh list
-                //this.getData();
+                this.$router.push('spaces');
             },
-            getSpaces() {
-                axios.get("http://localhost:3000/spaces",{headers: {'creatorId':1}})
-                    .then(response => {
-                        this.spaces = response.data
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+            async getSpaces() {
+                this.spaces = await store.dispatch('listAllSpaces');
             },
             //Speichert Namen des Contentypen in Vuex
             storeContentyp() {

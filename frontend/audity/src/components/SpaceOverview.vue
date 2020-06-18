@@ -24,7 +24,7 @@
 </template>
 
 <script>
-    import axios from "axios";
+    import store from "../store";
 
     export default {
         name: "SpaceOverview",
@@ -38,67 +38,34 @@
             allSpacesName: '',
             allContents: {},
             componentLoaded: false,
-            spaces: ""
+            spaces: []
         }),
         methods: {
-            addSpace() {
-                let Space = {
-                    name: this.spaceName,
-                    userid: this.creator
-                };
-
-                console.log(JSON.stringify(Space));
-                axios.post("http://localhost:3000/spaces", Space).then(
-                    response => {
-                        console.log(response);
-                        this.dataChecker = "created";
-                    },
-                    error => {
-                        console.log(error);
-                        this.dataChecker = "fail";
-                    }
-                );
-
-                // delete User-Input
-                this.spaceName = "";
-                // refresh list
-                //this.getData();
-            },
-
-            deleteSpace() {
-                //To Do
-            },
-
             commitID(name) {
                 this.$store.commit("SET_SPACEID", name);
             },
-            getData() {
-                axios
-                    .get("http://localhost:3000/contents", {headers: {creatorId: 1}})
-                    .then(response => {
-                        this.spaces = response.data;
-
-                        for (var i = 0; i < this.spaces.length; i++) {
-                            this.allSpaces.push(this.spaces[i].space)
-                            this.allSpaces[i].children = []
-                            if(this.spaces[i].content[0]){
-                                for(var j = 0; j < this.spaces[i].content.length; j ++){
-                                    this.allSpaces[i].children.push(this.spaces[i].content[j])
-                                }
-                            }
+            async getData() {
+                this.spaces = await store.dispatch('listAllContents')
+                for (let i = 0; i < this.spaces.length; i++) {
+                    this.allSpaces.push(this.spaces[i].space)
+                    this.allSpaces[i].children = []
+                    if(this.spaces[i].content[0]){
+                        for(let j = 0; j < this.spaces[i].content.length; j ++){
+                            this.allSpaces[i].children.push(this.spaces[i].content[j])
                         }
-
-                    })
+                    }
+                }
             },
-
-        },
-        created() {
-            this.getData();
-            this.componentLoaded = true;
+            // @SR What does this do?
+            created() {
+                this.getData();
+                this.componentLoaded = true;
+            }
         },
 
         // when the comonent is displayed, call this method to show all spaces
         mounted() {
+            this.getData()
         }
     }
 </script>
