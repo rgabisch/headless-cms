@@ -107,6 +107,14 @@ export default new Vuex.Store({
 
             return response.data.schemas;
         },
+        async listAllContents({state}) {
+            const response = await axios.get(
+                `${state.service.url}/contents`,
+                state.service.config
+            );
+
+            return response.data;
+        },
         async openSpace({state}, name) {
             await axios.post(
                 `${state.service.url}/spaces`,
