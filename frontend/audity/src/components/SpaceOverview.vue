@@ -38,7 +38,7 @@
             allSpacesName: '',
             allContents: {},
             componentLoaded: false,
-            spaces: ""
+            spaces: []
         }),
         methods: {
             commitID(name) {
@@ -56,11 +56,11 @@
                     }
                 }
             },
-        },
-        // @SR What does this do?
-        created() {
-            this.getData();
-            this.componentLoaded = true;
+            // @SR What does this do?
+            created() {
+                this.getData();
+                this.componentLoaded = true;
+            }
         },
 
         // when the comonent is displayed, call this method to show all spaces
