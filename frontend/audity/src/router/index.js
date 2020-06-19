@@ -65,6 +65,13 @@ const routes = [
             }
         ]
     },
+
+    {
+        path: '/template',
+        name: 'template',
+        props: true,
+        component: () => import('../views/Template'),
+    }
 ]
 
 const router = new VueRouter({

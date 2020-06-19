@@ -2,7 +2,6 @@
     <div>
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
-                <!-- Masthead Avatar Image--><img class="masthead-avatar mb-5" src="../assets/img/avataaars.svg" alt="" width="100"/><!-- Masthead Heading-->
                 <h1 class="masthead-heading text-uppercase mb-0">Title</h1>
                 <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
@@ -29,7 +28,7 @@
                 <div class="row">
                     <!-- Portfolio Item 1-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/cabin.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/cabin.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -38,7 +37,7 @@
                     </div>
                     <!-- Portfolio Item 2-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/cake.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/cake.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -47,7 +46,7 @@
                     </div>
                     <!-- Portfolio Item 3-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/circus.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/circus.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -56,7 +55,7 @@
                     </div>
                     <!-- Portfolio Item 4-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/game.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/game.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -65,7 +64,7 @@
                     </div>
                     <!-- Portfolio Item 5-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/safe.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/safe.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -74,7 +73,7 @@
                     </div>
                     <!-- Portfolio Item 6-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/portfolio/submarine.png" alt="" />
+                        <img class="img-fluid" src="../assets/img/submarine.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -229,13 +228,6 @@
         </footer>
     </div>
 </template>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-<!-- Third party plugin JS-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-<!-- Contact form JS-->
-<script src="assets/mail/jqBootstrapValidation.js"></script>
-<script src="assets/mail/contact_me.js"></script>
 
 <script>
     export default {
