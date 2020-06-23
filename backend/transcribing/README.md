@@ -2,12 +2,6 @@
 
 To use the speech to text please update the variables inside .env_sample with the data from IBM. Please save that changes to .env_sample. Do not overwrite .env_sample. Github will ignore your .env file with our secret keys.
 
-### Run code: 
-```
-node app.js
-```
-
-
 ## Tools for audio transcription
 
 Unfortunately it is currently still difficult to get the lyrics from songs. Lyrics and music are difficult to separate. Some "quiet" music styles might work though. A way out of this problem would be to recognize the song via song recognition and then link the lyrics from a lyrics database. The requirement for this is that the song is available in this database. For our use case this will never be the case when publishing new content. For this reason I only refer my research to pure speech recognition. 
