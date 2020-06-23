@@ -10,7 +10,6 @@ class SignInUseCase {
     }
 
     async execute(signInCommand: SignInCommand) {
-        console.log(signInCommand);
         const user = await this.userRepository.signIn(signInCommand.email, signInCommand.pass)
 
         if (!user)

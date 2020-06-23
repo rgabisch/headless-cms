@@ -3,6 +3,7 @@ import Content from "./Content";
 import EmptyValueException from "../exceptions/EmptyValueException";
 import {UndefinedSchemaException} from "../exceptions/UndefinedSchemaException";
 import Space from "./Space";
+import NotUniqueSpaceNameException from "../exceptions/NotUniqueSpaceNameException";
 
 class UndefinedSpaceException implements Error {
     constructor(id: string) {
@@ -57,6 +58,11 @@ class Creator {
         return Array.from(this.schemas.values());
     }
 
+    hasOpensWithName(name: string): boolean {
+        return !!this.getAllSpaces()
+                     .find(space => space.hasName(name))
+    }
+
     hasOpens(spaceId: string): boolean {
         return !!this.spaces.get(spaceId);
     }
@@ -66,6 +72,10 @@ class Creator {
     }
 
     open(space: Space): void {
+        if (this.hasOpensWithName(space.name)) {
+            throw new NotUniqueSpaceNameException();
+        }
+
         this.spaces.set(space.id, space);
     }
 
