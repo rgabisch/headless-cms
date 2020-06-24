@@ -8,6 +8,9 @@ import moment from "moment";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
+import BufferTransformer from "../repositories/firebase/BufferTransformer";
+var formidable = require('formidable');
+var util = require('util');
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
@@ -20,25 +23,57 @@ class ContentController {
         const router = express.Router();
 
         router.post('/spaces/:spaceId/', async (req, res) => {
-            const command = new WriteContentCommand(
-                req.body.schemaId,
-                <string>req.headers._creatorId,
-                req.params.spaceId,
-                req.body.name,
-                req.body.content,
-                <string | undefined>req.query.dateFormat,
-            );
+            if(req.headers["content-type"] == "application/json"){
+                console.log("Content-Type application/json")
+                const command = new WriteContentCommand(
+                    req.body.schemaId,
+                    <string>req.headers._creatorId,
+                    req.params.spaceId,
+                    req.body.name,
+                    req.body.content,
+                    <string | undefined>req.query.dateFormat,
+                );
+    
+                try {
+                    const writtenContentEvent = await this.writeContentUseCase.execute(command);
+                    res.send({
+                        contentId: writtenContentEvent.contentId,
+                        creatorId: writtenContentEvent.creatorId,
+                        creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
+                        content: writtenContentEvent.content
+                    });
+                } catch (e) {
+                    res.status(400).send('post body is invalid');
+                }
+            }
+            
+            else{
+                console.log("Content-Type "+req.headers["content-type"])
+                let form = new formidable.IncomingForm();
 
-            try {
-                const writtenContentEvent = await this.writeContentUseCase.execute(command);
-                res.send({
-                    contentId: writtenContentEvent.contentId,
-                    creatorId: writtenContentEvent.creatorId,
-                    creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
-                    content: writtenContentEvent.content
-                });
-            } catch (e) {
-                res.status(400).send('post body is invalid');
+                form.parse(req, function(err:any, fields:any, files:any) {
+                    if (err) {
+                      console.error(err.message);
+                      return;
+                    }
+
+                    let contentJson = JSON.parse(fields.contentJson)
+
+                    let command = new WriteContentCommand(
+                        contentJson.body.schemaId,
+                        <string>contentJson.headers._creatorId,
+                        contentJson.params.spaceId,
+                        contentJson.body.name,
+                        contentJson.body.content,
+                        <string | undefined>contentJson.query.dateFormat,
+                    );
+                    
+                    let files_json = files
+
+                    res.writeHead(200, {'content-type': 'text/plain'});
+                    res.write('ok');
+                    res.end(util.inspect({fields: fields, files: files}));
+                })
             }
         });
 
