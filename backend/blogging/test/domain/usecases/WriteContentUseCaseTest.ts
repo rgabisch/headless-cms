@@ -188,7 +188,7 @@ suite('Write Content Use Case', () => {
 
     test('given schema id, creator id, content -> return written content', async () => {
         const content = 'content';
-        creator.open(new Space('1', '1', 'my personal podcast'));
+        creator.open(new Space('1', 'my personal podcast'));
         await creatorRepository.add(creator);
         const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
                 typeId: typeId,
@@ -215,7 +215,7 @@ suite('Write Content Use Case', () => {
 
     test('given schema id, creator id, content -> stores content', async () => {
         await creatorRepository.add(creator);
-        creator.open(new Space('1', '1', 'my personal podcast'));
+        creator.open(new Space('1', 'my personal podcast'));
         const command = new WriteContentCommand(schemaId, creatorId, spaceId, contentName, [{
                 typeId: typeId,
                 name: typeName,

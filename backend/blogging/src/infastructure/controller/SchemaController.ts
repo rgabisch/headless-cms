@@ -16,12 +16,11 @@ class SchemaController {
         const router = express.Router();
 
         router.post('/', async (req, res) => {
-            const command = new DefineSchemaCommand(req.body.creatorId, req.body.name, req.body.types);
+            const command = new DefineSchemaCommand(<string>req.headers._creatorId, req.body.name, req.body.types);
             try {
                 const definedSchemaEvent = await this.defineSchemaUseCase.execute(command);
                 res.send(definedSchemaEvent);
             } catch (e) {
-                console.log(e.name)
                 res.status(400).send('post body is invalid');
             }
         });
@@ -32,21 +31,20 @@ class SchemaController {
                 const listAllSchemasEvent = await this.listAllSchemasUseCase.execute(command);
                 res.send(listAllSchemasEvent)
             } catch (e) {
-                res.status(404).send('404 - No Schema found')
+                res.status(404).send('404 - No Schema found');
             }
-
-        })
+        });
 
         router.get('/:schemaId', async (req, res) => {
-            const command = new ViewSchemaCommand(<string>req.headers._creatorId, req.params.schemaId)
+            const command = new ViewSchemaCommand(<string>req.headers._creatorId, req.params.schemaId);
             try {
                 const viewSchemaEvent = await this.viewSchemaUseCase.execute(command);
                 res.send(viewSchemaEvent)
             } catch (e) {
-                res.status(404).send('404 - No Schema found')
+                res.status(404).send('404 - No Schema found');
             }
 
-        })
+        });
 
 
         return router;

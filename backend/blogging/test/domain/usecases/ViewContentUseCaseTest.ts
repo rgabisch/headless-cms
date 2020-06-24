@@ -51,7 +51,7 @@ suite('View Content Use Case', () => {
 
         test('given unassigned content id -> throws exception', async () => {
             const creator = new Creator('1', new Map(), new Map());
-            const space = new Space('2', creator.id, 'My Podcast');
+            const space = new Space('2', 'My Podcast');
             creator.open(space);
             await creatorRepository.add(creator);
             const command = new ViewContentCommand(creator.id, space.id, '1', dateFormat);
@@ -68,7 +68,7 @@ suite('View Content Use Case', () => {
 
         test('given assigned creator, space, content id when content was written -> returns an event', async () => {
             const creator = new Creator('1', new Map(), new Map());
-            const space = new Space('2', creator.id, 'My Podcast');
+            const space = new Space('2', 'My Podcast');
             const schema = new Schema('1', 'podcast', new TypeDefinition([]));
             const content = new Content('3', 'my first podcast', schema, new Date(), new TypeMappings([]));
             creator.open(space);

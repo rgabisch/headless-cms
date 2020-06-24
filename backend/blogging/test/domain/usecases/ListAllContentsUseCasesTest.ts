@@ -52,7 +52,7 @@ suite('List All Content Use Cases', () => {
 
         test('given an assigned creator id and spade id with no content in this space -> returns an event that contains no content', async () => {
             const creator = new Creator('1', new Map(), new Map());
-            const space = new Space('2', creator.id, 'My Podcast');
+            const space = new Space('2', 'My Podcast');
             creator.open(space);
             await creatorRepository.add(creator);
             const command = new ListAllContentsCommand(creator.id, space.id, dateFormat);
@@ -65,7 +65,7 @@ suite('List All Content Use Cases', () => {
         test('given an assigned creator id and spade id with content in this space -> returns an event with content', async () => {
             const creationDate = new Date();
             const creator = new Creator('1', new Map(), new Map());
-            const space = new Space('2', creator.id, 'My Podcast');
+            const space = new Space('2', 'My Podcast');
             const schema = new Schema('4', 'Podcast', new TypeDefinition([]));
             const typeMapping = new TypeMappings([]);
             const content = new Content('3', 'my first podcast', schema, creationDate, typeMapping);

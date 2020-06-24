@@ -19,9 +19,9 @@ class SpaceController {
 
         router.post('/', async (req, res) => {
             const name = req.body.name;
-            const userId = req.body.userid;
+            const creatorId = <string>req.headers._creatorId;
 
-            const command = new OpenSpaceCommand(name, userId);
+            const command = new OpenSpaceCommand(name, creatorId);
 
             try {
                 const openedSpaceEvent = await this.openSpaceUseCase.execute(command);
@@ -34,7 +34,7 @@ class SpaceController {
 
         router.get('/', async (req, res) => {
             const command = new ListAllSpacesCommand(<string>req.headers._creatorId);
-            console.log(command);
+
             try {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
                 res.send(writtenSpacesEvent.content);

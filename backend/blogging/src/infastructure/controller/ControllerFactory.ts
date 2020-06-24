@@ -1,4 +1,4 @@
-import SpaceController from "./RepositoryController";
+import SpaceController from "./SpaceController";
 import SchemaController from "./SchemaController";
 import ContentController from "./ContentController";
 import IdGenerator from "../../shared/IdGenerator";

@@ -5,23 +5,26 @@
   "main": "app.ts",
   "scripts": {
     "build": "tsc",
-    "test": "mocha -r ts-node/register --ui tdd ./blogging/test/**/*.ts",
-    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
+    "postbuild": "cp .env dist/ || true",
+    "test": "mocha -r ts-node/register --ui tdd ./blogging/test/**/*.ts ./transcribing/test/**/*.ts ./identifying/test/**/*.ts",
     "prestart:dev": "npm run build",
+    "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
     "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
-    "prestart:prod": "npm run build",
-    "start:prod": "cross-env NODE_ENV=production node ./dist/app.js"
+    "start:prod": "cross-env NODE_ENV=production node ./dist/app.js",
+    "prestart:prod": "npm run build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^5.0.1",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.15.0",
     "firebase-admin": "latest",
     "moment": "^2.26.0",
-    "uuid": "^8.0.0"
+    "uuid": "^8.0.0",
+    "watson-developer-cloud": "^4.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

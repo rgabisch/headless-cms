@@ -13,7 +13,9 @@ import FireBaseUserRepository from "./identifying/src/infastructure/FireBaseUser
 import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
 import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
 import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
+import path from "path";
 
+require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
 const app = express();
 const port = 3000;
@@ -71,6 +73,5 @@ app.use('/spaces', spaceController.routes());
 app.use('/schemas', schemaController.routes());
 app.use('/contents', contentController.routes());
 app.use('/creators', creatorController.routes());
-
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));
