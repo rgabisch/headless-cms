@@ -120,7 +120,7 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
                 const space_id = value.id
                 const space_user = value.userId
                 const space_name = value.name
-                const space = new Space(space_id, space_user, space_name)
+                const space = new Space(space_id, space_name)
                 spaces.set(key, space)
             }
         );
