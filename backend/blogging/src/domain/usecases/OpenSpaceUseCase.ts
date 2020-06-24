@@ -17,7 +17,7 @@ class OpenSpaceUseCase {
 
     async execute(command: OpenSpaceCommand): Promise<OpenedSpaceEvent> {
         const creator = await this.creatorRepository.findBy(command.userId);
-
+        
         if (!creator)
             throw new UnassignedIdException();
 

@@ -19,7 +19,7 @@ class SpaceController {
 
         router.post('/', async (req, res) => {
             const name = req.body.name;
-            const userId = req.body.userid;
+            const userId = <string>req.headers._creatorId;
 
             const command = new OpenSpaceCommand(name, userId);
 
@@ -27,6 +27,7 @@ class SpaceController {
                 const openedSpaceEvent = await this.openSpaceUseCase.execute(command);
                 res.send(openedSpaceEvent);
             } catch (e) {
+                console.log(e)
                 let errorMessage = this.errorFactory.createFrom(e, command);
                 res.status(400).send(errorMessage);
             }
@@ -34,11 +35,11 @@ class SpaceController {
 
         router.get('/', async (req, res) => {
             const command = new ListAllSpacesCommand(<string>req.headers._creatorId);
-            console.log(command);
             try {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
                 res.send(writtenSpacesEvent.content);
             } catch (e) {
+                console.log(e)
                 res.status(400).send('post body is invalid');
             }
 

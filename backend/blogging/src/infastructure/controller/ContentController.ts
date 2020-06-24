@@ -27,7 +27,7 @@ class ContentController {
                 req.body.schemaId,
                 <string>req.headers._creatorId,
                 req.params.spaceId,
-                req.body.name,
+                req.body.contentName,
                 req.body.content,
                 <string | undefined>req.query.dateFormat,
             );
