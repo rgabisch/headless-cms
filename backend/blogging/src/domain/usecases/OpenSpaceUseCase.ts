@@ -1,17 +1,13 @@
 import OpenSpaceCommand from "../commands/OpenSpaceCommand";
-import SpaceRepository from "../repositories/SpaceRepository";
 import OpenedSpaceEvent from "../events/OpenedSpaceEvent";
 import Space from "../entities/Space";
 import IdGenerator from "../../shared/IdGenerator";
-import NotUniqueSpaceNameException from "../exceptions/NotUniqueSpaceNameException";
-import FindByNameCriteria from "../repositories/criterias/FindByNameCriteria";
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 
 class OpenSpaceUseCase {
-    constructor(private repository: SpaceRepository,
-                private creatorRepository: CreatorRepository,
+    constructor(private creatorRepository: CreatorRepository,
                 private idGenerator: IdGenerator) {
     }
 
@@ -21,14 +17,9 @@ class OpenSpaceUseCase {
         if (!creator)
             throw new UnassignedIdException();
 
-        const space = new Space(this.idGenerator.generate(), command.userId, command.name);
-        const spacesWithEqualName = await this.repository.query(new FindByNameCriteria(space));
+        const space = new Space(this.idGenerator.generate(), command.name);
 
-        if (spacesWithEqualName.length > 0) {
-            throw new NotUniqueSpaceNameException();
-        }
         creator.open(space);
-        this.repository.save(space);
         await this.creatorRepository.update(creator);
 
         return new OpenedSpaceEvent(space.id, space.name);

@@ -1,10 +1,8 @@
 import {SignUpCommand} from "../../../../blogging/src/domain/commands/SignUpCommand";
-import {signUp} from '../../infastructure/auth'
 import {SignUpEvent} from "../../../../blogging/src/domain/events/SignUpEvent";
 import UserRepository from "../UserRepository";
 import CreateCreatorUseCase from "../../../../blogging/src/domain/usecases/CreateCreatorUseCase";
 import CreateCreatorCommand from "../../../../blogging/src/domain/commands/CreateCreatorCommand";
-import FireBaseUserRepository from "../../infastructure/FireBaseUserRepository"
 
 class SignUpUseCase {
 

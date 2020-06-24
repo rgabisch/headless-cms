@@ -15,7 +15,7 @@ suite('Creator Entity', () => {
     const otherContent = new Content('2', 'my second podcast', schema, new Date(), new TypeMappings([]));
 
     setup(() => {
-        space = new Space('1', creatorId, 'name');
+        space = new Space('1', 'name');
     });
 
     suite('constructor', () => {
@@ -100,7 +100,7 @@ suite('Creator Entity', () => {
         test('given content, space and an undefined schema -> throws an error', () => {
             let exception;
             const creator = new Creator(creatorId, new Map(), new Map());
-            creator.open(new Space('1', creator.id, 'name'));
+            creator.open(new Space('1', 'name'));
             const undefinedSchema = new Schema('unit-test', 'podcast', new TypeDefinition([]));
             const content = new Content('1', 'my first podcast', undefinedSchema, new Date(), new TypeMappings([]));
 
@@ -116,7 +116,7 @@ suite('Creator Entity', () => {
         test('given content and schema -> creator writes content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
-            creator.open(new Space('1', creatorId, 'name'));
+            creator.open(new Space('1', 'name'));
             const content = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
             creator.write(content, space);
 
@@ -193,7 +193,7 @@ suite('Creator Entity', () => {
 
     suite('get content of all spaces', () => {
 
-        const secondSpace = new Space('2', creatorId, 'other name');
+        const secondSpace = new Space('2', 'other name');
 
         test('given creator without spaces -> returns no content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
@@ -247,7 +247,7 @@ suite('Creator Entity', () => {
     });
 
     suite('get all spaces', () => {
-        const otherSpace = new Space('2', creatorId, 'other space');
+        const otherSpace = new Space('2', 'other space');
 
         test('given creator without a space -> returns no space', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
@@ -345,4 +345,35 @@ suite('Creator Entity', () => {
             assert.sameMembers(schemas, [schema, otherSchema]);
         });
     });
+
+    suite('has open a spave with name', () => {
+        const name = 'My First Podcast';
+        const otherName = 'My Second Podcast';
+
+        test('given creator without spaces -> reruns false', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+
+            const hasName = creator.hasOpensWithName(name);
+
+            assert.isFalse(hasName);
+        });
+
+        test('given creator with spaces and check for an other name -> reruns false', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(new Space('1', name));
+
+            const hasName = creator.hasOpensWithName(otherName);
+
+            assert.isFalse(hasName);
+        });
+
+        test('given creator with spaces and check for same name -> reruns true', () => {
+            const creator = new Creator(creatorId, new Map(), new Map());
+            creator.open(new Space('1', name));
+
+            const hasName = creator.hasOpensWithName(name);
+
+            assert.isTrue(hasName);
+        });
+    })
 });

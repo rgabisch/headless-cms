@@ -27,7 +27,6 @@ class IdentifyingController {
             const command = new SignUpCommand(req.body.email, req.body.pass);
 
             try {
-                console.log('a')
                 const signUpEvent = await this.signUpUseCase.execute(command);
                 res.send(signUpEvent)
             } catch (e) {

@@ -3,11 +3,8 @@ import OpenSpaceUseCase from "../../../src/domain/usecases/OpenSpaceUseCase";
 import OpenSpaceCommand from "../../../src/domain/commands/OpenSpaceCommand";
 import EmptyValueException from "../../../src/domain/exceptions/EmptyValueException";
 import OpenedSpaceEvent from "../../../src/domain/events/OpenedSpaceEvent";
-import MoreThan50CharactersException
-    from "../../../src/domain/exceptions/MoreThan50CharactersException";
-import InMemorySpaceRepository from "../../../src/infastructure/repositories/InMemorySpaceRepository";
+import MoreThan50CharactersException from "../../../src/domain/exceptions/MoreThan50CharactersException";
 import StaticIdGenerator from "../../../src/shared/StaticIdGenerator";
-import Space from "../../../src/domain/entities/Space";
 import InMemoryCreatorRepository from "../../../src/infastructure/repositories/InMemoryCreatorRepository";
 import Creator from "../../../src/domain/entities/Creator";
 import {UnassignedIdException} from "../../../src/domain/exceptions/UnassignedIdException";
@@ -26,16 +23,14 @@ const nameMadeOf51Characters = 'a'.repeat(51);
 const name = nameMadeOfOneCharacter;
 
 let testSubject: OpenSpaceUseCase;
-let spaceRepository: InMemorySpaceRepository;
 let creatorRepository: InMemoryCreatorRepository;
 
 suite('Open Space Use Case', () => {
 
     setup(async () => {
-        spaceRepository = new InMemorySpaceRepository();
         creatorRepository = new InMemoryCreatorRepository();
         await creatorRepository.add(new Creator(userId, new Map(), new Map()));
-        testSubject = new OpenSpaceUseCase(spaceRepository, creatorRepository, new StaticIdGenerator(spaceId));
+        testSubject = new OpenSpaceUseCase(creatorRepository, new StaticIdGenerator(spaceId));
     });
 
     suite('when execute', () => {
@@ -131,7 +126,7 @@ suite('Open Space Use Case', () => {
             });
 
 
-            test('it stores the space in the spaceRepository', async () => {
+            test('it stores the space in an repository', async () => {
                 await creatorRepository.add(new Creator(otherUserId, new Map(), new Map()));
                 const previous = new OpenSpaceCommand(nameMadeOfOneCharacter, otherUserId);
                 await testSubject.execute(previous);
@@ -143,14 +138,13 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in an repository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOfOneCharacter, userId);
 
                 await testSubject.execute(command);
 
-                const expected = new Space(spaceId, userId, nameMadeOfOneCharacter);
-                const openedSpace = await spaceRepository.findBy(spaceId);
-                expect(openedSpace).to.be.deep.equal(expected);
+                const creator = <Creator>await creatorRepository.findBy(userId);
+                expect(creator.hasOpens(spaceId)).to.be.true;
             });
         });
 
@@ -176,14 +170,13 @@ suite('Open Space Use Case', () => {
                 expect(openedSpaceEvent).to.be.deep.equal(expected)
             });
 
-            test('when other user opened a space with the same name -> it stores the space in the spaceRepository', async () => {
+            test('when other user opened a space with the same name -> it stores the space in a repository', async () => {
                 const command = new OpenSpaceCommand(nameMadeOf50Characters, userId);
 
                 await testSubject.execute(command);
 
-                const expected = new Space(spaceId, userId, nameMadeOf50Characters);
-                const openedSpace = await spaceRepository.findBy(spaceId);
-                expect(openedSpace).to.be.deep.equal(expected);
+                const creator = <Creator>await creatorRepository.findBy(userId);
+                expect(creator.hasOpens(spaceId)).to.be.true;
             });
         });
     });
