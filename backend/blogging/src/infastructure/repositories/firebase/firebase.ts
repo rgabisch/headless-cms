@@ -9,6 +9,17 @@ A Class to initialize a connection to the fire(data)base
 the database is pre-set on: "https://headless-cms-15c61.firebaseio.com"
 the credentials are pre-set based on the firebase serviceaccount
 */
+admin.initializeApp({
+    credential: admin.credential.cert({
+        clientEmail: serviceAccount.client_email,
+        privateKey: serviceAccount.private_key,
+        projectId: serviceAccount.project_id
+    }),
+    databaseURL: "https://headless-cms-15c61.firebaseio.com",
+    storageBucket: "headless-cms-15c61.appspot.com"
+});
+
+
 class Firebase {
 
     // Root-Destination (e.g. 'Space', 'Type', ...)
@@ -17,16 +28,6 @@ class Firebase {
 
     // Constructor to initialize the database connection
     constructor(root: string) {
-
-        admin.initializeApp({
-            credential: admin.credential.cert({
-                clientEmail: serviceAccount.client_email,
-                privateKey: serviceAccount.private_key,
-                projectId: serviceAccount.project_id
-            }),
-            databaseURL: "https://headless-cms-15c61.firebaseio.com",
-            storageBucket: "headless-cms-15c61.appspot.com"
-        });
 
         this.root = root;
         const storage = new Storage({keyFilename: "./serviceaccount.json"});
@@ -50,7 +51,8 @@ class Firebase {
         if (await this.exists(ref)) {
             return (await ref.once('value')).val();
         } else {
-            console.log(`[ERROR]: Read - Object with ID ${id} doesn't exists`)
+            console.log(`[INFO]: Read - Object with ID ${id} doesn't exists`)
+            return false
         }
     }
 
@@ -82,11 +84,12 @@ class Firebase {
         new_id (string): the new given id
         key_values (object): the data to be stored
     */
-    async db_add(new_id: string, key_values: object) {
+    async db_add(new_id: string, key_values: any) {
+        const my_object = Firebase.toObject(key_values)
         if (new_id.trim() != "") {
             let ref = this.ref(new_id)
             if (!await this.exists(ref)) {
-                ref.set(key_values)
+                ref.set(my_object)  
             } else {
                 console.log(`[ERROR]: Insert - Object with ID ${new_id} already exists`)
             }
@@ -171,10 +174,11 @@ class Firebase {
         key_vaues (object): the data to replace
     */
     async db_update(id: string, key_values: object) {
+        const my_object = Firebase.toObject(key_values)
         if (id.trim() != "") {
             let ref = this.ref(id)
             if (await this.exists(ref)) {
-                ref.set(key_values)
+                ref.set(my_object)
             } else {
                 console.log(`[ERROR]: Update - Object with ID ${id} doesn't exist`)
             }
@@ -216,6 +220,46 @@ class Firebase {
         exist - returns true if a object exists on a reference
     */
 
+    /* 
+    Transforms a Map -> Object Type
+
+    param:
+        key_values (Map) - the Map to be transformed
+
+    return Object
+    */
+    private static toObject(a_map: any){
+        const obj = Object.fromEntries([])
+
+        if (a_map instanceof Map){
+            a_map.forEach((value: any, key: any) => {
+                if (value instanceof Object && !(value instanceof Date)){
+                    obj[key] = Firebase.toObject(value)
+                } else{
+                    if (value instanceof Date){
+                        obj[key] = admin.firestore.Timestamp.fromDate(value)
+                    } else{
+                        obj[key] = value
+                    }
+                }  
+            })
+        } else {
+            Object.keys(a_map).forEach(key => {
+                const value = a_map[key];
+                if (value instanceof Object && !(value instanceof Date)){
+                    obj[key] = Firebase.toObject(value)
+                } else{
+                    if (value instanceof Date){
+                        obj[key] = admin.firestore.Timestamp.fromDate(value)
+                    } else{
+                        obj[key] = value
+                    }
+                        
+                }  
+            });
+        }
+        return obj
+    }
 
     /*
     Get a Reference-Object to apply the CRUD-Methods

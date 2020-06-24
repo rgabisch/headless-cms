@@ -27,7 +27,7 @@ class WriteContentUseCase {
 
         if (creator.hasNotOpens(command.spaceId))
             throw new UnassignedIdException();
-
+        
         const typeMapping = command.content.map(({typeId, name, content}) => ({
             type: this.typeFactory.createBy(typeId),
             name,
@@ -43,7 +43,7 @@ class WriteContentUseCase {
             this.dateGenerator.generate(),
             new TypeMappings(typeMapping)
         );
-
+        
         creator.write(content, space);
 
         this.creatorRepository.update(creator);

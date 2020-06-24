@@ -12,13 +12,8 @@ class SignUpUseCase {
 
     async execute(signUpCommand: SignUpCommand) {
         const user = await this.userRepository.signUp(signUpCommand.email, signUpCommand.pass);
-
-        if (!user)
-            console.log('Somethign went wrong, look up the firebase log');
-
         const createCreatorCommand = new CreateCreatorCommand(user.user.uid);
         await this.createCreatorUseCase.execute(createCreatorCommand);
-
         return new SignUpEvent(user.user.xa)
     }
 
