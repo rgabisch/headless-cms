@@ -14,6 +14,7 @@ import SignUpUseCase from "./identifying/src/domain/usecases/SignUpUseCase";
 import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUserRepository";
 import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
 import path from "path";
+import cors from 'cors';
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
@@ -41,19 +42,16 @@ if (process.env.NODE_ENV == Environment.DEV) {
 }
 
 app.use(bodyParser.json());
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:8080',
+    allowedHeaders: ['Origin, X-Requested-With, content-type, creatorId, Authorization']
+}));
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, creatorId, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
 app.use('', identifyingController.routes());
 
 app.use(async (req, res, next) => {
     const authorization = req.get('Authorization') ?? '';
-
     if (process.env.NODE_ENV == Environment.DEV) {
         req.headers._creatorId = authorization;
         return next();
