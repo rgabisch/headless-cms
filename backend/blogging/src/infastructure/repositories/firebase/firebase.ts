@@ -85,11 +85,12 @@ class Firebase {
         key_values (object): the data to be stored
     */
     async db_add(new_id: string, key_values: any) {
-        const my_object = Firebase.toObject(key_values)
+        const my_object = key_values
+        // const my_object = Firebase.toObject(key_values)
         if (new_id.trim() != "") {
             let ref = this.ref(new_id)
             if (!await this.exists(ref)) {
-                ref.set(my_object)  
+                ref.set(my_object)
             } else {
                 console.log(`[ERROR]: Insert - Object with ID ${new_id} already exists`)
             }
@@ -228,34 +229,34 @@ class Firebase {
 
     return Object
     */
-    private static toObject(a_map: any){
+    private static toObject(a_map: any) {
         const obj = Object.fromEntries([])
 
-        if (a_map instanceof Map){
+        if (a_map instanceof Map) {
             a_map.forEach((value: any, key: any) => {
-                if (value instanceof Object && !(value instanceof Date)){
+                if (value instanceof Object && !(value instanceof Date)) {
                     obj[key] = Firebase.toObject(value)
-                } else{
-                    if (value instanceof Date){
+                } else {
+                    if (value instanceof Date) {
                         obj[key] = admin.firestore.Timestamp.fromDate(value)
-                    } else{
+                    } else {
                         obj[key] = value
                     }
-                }  
+                }
             })
         } else {
             Object.keys(a_map).forEach(key => {
                 const value = a_map[key];
-                if (value instanceof Object && !(value instanceof Date)){
+                if (value instanceof Object && !(value instanceof Date)) {
                     obj[key] = Firebase.toObject(value)
-                } else{
-                    if (value instanceof Date){
+                } else {
+                    if (value instanceof Date) {
                         obj[key] = admin.firestore.Timestamp.fromDate(value)
-                    } else{
+                    } else {
                         obj[key] = value
                     }
-                        
-                }  
+
+                }
             });
         }
         return obj

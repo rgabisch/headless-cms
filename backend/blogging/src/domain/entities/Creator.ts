@@ -17,24 +17,12 @@ class UndefinedSpaceException implements Error {
 
 class Creator {
 
-    private static cache = new Map()
-
     constructor(readonly id: string,
                 public schemas: Map<string, Schema>,
                 public spaces: Map<string, Space>) {
         if (id.trim() === '')
             throw new EmptyValueException();
-        Creator.cache.set(this.id, this)
     }
-
-    public static inCache(id: string): boolean{
-        return Creator.cache.has(id)
-    }
-
-    public static get(id: string): Creator{
-        return Creator.cache.get(id)
-    }
-
 
     define(schema: Schema): void {
         this.schemas.set(schema.id, schema);
