@@ -10,8 +10,9 @@
     "prestart:dev": "npm run build",
     "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
     "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
+    "prestart:prod": "npm run build",
     "start:prod": "cross-env NODE_ENV=production node ./dist/app.js",
-    "prestart:prod": "npm run build"
+    "start:watch:prod": "cross-env NODE_ENV=production nodemon -e js,ts ./app.ts"
   },
   "author": "",
   "license": "ISC",

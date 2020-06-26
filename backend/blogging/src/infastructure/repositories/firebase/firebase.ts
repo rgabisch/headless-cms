@@ -9,6 +9,17 @@ A Class to initialize a connection to the fire(data)base
 the database is pre-set on: "https://headless-cms-15c61.firebaseio.com"
 the credentials are pre-set based on the firebase serviceaccount
 */
+admin.initializeApp({
+    credential: admin.credential.cert({
+        clientEmail: serviceAccount.client_email,
+        privateKey: serviceAccount.private_key,
+        projectId: serviceAccount.project_id
+    }),
+    databaseURL: "https://headless-cms-15c61.firebaseio.com",
+    storageBucket: "headless-cms-15c61.appspot.com"
+});
+
+
 class Firebase {
 
     // Root-Destination (e.g. 'Space', 'Type', ...)
@@ -17,16 +28,6 @@ class Firebase {
 
     // Constructor to initialize the database connection
     constructor(root: string) {
-
-        admin.initializeApp({
-            credential: admin.credential.cert({
-                clientEmail: serviceAccount.client_email,
-                privateKey: serviceAccount.private_key,
-                projectId: serviceAccount.project_id
-            }),
-            databaseURL: "https://headless-cms-15c61.firebaseio.com",
-            storageBucket: "headless-cms-15c61.appspot.com"
-        });
 
         this.root = root;
         const storage = new Storage({keyFilename: "./serviceaccount.json"});
@@ -50,7 +51,8 @@ class Firebase {
         if (await this.exists(ref)) {
             return (await ref.once('value')).val();
         } else {
-            console.log(`[ERROR]: Read - Object with ID ${id} doesn't exists`)
+            console.log(`[INFO]: Read - Object with ID ${id} doesn't exists`)
+            return false
         }
     }
 

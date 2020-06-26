@@ -16,9 +16,10 @@ class UndefinedSpaceException implements Error {
 }
 
 class Creator {
+
     constructor(readonly id: string,
-                private schemas: Map<string, Schema>,
-                private spaces: Map<string, Space>) {
+                public schemas: Map<string, Schema>,
+                public spaces: Map<string, Space>) {
         if (id.trim() === '')
             throw new EmptyValueException();
     }
