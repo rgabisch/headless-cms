@@ -3,15 +3,12 @@
     <v-col>
       <v-card class="p-3">
         <h1>{{spacename}}</h1>
-        <br />
-        <p>Erstelle eine neue Seite für {{spacename}}</p>
-        <v-btn color="warning" :to="{ name: 'createContent'}">Seite erstellen</v-btn>
       </v-card>
       <br />
       <v-card>
         <v-card-subtitle>Übersicht</v-card-subtitle>
-        <v-card-text v-if="contents == []">
-          <strong>Hinweis:</strong>Erstelle eine neue Seite um in diese in der Liste auswählen zu können.
+        <v-card-text v-if="!contents.length">
+          <strong>Hinweis:</strong>Erstelle eine neue Seite um diese in der Liste auswählen zu können.
         </v-card-text>
         <v-col lg="12">
           <v-list-item
@@ -30,9 +27,23 @@
     </v-col>
     <v-col lg="3" class="ml-5">
       <v-card class="p-3">
-        <v-card-title>Aktionen</v-card-title>
+        <v-card-title>Seite erstellen</v-card-title>
+        <v-form>
+          <v-text-field
+                  label="Titel der Seite"
+                  placeholder=" "
+                  v-model="newContentName"
+          ></v-text-field>
+          <v-btn
+                  large
+                  block
+                  color="#FF8E3C"
+                  @click="storeContent"
+          >
+            Erstellen
+          </v-btn>
+        </v-form>
       </v-card>
-      <v-card class="p-3 mt-3">{{contents}}</v-card>
     </v-col>
   </v-row>
 </template>
@@ -45,24 +56,29 @@ export default {
   props: ["sid"],
   data: () => ({
     contents: [],
-    spacename: "undefined"
+    spacename: "",
+    newContentName: ""
   }),
   computed: {
     spaceId() {
       return this.sid;
     }
   },
+  methods: {
+    storeContent() {
+      let storeInfo = [this.newContentName, this.$store.getters.space];
+      this.$store.commit('SET_CONTENT', storeInfo);
+      this.$router.push({name: "createContent"});
+    }
+  },
   async mounted() {
     this.contents = await store.dispatch('viewSpace', this.spaceId);
-    //TODO getSpaceById() for {{ Space name }}
-    this.spacename = this.$store.getters.spaceID;
-    console.log(this.$store.getters.spaceID);
+    this.spacename = this.$store.getters.space.name;
+    this.newContentName = ""
   }
 };
 </script>
 
 <style scoped>
-#error_padding {
-  margin-top: -12px;
-}
+
 </style>

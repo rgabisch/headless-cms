@@ -10,7 +10,7 @@
     <v-list-item-icon>
           <v-icon>mdi-account</v-icon>
     </v-list-item-icon>
-          <v-list-item-content v-if="email != undefined">{{ email }}</v-list-item-content>
+          <v-list-item-content v-if="email !== undefined">{{ email }}</v-list-item-content>
         </v-list-item>
 
 <v-divider id="spacer"></v-divider>
@@ -64,12 +64,12 @@ export default {
         { text: 'Spaces',
         icon: 'mdi-folder',
         to: '/spaces' },
-        { text: 'Schema erstellen',
-        icon: 'mdi-gesture',
-        to: '/create-contenttyp' },
-        { text: 'Seiten erstellen',
+        { text: 'Schemas',
+          icon: 'mdi-gesture',
+          to: '/schemas' },
+        /*{ text: 'Seiten erstellen',
         icon: 'mdi-send',
-        to: '/create-content' },
+        to: '/create-content' },*/
       ],
       }),
       methods: {

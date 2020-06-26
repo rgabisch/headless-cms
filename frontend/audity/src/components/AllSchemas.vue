@@ -1,31 +1,44 @@
 <template>
     <v-row>
         <v-col>
-            <h1>Schemas</h1>
-            <v-container v-if="schemas.length">
-                <v-card v-for="schema in schemas"
+            <v-card class="p-3">
+                <h1>Schemas</h1>
+            </v-card>
+            <br />
+            <v-card>
+                <v-card-subtitle>Übersicht</v-card-subtitle>
+                <v-card-text v-if="!schemas.length">
+                    <strong>Hinweis:</strong>Erstelle zuerst ein Schema.
+                </v-card-text>
+                <v-col lg="12">
+                    <v-list-item
+                        v-for="schema in schemas"
                         :key="schema.id"
                         class="mt-3"
                         :to="{ name: 'schema', params: { id: schema.id }}"
-                >
-                    <v-card-title>{{schema.name}}</v-card-title>
-                </v-card>
-            </v-container>
-            <v-container v-else>
-                <v-card>
-                    <v-card-text>Lass uns dein erstes
-                        <router-link :to="{ name: 'createSchema'}">Schema erstellen</router-link>
-                    </v-card-text>
-                </v-card>
-            </v-container>
+                        color="warning">
+                        <v-list-item-content>
+                            <v-list-item-title v-text="schema.name"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-col>
+            </v-card>
         </v-col>
         <v-col lg="3" class="ml-5">
-            <v-card class="p-3">
-                <v-card-title>Aktionen</v-card-title>
-            </v-card>
-            <v-card class="p-3 mt-3">
-
-            </v-card>
+        <v-card class="pa-3">
+            <v-card-title>Schema erstellen</v-card-title>
+            <v-text-field
+                    label="Name des Schemas"
+                    placeholder=" "
+                    v-model="newSchemaName"
+            ></v-text-field>
+            <v-btn
+                    large
+                    block
+                    color="#FF8E3C"
+                    @click="storeSchema"
+                    >Erstellen</v-btn>
+        </v-card>
         </v-col>
     </v-row>
 </template>
@@ -36,10 +49,18 @@
     export default {
         name: "AllSchemas",
         data: () => ({
-            schemas: []
+            schemas: [],
+            newSchemaName: ""
         }),
+        methods: {
+            storeSchema() {
+                this.$store.commit('SET_SCHEMA', this.newSchemaName);
+                this.$router.push('create-schema');
+            }
+        },
         async mounted() {
             this.schemas = await store.dispatch('listAllSchemas')
+            this.newSchemaName = ""
         }
     }
 </script>

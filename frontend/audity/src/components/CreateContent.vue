@@ -20,21 +20,23 @@
                         item-value="id"
                         v-model="selectedSpace"
                 ></v-select>
-
                 <v-card class="p-3 mt-3 text-center">
-                    <v-card-title>{{ cardTitle }}</v-card-title>
+                    <v-card-title id="schema-type">{{ cardTitle }}</v-card-title>
                     <Container
+                            id ="drop-container"
                             class="drop-container"
                             group-name="1"
                             :get-child-payload="getChildPayloadTest"
                             @drop="onDrop($event)">
-                        <div class="p-3" v-for="type in selectedSchema.types" :key="type.id">
-                            <type :id="type.id" :label="type.name" @textInput="handleData($event, type)"></type>
+                        <div id="drop-text">drop here</div>
+                        <div v-if="selectedSchema.typeDefinition !== ''">
+                            <div class="p-3" v-for="def in selectedSchema.typeDefinition" :key="def">
+                                <div class="p-3" v-for="type in def" :key="type.name">
+                                    <type :id="type.type.id" :label="type.name" @input="handleData($event, type)"></type>
+                                </div>
+                            </div>
                         </div>
                     </Container>
-                </v-card>
-                <v-card>
-
                 </v-card>
             </v-form>
         </v-col>
@@ -42,7 +44,7 @@
             <v-card class="p-3">
                 <v-card-title>Aktionen</v-card-title>
                 <v-btn
-                        x-large
+                        large
                         block
                         color="#FF8E3C"
                         @click="createContent"
@@ -50,7 +52,7 @@
                 </v-btn>
                 <v-btn
                         class="mt-3"
-                        x-large
+                        large
                         block
                         color="#FF8E3C"
                 >Veröffentlichen
@@ -58,8 +60,9 @@
             </v-card>
 
             <v-card class="p-3 mt-3">
-                <v-card-title>Contenttypen</v-card-title>
+                <v-card-title>Schemas</v-card-title>
                 <Container
+                        v-if="schemas.length"
                         behaviour="copy"
                         group-name="1"
                         :get-child-payload="getChildPayloadSchemas">
@@ -74,6 +77,13 @@
                         </div>
                     </Draggable>
                 </Container>
+                <v-btn
+                    large
+                    block
+                    color="#FF8E3C"
+                    to="create-schema"
+                >Erstellen
+                </v-btn>
             </v-card>
         </v-col>
     </v-row>
@@ -95,7 +105,7 @@
             spaces: [],
             selectedSchema: {},
             selectedSpace : '',
-            cardTitle: 'Drop here',
+            cardTitle: '',
             formValid: false,
             rules: {
                 required: [value => !!value || "Required"]
@@ -103,10 +113,17 @@
         }),
         methods: {
             onDrop(dropResult) {
+                const dropContainer = document.getElementById("drop-container");
+                dropContainer.style.backgroundColor = "white";
+                dropContainer.style.border = "none"
+                const dropText = document.getElementById('drop-text');
+                dropText.style.visibility = "hidden";
+                dropText.style.lineHeight = "0px";
+
                 this.cardTitle = dropResult.payload.name;
                 this.selectedSchema = JSON.parse(JSON.stringify(dropResult.payload));
-                for (let i = 0; i < this.selectedSchema.types.length; i++) {
-                    this.selectedSchema.types[i].content = ''
+                for (let i = 0; i < this.selectedSchema.typeDefinition.definitions.length; i++) {
+                    this.selectedSchema.typeDefinition.definitions[i].content = ''
                 }
             },
             getChildPayloadSchemas(index) {
@@ -118,29 +135,12 @@
             async createContent() {
                 let Content = {
                     name: this.name,
-                    schemaId: this.selectedSchema.id,
-                    creatorId: this.creator,
-                    // TODO when types are implemented
-                    content: [
-                        {
-                            "typeId": "1",
-                            "name": "Podcast Title",
-                            "content": "Test Podcast Title"
-                        },
-                        {
-                            "typeId": "1",
-                            "name": "Description",
-                            "content": "Blabala blablaaa bbballlaa"
-                        },
-                        {
-                            "typeId": "6",
-                            "name": "Podcast",
-                            "content": "podcast.mp3"
-                        }
-                    ]
-                };
-
-                await store.dispatch('writeContent', {space: this.selectedSpace, content: Content});
+                    spaceId: this.selectedSpace,
+                    schemaId: this.schemaId,
+                    content: this.selectedSchema.typeDefinition.definitions
+                }
+                console.log(Content)
+                //await store.dispatch('writeContent', {space: this.selectedSpace, content: Content});
             },
             handleData: function (e, type) {
                 type.content = e
@@ -152,22 +152,32 @@
                 this.schemas = await store.dispatch('listAllSchemas');
             }
         },
-        mounted() {
-            this.$refs.form.validate();
+        async mounted() {
+            //this.$refs.form.validate();
             this.getSpaces();
             this.getSchemas();
 
             //Bekommt den Namen und der Seite und den Namen des Spaces aus Vuex
             this.name = this.$store.getters.content.name;
-            this.selectedSpace = this.$store.getters.content.spaceName
+            this.selectedSpace = this.$store.getters.content.inSpace
 
         },
 
         computed: {
             // map `this.user` to `this.$store.getters.user`
             ...mapGetters({
-                user: "user",
+                user: "user"
             })
         }
     }
 </script>
+<style>
+    #drop-text{
+        text-align: center;
+        vertical-align: middle;
+        line-height: 330px;
+        font-size: 2rem;
+        color: #dcd9d9;
+        position: static;
+    }
+</style>
