@@ -21,7 +21,6 @@
         <v-card-title>Aktionen</v-card-title>
         <v-btn class="mt-3" block color="#FF8E3C">Veröffentlichen</v-btn>
       </v-card>
-      <v-card class="p-3 mt-3">{{content}}</v-card>
     </v-col>
   </v-row>
 </template>
