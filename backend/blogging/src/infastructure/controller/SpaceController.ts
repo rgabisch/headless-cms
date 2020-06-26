@@ -27,7 +27,6 @@ class SpaceController {
                 const openedSpaceEvent = await this.openSpaceUseCase.execute(command);
                 res.send(openedSpaceEvent);
             } catch (e) {
-                console.log(e.name);
                 let errorMessage = this.errorFactory.createFrom(e, command);
                 res.status(400).send(errorMessage);
             }
@@ -40,7 +39,6 @@ class SpaceController {
                 const writtenSpacesEvent = await this.listAllSpacesUseCase.execute(command);
                 res.send(writtenSpacesEvent.content);
             } catch (e) {
-                console.log(e.name);
                 res.status(400).send('post body is invalid');
             }
 

@@ -54,7 +54,6 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
         const mapped = this.creatorToDatabaseMapper.map(creator);
         await super.db_update(creator.id, mapped)
     }
-
 }
 
 export default FireBaseCreatorRepository;
