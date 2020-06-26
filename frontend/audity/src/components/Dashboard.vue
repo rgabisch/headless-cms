@@ -42,7 +42,8 @@
                             placeholder=" "
                             :items="spaces"
                             item-text="name"
-                            v-model="spaceName"
+                            return-object
+                            v-model="selectedSpace"
                             >
                     </v-select>
                     <v-btn
@@ -50,7 +51,6 @@
                             block
                             color="#FF8E3C"
                             @click="storeContent"
-                            to="/create-content"
                     >
                         Erstellen
                     </v-btn>
@@ -76,18 +76,18 @@
                 </v-form>
             </v-card>
             <v-card class="pa-3 mt-2">
-                <v-card-title>Contenttyp erstellen</v-card-title>
+                <v-card-title>Schema erstellen</v-card-title>
                 <v-text-field
-                        label="Name des Contenttyps"
+                        label="Name des Schemas"
                         placeholder=" "
-                        v-model="contenttypName"
+                        v-model="schemaName"
                 ></v-text-field>
                 <v-btn
                         large
                         block
                         color="#FF8E3C"
-                        @click="storeContentyp"
-                        to="create-contenttyp">Erstellen</v-btn>
+                        @click="storeSchema"
+                        >Erstellen</v-btn>
             </v-card>
         </v-col>
     </v-row>
@@ -104,9 +104,8 @@
         data: () => ({
             spaceName: "",
             seiteName: "",
-            contenttypName:"",
-            //Replace creator ID with LoggedIn user
-            creator: "1",
+            schemaName:"",
+            selectedSpace: "",
             spaces: []
         }),
         methods: {
@@ -119,15 +118,17 @@
             async getSpaces() {
                 this.spaces = await store.dispatch('listAllSpaces');
             },
-            //Speichert Namen des Contentypen in Vuex
-            storeContentyp() {
-                var storeContenttypName = this.contenttypName
-                this.$store.commit('SET_CONTENTTYPNAME', storeContenttypName)
+            //Speichert Namen des Schemas in Vuex
+            storeSchema() {
+                this.$store.commit('SET_SCHEMA', this.schemaName);
+                this.$router.push('create-schema');
+
             },
             //Speichert Name der Seite und Name des Spaces in Vuex
             storeContent() {
-                var storePageInfo = [this.seiteName, this.spaceName]
-                this.$store.commit('SET_CONTENT', storePageInfo)
+                let storePageInfo = [this.seiteName, this.selectedSpace];
+                this.$store.commit('SET_CONTENT', storePageInfo);
+                this.$router.push('create-content');
             }
         },
         mounted() {

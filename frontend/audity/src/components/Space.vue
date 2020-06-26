@@ -3,25 +3,18 @@
     <v-col>
       <v-card class="p-3">
         <h1>Deine Spaces</h1>
-        <br />
-        <v-form>
-          <v-text-field label="Name des Spaces" filled dense v-model="spaceName"></v-text-field>
-          <v-btn id="submit-btn" class="mr-4" @click="addSpace">Space erstellen</v-btn>
-        </v-form>
       </v-card>
       <br />
-      <div v-if="dataChecker == 'created'">
-        <div id="alert" class="alert alert-success">
+      <div v-if="dataChecker === 'created'">
+        <div class="alert alert-success">
           <strong>Erfolg!</strong> Dein Baustein wurde erstellt!
         </div>
       </div>
-
-      <div v-else-if="dataChecker == 'fail'">
-        <div id="alert" class="alert alert-danger">
+      <div v-else-if="dataChecker === 'fail'">
+        <div class="alert alert-danger">
           <strong>Error!</strong> Es ist ein Fehler aufgetreten bei dem Erstellen eines neuen Elements!
         </div>
       </div>
-      <br />
       <v-card>
         <v-card-subtitle>Übersicht</v-card-subtitle>
         <v-card-text v-if="spaces == ''">
@@ -33,9 +26,8 @@
                   :key="space.name"
                   class="mt-3"
                   :to="{ name: 'listAllContents', params: { sid: space.id }}"
-                  v-on:click.capture="commitID(space.name)"
-                  color="warning"
-          >
+                  v-on:click.capture="commitID(space)"
+                  color="warning">
             <v-list-item-content>
               <v-list-item-title v-text="space.name"></v-list-item-title>
             </v-list-item-content>
@@ -43,8 +35,27 @@
         </v-col>
       </v-card>
     </v-col>
-
     <v-col lg="3" class="ml-5">
+      <v-card class="pa-3">
+        <v-card-title>Space erstellen</v-card-title>
+        <v-form>
+          <v-text-field
+                  label="Name des Spaces"
+                  placeholder=" "
+                  v-model="spaceName">
+          </v-text-field>
+          <v-btn
+                  large
+                  block
+                  color="#FF8E3C"
+                  id="submit-btn"
+                  @click="addSpace"
+          >
+            Erstellen
+          </v-btn>
+        </v-form>
+      </v-card>
+      <br />
       <v-card class="p-3">
         <v-card-title>Was ist ein Space?</v-card-title>
         <v-card-text>
@@ -86,8 +97,8 @@ export default {
       deleteSpace() {
         //To Do
       },
-      commitID(name) {
-        this.$store.commit("SET_SPACEID", name);
+      commitID(space) {
+        this.$store.commit("SET_SPACE", space);
       },
     async getData() {
       this.spaces = await store.dispatch('listAllSpaces');
@@ -100,13 +111,4 @@ export default {
   };
 </script>
 <style scoped>
-  .btn-primary,
-  .btn-primary:hover,
-  .btn-primary:active,
-  .btn-primary:visited {
-    background-color: rgb(235, 117, 14) !important;
-  }
-  #error_padding {
-    margin-top: -12px;
-  }
 </style>
