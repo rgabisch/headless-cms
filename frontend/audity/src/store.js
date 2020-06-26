@@ -26,9 +26,9 @@ export default new Vuex.Store({
         },
         content: {
             name: '',
-            spaceName: ''
+            inSpace: ''
         },
-        contentyp: {
+        schema: {
             name: ''
         }
     },
@@ -42,14 +42,14 @@ export default new Vuex.Store({
         usersEmail(state) {
             return state.user.email
         },
-        spaceID: state => {
-            return state.space.id
+        space: state => {
+            return state.space
         },
         content(state) {
             return state.content
         },
-        contenttyp(state) {
-            return state.contentyp
+        schema(state) {
+            return state.schema
         }
     },
     mutations: {
@@ -64,8 +64,9 @@ export default new Vuex.Store({
             state.user.email = email;
             console.log(`SET_USER_EMAIL: ${email}`)
         },
-        SET_SPACEID(state, idnr) {
-            state.space.id = idnr;
+        SET_SPACE(state, space) {
+            state.space.id = space.id;
+            state.space.name = space.name;
         },
         increment(state) {
             // mutate state
@@ -73,23 +74,23 @@ export default new Vuex.Store({
         },
         SET_CONTENT(state, createPageInfo) {
             state.content.name = createPageInfo[0];
-            state.content.spaceName = createPageInfo[1];
+            state.content.inSpace = createPageInfo[1];
         },
-        SET_CONTENTTYPNAME(state, contenttypName) {
-            state.contentyp.name = contenttypName
+        SET_SCHEMA(state, schemaName) {
+            state.schema.name = schemaName
         }
     },
     actions: {
-        SET_SPACEID(context, payload) {
+        SET_SPACE(context, payload) {
             setTimeout(() => {
-                context.commit('SET_SPACEID', payload)
+                context.commit('SET_SPACE', payload)
             }, 2000);
         },
         SET_CONTENT(context, payload) {
             context.commit('SET_CONTENT', payload)
         },
-        SET_CONTENTTYPNAME(context, payload) {
-            context.commit('SET_CONTENTTYPNAME', payload)
+        SET_SCHEMA(context, payload) {
+            context.commit('SET_SCHEMA', payload)
         },
         async listAllSpaces({state}) {
             const response = await axios.get(
@@ -117,14 +118,11 @@ export default new Vuex.Store({
         },
         async openSpace({state}, name) {
             await axios.post(
-                `${state.service.url}/spaces`,
-                {name, userid: state.authentication.token},
+                `${state.service.url}/spaces`, {name},
                 state.service.config
             );
         },
         async writeContent({state}, payload) {
-            payload.creator.creatorId = state.authentication.token;
-
             await axios.post(
                 `${state.service.url}/contents/spaces/${payload.space}`,
                 payload.content,
@@ -139,8 +137,10 @@ export default new Vuex.Store({
             return response.data;
         },
         async defineSchema({state}, schema) {
-            schema.creatorId = state.authentication.token;
-            await axios.post(`${state.service.url}/schemas`, schema);
+            await axios.post(
+                `${state.service.url}/schemas`, schema,
+                state.service.config
+            );
         },
         async viewSchema({state}, schema) {
             const response = await axios.get(
@@ -151,7 +151,7 @@ export default new Vuex.Store({
         },
         async viewContent({state}, {content, space}) {
             const response = await axios.get(
-                `${state.service.url}/${content}/spaces/${space}`,
+                `${state.service.url}/contents/${content}/spaces/${space}`,
                 state.service.config
             );
             return response.data;
