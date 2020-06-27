@@ -26,7 +26,9 @@
     "firebase-admin": "latest",
     "moment": "^2.26.0",
     "uuid": "^8.0.0",
-    "watson-developer-cloud": "^4.0.1"
+    "watson-developer-cloud": "^4.0.1",
+    "form-data": "^3.0.0",
+    "formidable": "^1.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
