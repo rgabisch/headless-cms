@@ -1,21 +1,40 @@
 import {CreatorRepository} from "../repositories/CreatorRepository";
 import ListAllSchemasCommand from "../commands/ListAllSchemasCommand";
-import ListAllSchemasEvent from "../events/ListAllSchemasEvent";
+import ListedAllSchemasEvent from "../events/ListedAllSchemasEvent";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
-class ViewSchemaUseCase{
-    constructor(private creatorRepository: CreatorRepository){
+class ListAllSchemaUseCase {
+    constructor(private creatorRepository: CreatorRepository) {
     }
 
-    async execute(command: ListAllSchemasCommand): Promise<ListAllSchemasEvent>{
-        const creator = await this.creatorRepository.findBy(command.creatorId)
+    async execute(command: ListAllSchemasCommand): Promise<ListedAllSchemasEvent> {
+        const creator = await this.creatorRepository.findBy(command.creatorId);
 
         if (!creator)
             throw new UnassignedIdException();
 
-        const schemas = creator.getAllSchemas()
-        return new ListAllSchemasEvent(schemas)
+        const schemas = creator.getAllSchemas();
+
+        const mappedSchemas = [];
+        for (let schema of schemas) {
+
+            const mappedTypeDefinition = [];
+            for (let typeDefinition of schema.typeDefinition) {
+                mappedTypeDefinition.push({
+                    typeId: typeDefinition.type.id,
+                    name: typeDefinition.name
+                })
+            }
+
+            mappedSchemas.push({
+                id: schema.id,
+                name: schema.name,
+                types: mappedTypeDefinition
+            });
+        }
+
+        return new ListedAllSchemasEvent(mappedSchemas)
     }
 }
 
-export default ViewSchemaUseCase
+export default ListAllSchemaUseCase
