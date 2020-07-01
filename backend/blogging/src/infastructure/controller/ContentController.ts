@@ -61,11 +61,11 @@ class ContentController {
 
                     let command = new WriteContentCommand(
                         contentJson.body.schemaId,
-                        <string>contentJson.headers._creatorId,
-                        contentJson.params.spaceId,
+                        <string>req.headers._creatorId,
+                        req.params.spaceId,
                         contentJson.body.name,
                         contentJson.body.content,
-                        <string | undefined>contentJson.query.dateFormat,
+                        <string | undefined>req.query.dateFormat,
                     );
                     
                     let files_json = files
