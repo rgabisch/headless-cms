@@ -8,7 +8,7 @@ class ListAllSpacesUseCase {
 
     async execute(command: ListAllSpacesCommand): Promise<ListedAllSpacesEvent> {
         const creator = await this.creatorRepository.findBy(command.creatorId);
-
+        
         if (!creator) {
             throw new UnassignedIdException();
         }

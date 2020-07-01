@@ -37,6 +37,19 @@ export class TypeDefinition {
 
         return true;
     }
+
+    [Symbol.iterator](): Iterator<{ type: Type, name: string }> {
+        let counter = 0;
+        const definitions = this.definitions;
+        return {
+            next: function (...args: [] | [undefined]): IteratorYieldResult<{ type: Type, name: string }> | IteratorReturnResult<any> {
+                return {
+                    done: counter == definitions.length,
+                    value: definitions[counter++]
+                }
+            }
+        }
+    }
 }
 
 export class TypeMappings implements Iterable<{ type: Type, name: string, content: string }> {

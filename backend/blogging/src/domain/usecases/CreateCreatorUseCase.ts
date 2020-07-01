@@ -13,7 +13,7 @@ class CreateCreatorUseCase {
         const creator = await this.creatorRepository.findBy(command.id);
         if (creator)
             throw new AssignedIdException();
-
+            
         await this.creatorRepository.add(new Creator(command.id, new Map(), new Map()));
 
         return new CreateCreatorEvent(command.id);

@@ -1,20 +1,20 @@
 <template>
         <v-row>
             <v-col>
-                <h1>Contenttyp erstellen</h1>
+                <h1>Schema erstellen</h1>
                 <p>Zurück</p>
                 <v-form v-model="formValid" ref="form">
                     <v-text-field
-                            label="Name des Contenttyps"
+                            label="Name des Schemas"
                             filled
                             dense
                             v-model="name"
                             :rules="rules.required"
                     ></v-text-field>
-                    <v-card class="p-3 mt-3 text-center" >
-                        <v-card-title class="">Drop here</v-card-title>
+                    <v-card class="pa-3 mt-3 text-center" >
                         <Container
-                                class="drop-container"
+                                id="drop-container"
+                                class="drop-container pt-4"
                                 group-name="draggable"
                                 :get-child-payload="getChildPayloadSelectedTypes"
                                 @drop="onDropCopy('selectedTypes', $event)">
@@ -31,6 +31,7 @@
                             </Draggable>
                         </Container>
                     </v-card>
+                    <br/>
                     <v-card>
                         <Container
                                 class="delete-container text-center"
@@ -51,13 +52,7 @@
                         @click="createSchema"
                     >Speichern
                     </v-btn>
-                    <v-btn
-                        class="mt-3"
-                        large
-                        block
-                        color="#FF8E3C"
-                    >Veröffentlichen
-                    </v-btn>
+                    {{selectedTypes}}
                 </v-card>
                 <v-card class="p-3 mt-3">
                     <v-card-title>Typen</v-card-title>
@@ -128,6 +123,8 @@ export default {
           this[collection] = this.applyDrag(this[collection], newObj)
       },
       onDropDelete(collection, dropResult) {
+          console.log(collection);
+          console.log("drop:",dropResult)
           collection.splice(dropResult, 1)
       },
       getChildPayloadTypes (index) {
@@ -139,12 +136,11 @@ export default {
       async createSchema() {
           if (this.formValid) {
               let Schema = {
-                  creatorId: this.creator,
                   name: this.name,
                   types: this.selectedTypes
               };
-              console.log(this.selectedTypes);
               await store.dispatch('defineSchema', Schema)
+              await this.$router.push('schemas');
           }
           else {
               alert('All required fields must be filled!');
@@ -154,17 +150,14 @@ export default {
   mounted() {
       this.$refs.form.validate();
 
-      //Bekommt den Namen des Contenttypen aus Vuex
-      this.name = this.$store.getters.contenttyp.name
+      //Bekommt den Namen des Schemas aus Vuex
+      this.name = this.$store.getters.schema.name
   }
 }
 
 </script>
 
 <style>
-    .drop-container{
-        min-height: 330px;
-    }
     .column-drag-handle{
         float: left;
         font-size: 2rem;
@@ -181,5 +174,10 @@ export default {
     }
     .draggable-item{
         cursor: grab;
+    }
+    .drop-container {
+        min-height: 330px;
+        border: 2px dashed #dcd9d9;
+        background: #f0f0f0;
     }
 </style>

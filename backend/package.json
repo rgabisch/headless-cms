@@ -10,24 +10,29 @@
     "prestart:dev": "npm run build",
     "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
     "start:dev": "cross-env NODE_ENV=development node ./dist/app.js",
+    "prestart:prod": "npm run build",
     "start:prod": "cross-env NODE_ENV=production node ./dist/app.js",
-    "prestart:prod": "npm run build"
+    "start:watch:prod": "cross-env NODE_ENV=production nodemon -e js,ts ./app.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^5.0.1",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.15.0",
     "firebase-admin": "latest",
     "moment": "^2.26.0",
     "uuid": "^8.0.0",
-    "watson-developer-cloud": "^4.0.1"
+    "watson-developer-cloud": "^4.0.1",
+    "form-data": "^3.0.0",
+    "formidable": "^1.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/cors": "^2.8.6",
     "@types/express": "^4.17.6",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.11",

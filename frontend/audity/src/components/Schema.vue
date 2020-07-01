@@ -1,27 +1,44 @@
 <template>
     <v-row>
         <v-col>
-            <h1>{{schema.name}}</h1>
+            <v-card class="p-3">
+                <h1>{{schema.name}}</h1>
+            </v-card>
             <v-card class="p-3 mt-3 text-center">
                 <div class="p-3" v-for="type in schema.typeDefinition.definitions" :key="type.name">
                     <v-card>
-                        <v-card-subtitle>{{type.name}} ({{type.type.id}})</v-card-subtitle>
+                        <v-card-subtitle>{{type.name}}</v-card-subtitle>
                     </v-card>
                 </div>
             </v-card>
         </v-col>
         <v-col lg="3" class="ml-5">
             <v-card class="p-3">
-                <v-card-title>Aktionen</v-card-title>
-                <v-btn
-                        class="mt-3"
-                        block
-                        color="#FF8E3C"
-                >Veröffentlichen
-                </v-btn>
-            </v-card>
-            <v-card class="p-3 mt-3">
-
+                <v-card-title>Seite erstellen</v-card-title>
+                <v-form>
+                    <v-text-field
+                            label="Titel der Seite"
+                            placeholder=" "
+                            v-model="newContentName"
+                    ></v-text-field>
+                    <v-select
+                            label="Veröffentlichen in Space"
+                            placeholder=" "
+                            :items="spaces"
+                            item-text="name"
+                            return-object
+                            v-model="selectedSpace"
+                    >
+                    </v-select>
+                    <v-btn
+                            large
+                            block
+                            color="#FF8E3C"
+                            @click="storeContent"
+                    >
+                        Erstellen
+                    </v-btn>
+                </v-form>
             </v-card>
         </v-col>
     </v-row>
@@ -34,15 +51,26 @@
         name: "Schema",
         props: ['id'],
         data: () => ({
-            schema: ''
+            schema: '',
+            spaces: [],
+            newContentName: '',
+            selectedSpace: ''
         }),
         computed: {
             schemaId() {
                 return this.id
             }
         },
-        mounted() {
-            this.schema = store.dispatch('viewSchema', this.schemaId);
+        methods: {
+            storeContent() {
+                let storeInfo = [this.newContentName, this.selectedSpace];
+                this.$store.commit('SET_CONTENT', storeInfo);
+                this.$router.push({name: 'createContent'});
+            }
+        },
+        async mounted() {
+            this.schema = await store.dispatch('viewSchema', this.schemaId);
+            this.spaces = await store.dispatch('listAllSpaces');
         },
     }
 </script>

@@ -1,55 +1,69 @@
 <template>
-    <!-- Text Type -->
-    <div v-if="id === '1'">
-        <v-card>
+    <v-card class="pb-3">
+        <!-- Text  -->
+        <div v-if="id === '1'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
             <v-text-field
                     placeholder=""
                     outlined
-                    v-model="textInput"
+                    v-model="input"
             ></v-text-field>
-        </v-card>
-    </div>
-    <!-- Audio Type -->
-    <div v-else-if="id === '6'">
-        <v-card>
+        </div>
+        <!-- Rich Text -->
+        <div v-else-if="id === '2'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <v-btn><label for="upload-audio">Search</label></v-btn>
-            <input type="file" name="audio" id="upload-audio" />
-
-        </v-card>
-    </div>
-    <!-- Date Type -->
-    <div v-else-if="id === '4'">
-        <v-card>
+            <v-text-field
+                    placeholder=""
+                    outlined
+                    v-model="input"
+            ></v-text-field>
+        </div>
+        <!-- Number -->
+        <div v-else-if="id === '3'">
+            <v-card-subtitle>{{label}}</v-card-subtitle>
+            <v-text-field
+                    placeholder=""
+                    outlined
+                    v-model="input"
+            ></v-text-field>
+        </div>
+        <!-- Date -->
+        <div v-else-if="id === '4'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
             <v-date-picker
-                    v-model="datePicker"
+                    v-model="input"
                     :show-current=true
                     :landscape=true
             ></v-date-picker>
-        </v-card>
-
-    </div>
-    <div v-else>
-        Not yet implemented {{label}}
-    </div>
+        </div>
+        <!-- Image -->
+        <div v-else-if="id === '5'">
+            <v-card-subtitle>{{label}}</v-card-subtitle>
+            <v-btn><label for="upload-image">Search</label></v-btn>
+            <input type="file" name="image" id="upload-image" />
+        </div>
+        <!-- Audio -->
+        <div v-else-if="id === '6'">
+            <v-card-subtitle>{{label}}</v-card-subtitle>
+            <v-btn><label for="upload-audio">Search</label></v-btn>
+            <input type="file" name="audio" id="upload-audio" />
+        </div>
+        <div v-else>
+            Type '{{label}}' with id {{id}} doesn#t exists.
+        </div>
+    </v-card>
 </template>
 <script>
     export default {
         name: 'Type',
         props: ['id', 'label'],
         data: () => ({
-            datePicker: new Date().toISOString().substr(0, 10),
-            rules: {
-                required: [value => !!value || "Required"]
-            },
-            textInput: ''
+            input: ''
         }),
         watch: {
-            handleTextInput: {
+            input: {
                 handler: function() {
-                    this.$emit('textInput', this.textInput);
+                    this.$emit('input', this.input);
                 },
                 deep: true
             }

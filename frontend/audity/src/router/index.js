@@ -48,7 +48,7 @@ const routes = [
                 component: () => import('../components/Content')
             },
             {
-                path: '/create-contenttyp',
+                path: '/create-schema',
                 name: 'createSchema',
                 component: () => import('../components/CreateSchema'),
             },

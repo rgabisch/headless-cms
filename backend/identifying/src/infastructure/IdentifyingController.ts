@@ -19,17 +19,18 @@ class IdentifyingController {
                 const signInEvent = await this.signInUseCase.execute(command);
                 res.send(signInEvent)
             } catch (e) {
+                console.log(e)
                 res.status(400).send('post body is invalid')
             }
         });
 
         router.post('/signup', async (req, res) => {
-            const command = new SignUpCommand(req.body.email, req.body.pass);
-
+            const command = new SignUpCommand(req.body.email, req.body.password);
             try {
                 const signUpEvent = await this.signUpUseCase.execute(command);
                 res.send(signUpEvent)
             } catch (e) {
+                console.log(e)
                 res.status(400).send('post body is invalid')
             }
         });
