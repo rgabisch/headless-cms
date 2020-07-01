@@ -29,7 +29,7 @@ class SchemaController {
             const command = new ListAllSchemasCommand(<string>req.headers._creatorId);
             try {
                 const listAllSchemasEvent = await this.listAllSchemasUseCase.execute(command);
-                res.send(listAllSchemasEvent)
+                res.send(listAllSchemasEvent.schemas)
             } catch (e) {
                 res.status(404).send('404 - No Schema found');
             }
