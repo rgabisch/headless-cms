@@ -1,6 +1,6 @@
 <template>
-    <v-row>
-        <v-col>
+    <v-row class="pa-2">
+        <v-col lg="9" class="col-12">
             <v-card class="p-3">
                 <h1>Schemas</h1>
             </v-card>
@@ -17,6 +17,9 @@
                         class="mt-3"
                         :to="{ name: 'schema', params: { id: schema.id }}"
                         color="warning">
+                        <v-list-item-icon>
+                            <v-icon>mdi-gesture</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title v-text="schema.name"></v-list-item-title>
                         </v-list-item-content>
@@ -24,7 +27,7 @@
                 </v-col>
             </v-card>
         </v-col>
-        <v-col lg="3" class="ml-5">
+        <v-col lg="3">
         <v-card class="pa-3">
             <v-card-title>Schema erstellen</v-card-title>
             <v-text-field
@@ -33,7 +36,6 @@
                     v-model="newSchemaName"
             ></v-text-field>
             <v-btn
-                    large
                     block
                     color="#FF8E3C"
                     @click="storeSchema"
@@ -66,5 +68,7 @@
 </script>
 
 <style scoped>
-
+    a{
+        text-decoration: none;
+    }
 </style>
