@@ -106,7 +106,7 @@ export default new Vuex.Store({
                 state.service.config
             );
 
-            return response.data.schemas;
+            return response.data;
         },
         async listAllContents({state}) {
             const response = await axios.get(
@@ -147,7 +147,7 @@ export default new Vuex.Store({
                 `${state.service.url}/schemas/${schema}`,
                 state.service.config
             );
-            return response.data.schema;
+            return response.data;
         },
         async viewContent({state}, {content, space}) {
             const response = await axios.get(

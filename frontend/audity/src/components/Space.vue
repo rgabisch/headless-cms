@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col>
+  <v-row class="pa-2">
+    <v-col lg="9" class="col-12">
       <v-card class="p-3">
         <h1>Deine Spaces</h1>
       </v-card>
@@ -17,7 +17,7 @@
       </div>
       <v-card>
         <v-card-subtitle>Übersicht</v-card-subtitle>
-        <v-card-text v-if="spaces == ''">
+        <v-card-text v-if="spaces === ''">
           <strong>Hinweis:</strong>Erstelle einen Space um in dieser Liste deine Spaces zu sehen.
         </v-card-text>
         <v-col lg="12">
@@ -28,6 +28,9 @@
                   :to="{ name: 'listAllContents', params: { sid: space.id }}"
                   v-on:click.capture="commitID(space)"
                   color="warning">
+            <v-list-item-icon>
+              <v-icon>mdi-folder</v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title v-text="space.name"></v-list-item-title>
             </v-list-item-content>
@@ -35,7 +38,7 @@
         </v-col>
       </v-card>
     </v-col>
-    <v-col lg="3" class="ml-5">
+    <v-col lg="3">
       <v-card class="pa-3">
         <v-card-title>Space erstellen</v-card-title>
         <v-form>
@@ -45,7 +48,6 @@
                   v-model="spaceName">
           </v-text-field>
           <v-btn
-                  large
                   block
                   color="#FF8E3C"
                   id="submit-btn"
@@ -111,4 +113,7 @@ export default {
   };
 </script>
 <style scoped>
+  a{
+    text-decoration: none;
+  }
 </style>

@@ -1,9 +1,9 @@
 <template>
-        <v-row>
-            <v-col>
+        <v-row class="pa-2">
+            <v-col lg="9" class="col-12">
+                <v-card class="p-3">
                 <h1>Schema erstellen</h1>
                 <p>Zurück</p>
-                <v-form v-model="formValid" ref="form">
                     <v-text-field
                             label="Name des Schemas"
                             filled
@@ -11,18 +11,21 @@
                             v-model="name"
                             :rules="rules.required"
                     ></v-text-field>
-                    <v-card class="pa-3 mt-3 text-center" >
+                </v-card>
+                <br/>
+                    <v-card class="text-center pa-5" >
                         <Container
                                 id="drop-container"
-                                class="drop-container pt-4"
+                                class="drop-container"
                                 group-name="draggable"
                                 :get-child-payload="getChildPayloadSelectedTypes"
                                 @drop="onDropCopy('selectedTypes', $event)">
                             <Draggable v-for="(type, index) in selectedTypes" :key="index">
-                                <div class="draggable-item pa-2">
+                                <div class="draggable-item pt-4 pr-3">
                                     <span class="column-drag-handle">&#8645;</span>
                                     <v-text-field
-                                            placeholder=""
+                                            class="type-item-input"
+                                            placeholder="type.name"
                                             outlined
                                             v-model="type.name"
                                             :rules="rules.required"
@@ -32,27 +35,23 @@
                         </Container>
                     </v-card>
                     <br/>
-                    <v-card>
+                    <v-card class="pa-5">
                         <Container
                                 class="delete-container text-center"
                                 group-name="draggable"
-                                @drop="onDropDelete('selectedTypes', $event)"
                         ><span>&#10006;</span>
                         </Container>
                     </v-card>
-                </v-form>
             </v-col>
-            <v-col lg="3" class="ml-5">
+            <v-col lg="3">
                 <v-card class="p-3">
                     <v-card-title>Aktionen</v-card-title>
                     <v-btn
-                        large
                         block
                         color="#FF8E3C"
                         @click="createSchema"
                     >Speichern
                     </v-btn>
-                    {{selectedTypes}}
                 </v-card>
                 <v-card class="p-3 mt-3">
                     <v-card-title>Typen</v-card-title>
@@ -122,11 +121,6 @@ export default {
           let newObj = JSON.parse(JSON.stringify(dropResult));
           this[collection] = this.applyDrag(this[collection], newObj)
       },
-      onDropDelete(collection, dropResult) {
-          console.log(collection);
-          console.log("drop:",dropResult)
-          collection.splice(dropResult, 1)
-      },
       getChildPayloadTypes (index) {
           return this.types[index]
       },
@@ -134,22 +128,15 @@ export default {
           return this.selectedTypes[index]
       },
       async createSchema() {
-          if (this.formValid) {
-              let Schema = {
-                  name: this.name,
-                  types: this.selectedTypes
-              };
-              await store.dispatch('defineSchema', Schema)
-              await this.$router.push('schemas');
-          }
-          else {
-              alert('All required fields must be filled!');
-          }
+          let Schema = {
+              name: this.name,
+              types: this.selectedTypes
+          };
+          await store.dispatch('defineSchema', Schema)
+          await this.$router.push('schemas');
       }
   },
   mounted() {
-      this.$refs.form.validate();
-
       //Bekommt den Namen des Schemas aus Vuex
       this.name = this.$store.getters.schema.name
   }
@@ -157,27 +144,26 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
     .column-drag-handle{
         float: left;
         font-size: 2rem;
-        color: #0798bb;
+        color: #FF8E3C;
         cursor: grab;
     }
     .delete-container{
-        height: 65px;
-        background: #f0f0f0;
+        height: 70px;
+        border: 2px dashed #dcd9d9 !important;
     }
     .delete-container>span{
         font-size: 3rem;
-        color: #ff7354;
+        color: #ec512f;
     }
     .draggable-item{
         cursor: grab;
     }
     .drop-container {
-        min-height: 330px;
+        min-height: 300px;
         border: 2px dashed #dcd9d9;
-        background: #f0f0f0;
     }
 </style>
