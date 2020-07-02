@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col>
+  <v-row class="pa-2">
+    <v-col lg="9" class="col-12">
       <v-card class="p-3">
         <h1>{{spacename}}</h1>
       </v-card>
@@ -10,7 +10,6 @@
         <v-card-text v-if="!contents.length">
           <strong>Hinweis:</strong>Erstelle eine neue Seite um diese in der Liste auswählen zu können.
         </v-card-text>
-        <v-col lg="12">
           <v-list-item
             v-for="content in contents"
             :key="content.id"
@@ -18,14 +17,16 @@
             :to="{ name: 'content', params: { cid: content.id }}"
             color="warning"
           >
+            <v-list-item-icon>
+              <v-icon>mdi-application</v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title v-text="content.name"></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-        </v-col>
       </v-card>
     </v-col>
-    <v-col lg="3" class="ml-5">
+    <v-col lg="3">
       <v-card class="p-3">
         <v-card-title>Seite erstellen</v-card-title>
         <v-form>
@@ -35,7 +36,6 @@
                   v-model="newContentName"
           ></v-text-field>
           <v-btn
-                  large
                   block
                   color="#FF8E3C"
                   @click="storeContent"
@@ -80,5 +80,7 @@ export default {
 </script>
 
 <style scoped>
-
+  a{
+    text-decoration: none;
+  }
 </style>

@@ -12,11 +12,7 @@
         <!-- Rich Text -->
         <div v-else-if="id === '2'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <v-text-field
-                    placeholder=""
-                    outlined
-                    v-model="input"
-            ></v-text-field>
+            <rich-text-editor @contentHtml="getEditorData($event)"></rich-text-editor>
         </div>
         <!-- Number -->
         <div v-else-if="id === '3'">
@@ -24,7 +20,9 @@
             <v-text-field
                     placeholder=""
                     outlined
+                    type="number"
                     v-model="input"
+                    :rules="rules.number"
             ></v-text-field>
         </div>
         <!-- Date -->
@@ -39,14 +37,14 @@
         <!-- Image -->
         <div v-else-if="id === '5'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <v-btn><label for="upload-image">Search</label></v-btn>
-            <input type="file" name="image" id="upload-image" />
+            <v-btn><label for="upload-image">Durchsuchen</label></v-btn>
+            <input type="file" accept="image/*" name="image" id="upload-image" />
         </div>
         <!-- Audio -->
         <div v-else-if="id === '6'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <v-btn><label for="upload-audio">Search</label></v-btn>
-            <input type="file" name="audio" id="upload-audio" />
+            <v-btn><label for="upload-audio">Durchsuchen</label></v-btn>
+            <input type="file" accept="audio/*" name="audio" id="upload-audio" />
         </div>
         <div v-else>
             Type '{{label}}' with id {{id}} doesn#t exists.
@@ -54,12 +52,22 @@
     </v-card>
 </template>
 <script>
+    import RichTextEditor from './RichTextEditor.vue'
     export default {
         name: 'Type',
         props: ['id', 'label'],
+        components: {RichTextEditor},
         data: () => ({
-            input: ''
+            input: '',
+            rules: {
+                number: [value => !!Number(value) || "The input must be a number"]
+            }
         }),
+        methods: {
+            getEditorData: function (e) {
+                this.input = e;
+            },
+        },
         watch: {
             input: {
                 handler: function() {
@@ -72,14 +80,11 @@
 </script>
 
 <style>
-    .draggable-item{
-        cursor: grab;
-    }
     label {
         cursor: pointer;
     }
 
-    #upload-audio{
+    #upload-audio, #upload-image{
         opacity: 0;
         position: absolute;
         z-index: -1;

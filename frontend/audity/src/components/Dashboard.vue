@@ -1,8 +1,8 @@
 <template>
-    <v-row>
-        <v-col>
+    <v-row class="pa-2">
+        <v-col lg="9" class="col-12">
             <v-row>
-                <v-col>
+                <v-col class="pt-0">
                     <v-card class="pa-2">
                         <v-card-title>Aufrufe</v-card-title>
                         <div class="d-flex">
@@ -12,7 +12,7 @@
                         </div>
                     </v-card>
                 </v-col>
-                <v-col>
+                <v-col class="pt-0">
                     <v-card class="pa-2">
                         <v-card-title>Kommentare</v-card-title>
                         <div class="d-flex justify-xl-space-between">
@@ -23,13 +23,13 @@
                     </v-card>
                 </v-col>
             </v-row>
-            <v-card height="500">
+            <v-card class="mt-3">
                 <v-card-title>Aktive Seiten und Entwürfe</v-card-title>
-                <SpaceOverview/>
+                <ContentsOverview/>
             </v-card>
         </v-col>
-        <v-col lg="3" class="ml-5">
-            <v-card class="p-3">
+        <v-col lg="3">
+            <v-card class="pa-3">
                 <v-card-title>Seite erstellen</v-card-title>
                 <v-form>
                     <v-text-field
@@ -47,7 +47,6 @@
                             >
                     </v-select>
                     <v-btn
-                            large
                             block
                             color="#FF8E3C"
                             @click="storeContent"
@@ -65,7 +64,6 @@
                             v-model="spaceName">
                     </v-text-field>
                     <v-btn
-                            large
                             block
                             color="#FF8E3C"
                             id="submit-btn"
@@ -83,7 +81,6 @@
                         v-model="schemaName"
                 ></v-text-field>
                 <v-btn
-                        large
                         block
                         color="#FF8E3C"
                         @click="storeSchema"
@@ -95,11 +92,11 @@
 
 <script>
     import  { mapGetters } from "vuex";
-    import SpaceOverview from "../components/SpaceOverview";
+    import ContentsOverview from "./ContentsOverview";
     import store from "../store";
 
     export default {
-        components: {SpaceOverview},
+        components: {ContentsOverview},
         name: 'Dashboard',
         data: () => ({
             spaceName: "",
