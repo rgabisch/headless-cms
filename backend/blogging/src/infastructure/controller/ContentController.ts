@@ -8,9 +8,10 @@ import moment from "moment";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
-import BufferTransformer from "../repositories/firebase/BufferTransformer";
+import firebase from "../repositories/firebase/firebase";
 var formidable = require('formidable');
 var util = require('util');
+var fs = require('fs');
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
@@ -24,8 +25,8 @@ class ContentController {
 
         router.post('/spaces/:spaceId/', async (req, res) => {
             if(req.headers["content-type"] == "application/json"){
-                console.log("Content-Type application/json")
-                const command = new WriteContentCommand(
+
+                let command = new WriteContentCommand(
                     req.body.schemaId,
                     <string>req.headers._creatorId,
                     req.params.spaceId,
@@ -35,7 +36,7 @@ class ContentController {
                 );
     
                 try {
-                    const writtenContentEvent = await this.writeContentUseCase.execute(command);
+                    let writtenContentEvent = await this.writeContentUseCase.execute(command);
                     res.send({
                         contentId: writtenContentEvent.contentId,
                         creatorId: writtenContentEvent.creatorId,
@@ -44,6 +45,7 @@ class ContentController {
                     });
                 } catch (e) {
                     res.status(400).send('post body is invalid');
+                    console.log(e)
                 }
             }
             
@@ -51,28 +53,61 @@ class ContentController {
                 console.log("Content-Type "+req.headers["content-type"])
                 let form = new formidable.IncomingForm();
 
-                form.parse(req, function(err:any, fields:any, files:any) {
+                let x = this
+                form.parse(req, async function(err:any, fields:any, files:any) {
                     if (err) {
-                      console.error(err.message);
-                      return;
+                        console.error(err.message);
+                        return;
                     }
 
-                    let contentJson = JSON.parse(fields.contentJson)
+                    let contentJson = JSON.parse(fields['json\n'])
+                    let data = files
+
+                    let storage = new firebase(<string>req.headers._creatorId)
+
+                    for(let file in data){
+                        let dataJson = data[file].toJSON()
+                        
+                        try{
+                            fs.readFile(dataJson.path,function(err:any,data:any){
+                                let bufferData = data
+                                storage.storage_add(file.trim(),bufferData)
+                            })
+                        }catch(e){
+                            console.log(e)
+                        }
+                        
+                          for(let json in contentJson.content){
+                            if(contentJson.content[json].name == file.trim()){
+                                contentJson.content[json].content = <string>req.headers._creatorId+"/"+file.trim()
+                            }
+                        }
+                        
+                    }
 
                     let command = new WriteContentCommand(
-                        contentJson.body.schemaId,
+                        contentJson.schemaId,
                         <string>req.headers._creatorId,
                         req.params.spaceId,
-                        contentJson.body.name,
-                        contentJson.body.content,
+                        contentJson.name,
+                        contentJson.content,
                         <string | undefined>req.query.dateFormat,
                     );
-                    
-                    let files_json = files
 
-                    res.writeHead(200, {'content-type': 'text/plain'});
-                    res.write('ok');
-                    res.end(util.inspect({fields: fields, files: files}));
+                    console.log(command)
+
+                    try {
+                        let writtenContentEvent = await x.writeContentUseCase.execute(command);
+                        res.send({
+                            contentId: writtenContentEvent.contentId,
+                            creatorId: writtenContentEvent.creatorId,
+                            creationDate: x.format(writtenContentEvent.creationDate, command.dateFormat),
+                            content: writtenContentEvent.content
+                        });
+                    } catch (e) {
+                        res.status(400).send('post body is invalid');
+                        console.log(e)
+                    }
                 })
             }
         });
