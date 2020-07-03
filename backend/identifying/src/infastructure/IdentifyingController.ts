@@ -12,7 +12,7 @@ class IdentifyingController {
     routes(): express.Router {
         const router = express.Router();
 
-        router.post('/signin', async (req, res) => {
+        router.post('/api/signin', async (req, res) => {
             const command = new SignInCommand(req.body.email, req.body.password);
 
             try {
@@ -24,7 +24,7 @@ class IdentifyingController {
             }
         });
 
-        router.post('/signup', async (req, res) => {
+        router.post('/api/signup', async (req, res) => {
             const command = new SignUpCommand(req.body.email, req.body.password);
             try {
                 const signUpEvent = await this.signUpUseCase.execute(command);

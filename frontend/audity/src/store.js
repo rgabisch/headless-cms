@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         service: {
-            url: 'http://localhost:3000',
+            url: 'api',
             config: {
                 headers: {
                     Authorization: undefined

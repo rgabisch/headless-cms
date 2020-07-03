@@ -19,7 +19,7 @@ import cors from 'cors';
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const creatorRepositoryFactory = new CreatorRepositoryFactory();
 const environmentFactory = new EnvironmentFactory();
@@ -39,6 +39,10 @@ const identifyingController = new IdentifyingController(new SignInUseCase(userRe
 
 if (process.env.NODE_ENV == Environment.DEV) {
     signUpUseCase.execute({email: 'test@mail.de', pass: 'test'});
+}
+
+if (process.env.NODE_ENV === Environment.PROD) {
+    app.use(express.static(__dirname + '/public'));
 }
 
 app.use(bodyParser.json());
@@ -67,9 +71,9 @@ app.use(async (req, res, next) => {
     }
 });
 
-app.use('/spaces', spaceController.routes());
-app.use('/schemas', schemaController.routes());
-app.use('/contents', contentController.routes());
-app.use('/creators', creatorController.routes());
+app.use('/api/spaces', spaceController.routes());
+app.use('/api/schemas', schemaController.routes());
+app.use('/api/contents', contentController.routes());
+app.use('/api/creators', creatorController.routes());
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));
