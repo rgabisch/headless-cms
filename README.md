@@ -10,6 +10,21 @@ cd headless-cms
 npm run install
 ```
 
+### Add an .env-File
+
+An .env file must be added to the backend directory:
+
+```
+.
+|--backend
+|----.env     <-- insert here
+|--frontend
+```
+
+This file contains credential information for external services. 
+
+If you do not want to store your own credentials for the individual services, an .env file can be found in the ticket [HCMS-63](https://headless-cms.atlassian.net/browse/HCMS-63).
+
 ### Run the Application
 The application is divided into frontend and backend and they are each started in a separate shell session.
 
