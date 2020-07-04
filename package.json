@@ -8,6 +8,7 @@
     "install:backend": "cd backend && npm install",
     "install": "npm run install:frontend && npm run install:backend",
     "test": "cd backend && npm run test",
+    "start": "NODE_ENV=production node ./backend/dist/app.js",
     "build:backend": "cd backend && npm run build",
     "start:backend:watch": "cd backend && npm run start:watch",
     "start:backend:dev": "cd backend && npm run start:dev",
