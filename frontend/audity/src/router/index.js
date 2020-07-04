@@ -13,6 +13,11 @@ const routes = [
             requiresVisitor: true
         }
     },
+    {
+        path: '/register',
+        name: 'register',
+        component: () => import('../views/Register')
+    },
     {   path: '/',
         name: 'index',
         component: () => import('../views/Index'),
