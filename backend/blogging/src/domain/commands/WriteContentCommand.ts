@@ -5,7 +5,7 @@ class WriteContentCommand extends ContentCommand {
                 public creatorId: string,
                 public spaceId: string,
                 public contentName: string,
-                public content: { typeId: string; name: string, content: string }[],
+                public content: { typeId: string; name: string, content: string, raw?: Buffer }[],
                 _dateFormat: string | undefined) {
         super(_dateFormat)
     }

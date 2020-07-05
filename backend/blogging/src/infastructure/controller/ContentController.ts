@@ -8,6 +8,15 @@ import moment from "moment";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
+import {TypeId} from "../../domain/entities/Type";
+import {promises as fs} from "fs";
+import {Readable} from "stream";
+
+const formidable = require('formidable');
+
+var util = require('util');
+
+// var fs = require('fs');
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
@@ -20,25 +29,77 @@ class ContentController {
         const router = express.Router();
 
         router.post('/spaces/:spaceId/', async (req, res) => {
-            const command = new WriteContentCommand(
-                req.body.schemaId,
-                <string>req.headers._creatorId,
-                req.params.spaceId,
-                req.body.name,
-                req.body.content,
-                <string | undefined>req.query.dateFormat,
-            );
+            if (req.headers["content-type"] == "application/json") {
 
-            try {
-                const writtenContentEvent = await this.writeContentUseCase.execute(command);
-                res.send({
-                    contentId: writtenContentEvent.contentId,
-                    creatorId: writtenContentEvent.creatorId,
-                    creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
-                    content: writtenContentEvent.content
-                });
-            } catch (e) {
-                res.status(400).send('post body is invalid');
+                let command = new WriteContentCommand(
+                    req.body.schemaId,
+                    <string>req.headers._creatorId,
+                    req.params.spaceId,
+                    req.body.name,
+                    req.body.content,
+                    <string | undefined>req.query.dateFormat,
+                );
+
+                try {
+                    let writtenContentEvent = await this.writeContentUseCase.execute(command);
+                    res.send({
+                        contentId: writtenContentEvent.contentId,
+                        creatorId: writtenContentEvent.creatorId,
+                        creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
+                        content: writtenContentEvent.content
+                    });
+                } catch (e) {
+                    res.status(400).send('post body is invalid');
+                    console.log(e)
+                }
+            } else {
+                console.log("Content-Type " + req.headers["content-type"])
+                let form = new formidable.IncomingForm();
+
+                let x = this
+                form.parse(req, async function (err: any, fields: any, files: any) {
+                    if (err) {
+                        console.error(err.message);
+                        return;
+                    }
+
+                    const content = JSON.parse(<string>fields['json']);
+
+                    const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
+
+                    for (let c of content.content) {
+                        if (c.typeId !== TypeId.Audio) {
+                            mappedContent.push(c);
+                        } else {
+                            mappedContent.push(Object.assign(c, {
+                                content: '',
+                                raw: await fs.readFile(files[c.name].path)
+                            }));
+                        }
+                    }
+
+                    let command = new WriteContentCommand(
+                        content.schemaId,
+                        <string>req.headers._creatorId,
+                        req.params.spaceId,
+                        content.name,
+                        mappedContent,
+                        <string | undefined>req.query.dateFormat,
+                    );
+
+                    try {
+                        let writtenContentEvent = await x.writeContentUseCase.execute(command);
+                        res.send({
+                            contentId: writtenContentEvent.contentId,
+                            creatorId: writtenContentEvent.creatorId,
+                            creationDate: x.format(writtenContentEvent.creationDate, command.dateFormat),
+                            content: writtenContentEvent.content
+                        });
+                    } catch (e) {
+                        res.status(400).send('post body is invalid');
+                        console.log(e)
+                    }
+                })
             }
         });
 

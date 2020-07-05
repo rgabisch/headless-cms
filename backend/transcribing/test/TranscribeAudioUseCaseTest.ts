@@ -14,7 +14,7 @@ suite('Transcribe Audio Use Case', () => {
     suite('when execute', () => {
         test('given valid command -> return transcription', async () => {
             const command: TranscribeAudioCommand = {
-                audio: new Readable(),
+                audio: Buffer.from('test'),
                 audioType: "mp3"
             };
 

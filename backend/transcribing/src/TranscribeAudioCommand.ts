@@ -1,7 +1,5 @@
-import {Readable} from "stream";
-
 class TranscribeAudioCommand {
-    constructor(public audio: Readable,
+    constructor(public audio: Buffer,
                 public audioType: "mp3" | "flac"
     ) {
     }

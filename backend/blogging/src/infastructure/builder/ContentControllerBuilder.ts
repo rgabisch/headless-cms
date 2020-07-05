@@ -4,20 +4,30 @@ import WriteContentUseCase from "../../domain/usecases/WriteContentUseCase";
 import ListAllContentsUseCase from "../../domain/usecases/ListAllContentsUseCase";
 import ViewContentUseCase from "../../domain/usecases/ViewContentUseCase";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
+import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
+import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 
 class ContentControllerBuilder extends ControllerBuilder<ContentController> {
+
+    private transcribeStrategy!: TranscribeStrategy;
 
     build(): ContentController {
         const writeContentUseCase = new WriteContentUseCase(
             this.creatorRepository,
             this.idGenerator,
             this.typeFactory,
-            this.dateGenerator
+            this.dateGenerator,
+            new TranscribeAudioUseCase(this.transcribeStrategy)
         );
         const listAllContentsUseCase = new ListAllContentsUseCase(this.creatorRepository);
         const listAllContentUsersUseCase = new ListAllContentsUsersUseCase(this.creatorRepository);
         const viewContentUseCase = new ViewContentUseCase(this.creatorRepository);
-        return new ContentController(writeContentUseCase, listAllContentsUseCase,listAllContentUsersUseCase, viewContentUseCase);
+        return new ContentController(writeContentUseCase, listAllContentsUseCase, listAllContentUsersUseCase, viewContentUseCase);
+    }
+
+    withTranscribeStrategy(transcribeStrategy: TranscribeStrategy): ContentControllerBuilder {
+        this.transcribeStrategy = transcribeStrategy;
+        return this;
     }
 
 }

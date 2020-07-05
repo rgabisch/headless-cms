@@ -8,12 +8,16 @@ import {TypeMappings} from "../entities/Schema";
 import TypeFactory from "../factories/TypeFactory";
 import Space from "../entities/Space";
 import DateGenerator from "../../shared/DateGenerator";
+import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
+import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
+import {Readable} from "stream";
 
 class WriteContentUseCase {
     constructor(private creatorRepository: CreatorRepository,
                 private idGenerator: IdGenerator,
                 private typeFactory: TypeFactory,
-                private dateGenerator: DateGenerator) {
+                private dateGenerator: DateGenerator,
+                private transcribeAudioUseCase: TranscribeAudioUseCase) {
     }
 
     async execute(command: WriteContentCommand): Promise<WrittenContentEvent> {
@@ -27,11 +31,24 @@ class WriteContentUseCase {
 
         if (creator.hasNotOpens(command.spaceId))
             throw new UnassignedIdException();
-        
-        const typeMapping = command.content.map(({typeId, name, content}) => ({
-            type: this.typeFactory.createBy(typeId),
-            name,
-            content
+
+        const typeMapping = await Promise.all(command.content.map(async ({typeId, name, content, raw}) => {
+            const type = this.typeFactory.createBy(typeId);
+
+            if (type.isAudio()) {
+                const transcribedAudioEvent = await this.transcribeAudioUseCase.execute({
+                    audio: <Buffer>raw,
+                    audioType: 'mp3'
+                });
+
+                content = transcribedAudioEvent.transcription
+            }
+
+            return {
+                type: this.typeFactory.createBy(typeId),
+                name,
+                content: <string>content
+            }
         }));
 
         const space = <Space>creator.getSpace(command.spaceId);
@@ -43,16 +60,21 @@ class WriteContentUseCase {
             this.dateGenerator.generate(),
             new TypeMappings(typeMapping)
         );
-        
+
         creator.write(content, space);
 
         this.creatorRepository.update(creator);
+
 
         return new WrittenContentEvent(
             content.id,
             creator.id,
             content.creationDate,
-            command.content
+            typeMapping.map(({type, name, content}) => ({
+                typeId: type.id,
+                name,
+                content
+            }))
         );
     }
 }

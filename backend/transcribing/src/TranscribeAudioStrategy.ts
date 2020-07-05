@@ -1,9 +1,9 @@
-import {Readable} from "stream";
+import {Readable, ReadableOptions} from "stream";
 
 const SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 
 export interface TranscribeStrategy {
-    transcribe(readSteam: Readable, fileExtension: "mp3" | "flac"): Promise<string>;
+    transcribe(readSteam: Buffer, fileExtension: "mp3" | "flac"): Promise<string>;
 }
 
 export class StaticTranscribeStrategy implements TranscribeStrategy {
@@ -11,7 +11,7 @@ export class StaticTranscribeStrategy implements TranscribeStrategy {
     constructor(readonly value: string) {
     }
 
-    async transcribe(readSteam: Readable, fileExtension: "mp3" | "flac"): Promise<string> {
+    async transcribe(readSteam: Buffer, fileExtension: "mp3" | "flac"): Promise<string> {
         return this.value;
     }
 
@@ -29,7 +29,7 @@ export class WatsonDeveloperCloudTranscribeStrategy implements TranscribeStrateg
         });
     }
 
-    async transcribe(readSteam: Readable, fileExtension: "mp3" | "flac"): Promise<string> {
+    async transcribe(readSteam: Buffer, fileExtension: "mp3" | "flac"): Promise<string> {
         const params = {
             audio: readSteam,
             content_type: `audio/${fileExtension}`,
@@ -42,4 +42,19 @@ export class WatsonDeveloperCloudTranscribeStrategy implements TranscribeStrateg
         return recognition.results[0].alternatives[0].transcript;
     }
 
+}
+
+
+class MultiStream extends Readable {
+    _object: any;
+
+    constructor(object: any, options: ReadableOptions) {
+        super(object instanceof Buffer || typeof object === "string" ? options : {objectMode: true});
+        this._object = object;
+    }
+
+    _read = () => {
+        this.push(this._object);
+        this._object = null;
+    };
 }
