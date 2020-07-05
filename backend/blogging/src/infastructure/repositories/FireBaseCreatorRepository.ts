@@ -10,13 +10,14 @@ import ToEntityCreatorMapper from "./firebase/ToEntityCreatorMapper";
 import ToEntitySchemaMapper from "./firebase/ToEntitySchemaMapper";
 import TypeFactory from "../../domain/factories/TypeFactory";
 import ToEntitySpaceMapper from "./firebase/ToEntitySpaceMapper";
-import {Readable} from "stream";
 
 
 class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
     private cache: CreatorCache;
     private creatorToDatabaseMapper: ToDatabaseCreatorMapper;
     private creatorToEntityMapper: ToEntityCreatorMapper;
+    private readonly audioStoragePath = (creatorId: string, contentId: string, audioName: string) =>
+        `creators/${creatorId}/contents/${contentId}/audios/${audioName}.mp3`;
 
     constructor() {
         super('Creator');
@@ -51,7 +52,7 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
         for (let content of creator.getAllContents()) {
             for (const typeMapping of content.typeMappings) {
                 if (typeMapping.type.isAudio()) {
-                    super.storage_add(`${creator.id}/${content.id}/${typeMapping.name}`, <Buffer>typeMapping.raw);
+                    super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
                 }
             }
         }
@@ -61,6 +62,15 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
 
     async update(creator: Creator) {
         this.cache.add(creator);
+
+        for (let content of creator.getAllContents()) {
+            for (const typeMapping of content.typeMappings) {
+                if (typeMapping.type.isAudio()) {
+                    super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
+                }
+            }
+        }
+
         const mapped = this.creatorToDatabaseMapper.map(creator);
         await super.db_update(creator.id, mapped)
     }

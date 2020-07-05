@@ -5,7 +5,7 @@
   "main": "app.ts",
   "scripts": {
     "build": "tsc",
-    "postbuild": "cp .env dist/ || true",
+    "postbuild": "copyfiles .env dist/",
     "test": "mocha -r ts-node/register --ui tdd ./blogging/test/**/*.ts ./transcribing/test/**/*.ts ./identifying/test/**/*.ts",
     "prestart:dev": "npm run build",
     "start:watch": "cross-env NODE_ENV=development nodemon -e js,ts ./app.ts",
@@ -38,6 +38,7 @@
     "@types/node": "^14.0.11",
     "@types/uuid": "^7.0.3",
     "chai": "^4.2.0",
+    "copyfiles": "^2.3.0",
     "cross-env": "^7.0.2",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.4",
