@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/rgabisch/headless-cms/issues"
   },
-  "homepage": "https://github.com/rgabisch/headless-cms#readme"
+  "homepage": "https://github.com/rgabisch/headless-cms#readme",
+  "rules": {
+    "no-unused-vars": "off"
+  }
 }

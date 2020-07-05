@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Login</div>
+                    <div class="card-header">Register</div>
                     <div class="card-body">
                         <div v-if="error" class="alert alert-danger">{{error}}</div>
                         <form action="#" @submit.prevent="submit">
@@ -40,20 +40,14 @@
                                     />
                                 </div>
                             </div>
-
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary text-orange"
-                                            style="background-color: #FF8E3C; color: black">Login
+                                            style="background-color: #FF8E3C; color: black">Registrieren
                                     </button>
                                 </div>
                             </div>
                         </form>
-                        <div class="col-md-8 offset-md-4">
-                            <router-link :to="{name: 'register'}">
-                                <button id="myButton" class="foo bar">Registrieren</button>
-                            </router-link>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -65,6 +59,7 @@
     import store from "../store";
 
     export default {
+        name: "Register",
         data() {
             return {
                 form: {
@@ -77,7 +72,7 @@
         methods: {
             async submit() {
                 try {
-                    await store.dispatch('login', {
+                    await store.dispatch('signUp', {
                         email: this.form.email,
                         password: this.form.password
                     });
@@ -87,5 +82,9 @@
                 }
             }
         }
-    };
+    }
 </script>
+
+<style scoped>
+
+</style>

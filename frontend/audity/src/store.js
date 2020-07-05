@@ -166,7 +166,23 @@ export default new Vuex.Store({
                 state.service.config);
 
             const token = response.data.Authorization;
+            commit("setToken", token);
+            commit("setLoggedIn", true);
+            commit("setUserEmail", email);
+        },
 
+        async signUp({state, commit}, {email, password}) {
+
+            console.log(state.service.url)
+            const response = await axios.post(
+                `${state.service.url}/signup`,
+                {
+                    email,
+                    password
+                },
+                state.service.config);
+
+            const token = response.data.Authorization;
             commit("setToken", token);
             commit("setLoggedIn", true);
             commit("setUserEmail", email);

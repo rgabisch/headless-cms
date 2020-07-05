@@ -13,6 +13,11 @@ const routes = [
             requiresVisitor: true
         }
     },
+    {
+        path: '/register',
+        name: 'register',
+        component: () => import('../views/Register')
+    },
     {   path: '/',
         name: 'index',
         component: () => import('../views/Index'),
@@ -65,6 +70,13 @@ const routes = [
             }
         ]
     },
+
+    {
+        path: '/template',
+        name: 'template',
+        props: true,
+        component: () => import('../views/Template'),
+    }
 ]
 
 const router = new VueRouter({
