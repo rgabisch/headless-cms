@@ -10,6 +10,7 @@ import ToEntityCreatorMapper from "./firebase/ToEntityCreatorMapper";
 import ToEntitySchemaMapper from "./firebase/ToEntitySchemaMapper";
 import TypeFactory from "../../domain/factories/TypeFactory";
 import ToEntitySpaceMapper from "./firebase/ToEntitySpaceMapper";
+import {Readable} from "stream";
 
 
 class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
@@ -46,6 +47,15 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
 
     async add(creator: Creator) {
         this.cache.add(creator);
+
+        for (let content of creator.getAllContents()) {
+            for (const typeMapping of content.typeMappings) {
+                if (typeMapping.type.isAudio()) {
+                    super.storage_add(`${creator.id}/${content.id}/${typeMapping.name}`, <Buffer>typeMapping.raw);
+                }
+            }
+        }
+
         super.db_add(creator.id, this.creatorToDatabaseMapper.map(creator));
     }
 

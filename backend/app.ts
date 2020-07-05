@@ -15,6 +15,11 @@ import InMemoryUserRepository from "./identifying/src/infastructure/InMemoryUser
 import CreateCreatorUseCase from './blogging/src/domain/usecases/CreateCreatorUseCase';
 import path from "path";
 import cors from 'cors';
+import {
+    StaticTranscribeStrategy,
+    TranscribeStrategy,
+    WatsonDeveloperCloudTranscribeStrategy
+} from "./transcribing/src/TranscribeAudioStrategy";
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
@@ -25,7 +30,16 @@ const creatorRepositoryFactory = new CreatorRepositoryFactory();
 const environmentFactory = new EnvironmentFactory();
 const environment = environmentFactory.buildBy(process.env.NODE_ENV);
 const creatorRepository = creatorRepositoryFactory.buildBy(environment);
-const controllerFactory = new ControllerFactory(new GlobalUniqueIdGenerator(), creatorRepository, new CurrentDateGenerator(), new TypeFactory());
+
+const transcribeStrategy: TranscribeStrategy = process.env.NODE_ENV == Environment.DEV
+    ? new StaticTranscribeStrategy('lala')
+    : new WatsonDeveloperCloudTranscribeStrategy(
+        {apiKey: <string>process.env.API_KEY, url: <string>process.env.URL},
+        true,
+        .9
+    );
+
+const controllerFactory = new ControllerFactory(new GlobalUniqueIdGenerator(), creatorRepository, new CurrentDateGenerator(), new TypeFactory(), transcribeStrategy);
 const spaceController = controllerFactory.buildForSpace();
 const schemaController = controllerFactory.buildForSchema();
 const contentController = controllerFactory.buildForContent();

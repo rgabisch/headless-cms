@@ -8,10 +8,15 @@ import moment from "moment";
 import {ListAllContentsCommand} from "../../domain/commands/ListAllContentsCommand";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
-import firebase from "../repositories/firebase/firebase";
-var formidable = require('formidable');
+import {TypeId} from "../../domain/entities/Type";
+import {promises as fs} from "fs";
+import {Readable} from "stream";
+
+const formidable = require('formidable');
+
 var util = require('util');
-var fs = require('fs');
+
+// var fs = require('fs');
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
@@ -24,7 +29,7 @@ class ContentController {
         const router = express.Router();
 
         router.post('/spaces/:spaceId/', async (req, res) => {
-            if(req.headers["content-type"] == "application/json"){
+            if (req.headers["content-type"] == "application/json") {
 
                 let command = new WriteContentCommand(
                     req.body.schemaId,
@@ -34,7 +39,7 @@ class ContentController {
                     req.body.content,
                     <string | undefined>req.query.dateFormat,
                 );
-    
+
                 try {
                     let writtenContentEvent = await this.writeContentUseCase.execute(command);
                     res.send({
@@ -47,54 +52,40 @@ class ContentController {
                     res.status(400).send('post body is invalid');
                     console.log(e)
                 }
-            }
-            
-            else{
-                console.log("Content-Type "+req.headers["content-type"])
+            } else {
+                console.log("Content-Type " + req.headers["content-type"])
                 let form = new formidable.IncomingForm();
 
                 let x = this
-                form.parse(req, async function(err:any, fields:any, files:any) {
+                form.parse(req, async function (err: any, fields: any, files: any) {
                     if (err) {
                         console.error(err.message);
                         return;
                     }
 
-                    let contentJson = JSON.parse(fields['json\n'])
-                    let data = files
+                    const content = JSON.parse(<string>fields['json']);
 
-                    let storage = new firebase(<string>req.headers._creatorId)
+                    const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
 
-                    for(let file in data){
-                        let dataJson = data[file].toJSON()
-                        
-                        try{
-                            fs.readFile(dataJson.path,function(err:any,data:any){
-                                let bufferData = data
-                                storage.storage_add(file.trim(),bufferData)
-                            })
-                        }catch(e){
-                            console.log(e)
+                    for (let c of content.content) {
+                        if (c.typeId !== TypeId.Audio) {
+                            mappedContent.push(c);
+                        } else {
+                            mappedContent.push(Object.assign(c, {
+                                content: '',
+                                raw: await fs.readFile(files[c.name].path)
+                            }));
                         }
-                        
-                          for(let json in contentJson.content){
-                            if(contentJson.content[json].name == file.trim()){
-                                contentJson.content[json].content = <string>req.headers._creatorId+"/"+file.trim()
-                            }
-                        }
-                        
                     }
 
                     let command = new WriteContentCommand(
-                        contentJson.schemaId,
+                        content.schemaId,
                         <string>req.headers._creatorId,
                         req.params.spaceId,
-                        contentJson.name,
-                        contentJson.content,
+                        content.name,
+                        mappedContent,
                         <string | undefined>req.query.dateFormat,
                     );
-
-                    console.log(command)
 
                     try {
                         let writtenContentEvent = await x.writeContentUseCase.execute(command);

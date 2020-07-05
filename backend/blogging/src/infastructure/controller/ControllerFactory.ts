@@ -10,6 +10,7 @@ import ContentControllerBuilder from "../builder/ContentControllerBuilder";
 import CreatorController from "./CreatorController";
 import CreatorControllerBuilder from "../builder/CreatorControllerBuilder";
 import DateGenerator from "../../shared/DateGenerator";
+import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 
 class ControllerFactory {
     private readonly spaceController: SpaceController;
@@ -20,7 +21,8 @@ class ControllerFactory {
     constructor(private idGenerator: IdGenerator,
                 private creatorRepository: CreatorRepository,
                 private dateGenerator: DateGenerator,
-                private typeFactory: TypeFactory) {
+                private typeFactory: TypeFactory,
+                private transcribeStrategy: TranscribeStrategy) {
         this.spaceController = new SpaceControllerBuilder().withIdGenerator(idGenerator)
                                                            .withCreatorRepository(creatorRepository)
                                                            .withTypeFactory(typeFactory)
@@ -31,7 +33,8 @@ class ControllerFactory {
                                                              .withTypeFactory(typeFactory)
                                                              .build();
 
-        this.contentController = new ContentControllerBuilder().withIdGenerator(idGenerator)
+        this.contentController = new ContentControllerBuilder().withTranscribeStrategy(transcribeStrategy)
+                                                               .withIdGenerator(idGenerator)
                                                                .withCreatorRepository(creatorRepository)
                                                                .withTypeFactory(typeFactory)
                                                                .withDateGenerator(dateGenerator)

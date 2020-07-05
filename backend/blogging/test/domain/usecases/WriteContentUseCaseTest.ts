@@ -11,6 +11,8 @@ import Type, {TypeId} from "../../../src/domain/entities/Type";
 import Space from "../../../src/domain/entities/Space";
 import StaticDateGenerator from "../../../src/shared/StaticDateGenerator";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
+import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
+import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 
 let creatorRepository: InMemoryCreatorRepository;
 let testSubject: WriteContentUseCase;
@@ -40,6 +42,13 @@ const dateFormat = "DD.MM.YY HH:mm";
 let creator: Creator;
 let dateGenerator = new StaticDateGenerator(new Date());
 
+const transcribeStrategy = new class implements TranscribeStrategy {
+    async transcribe(readSteam: Buffer, fileExtension: "mp3" | "flac"): Promise<string> {
+        return 'lalal';
+    }
+
+}
+
 suite('Write Content Use Case', () => {
 
     setup(() => {
@@ -52,7 +61,8 @@ suite('Write Content Use Case', () => {
             creatorRepository,
             new StaticIdGenerator(contentId),
             new TypeFactory(),
-            dateGenerator
+            dateGenerator,
+            new TranscribeAudioUseCase(transcribeStrategy)
         );
     });
 
