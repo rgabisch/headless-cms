@@ -72,10 +72,12 @@ class ContentController {
                         if (c.typeId !== TypeId.Audio) {
                             mappedContent.push(c);
                         } else {
-                            mappedContent.push(Object.assign(c, {
-                                content: '',
-                                raw: await fs.readFile(files[c.name].path)
-                            }));
+                            if (files[c.name]) {
+                                mappedContent.push(Object.assign(c, {
+                                    content: '',
+                                    raw: await fs.readFile(files[c.name].path)
+                                }));
+                            }
                         }
                     }
 
