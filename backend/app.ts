@@ -66,28 +66,32 @@ app.use(cors({
     allowedHeaders: ['Origin, X-Requested-With, content-type, creatorId, Authorization']
 }));
 
-app.use('', identifyingController.routes());
-
-app.use(async (req, res, next) => {
+const authentication = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const authorization = req.get('Authorization') ?? '';
     if (process.env.NODE_ENV == Environment.DEV) {
         req.headers._creatorId = authorization;
         return next();
     } else {
         try {
-            const token = await fireBaseUserRepository.authToken(authorization);
-            req.headers._creatorId = token.user_id;
-            return next();
+            if (authorization){
+                const token = await fireBaseUserRepository.authToken(authorization);
+                req.headers._creatorId = token.user_id;
+                return next();
+            } else if (req.baseUrl == "/api/contents" && req.method == "GET") {
+                req.headers._creatorId = req.get('creatorId')
+                return next();
+            }
         } catch (e) {
             res.status(401).send(e);
             next(e)
         }
     }
-});
+}
 
-app.use('/api/spaces', spaceController.routes());
-app.use('/api/schemas', schemaController.routes());
-app.use('/api/contents', contentController.routes());
-app.use('/api/creators', creatorController.routes());
+app.use('', identifyingController.routes());
+app.use('/api/contents', authentication, contentController.routes());
+app.use('/api/spaces', authentication, spaceController.routes());
+app.use('/api/schemas', authentication, schemaController.routes());
+app.use('/api/creators', authentication, creatorController.routes());
 
 app.listen(port, () => console.log(`Server listening at port ${port}`));
