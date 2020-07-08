@@ -6,6 +6,7 @@ import ViewContentUseCase from "../../domain/usecases/ViewContentUseCase";
 import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUsersUseCase";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
 import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
+import RemoveContentUseCase from "../../domain/usecases/RemoveContentUseCase";
 
 class ContentControllerBuilder extends ControllerBuilder<ContentController> {
 
@@ -22,7 +23,14 @@ class ContentControllerBuilder extends ControllerBuilder<ContentController> {
         const listAllContentsUseCase = new ListAllContentsUseCase(this.creatorRepository);
         const listAllContentUsersUseCase = new ListAllContentsUsersUseCase(this.creatorRepository);
         const viewContentUseCase = new ViewContentUseCase(this.creatorRepository);
-        return new ContentController(writeContentUseCase, listAllContentsUseCase, listAllContentUsersUseCase, viewContentUseCase);
+        const removeContentUseCase = new RemoveContentUseCase(this.creatorRepository);
+        return new ContentController(
+            writeContentUseCase,
+            listAllContentsUseCase,
+            listAllContentUsersUseCase,
+            viewContentUseCase,
+            removeContentUseCase
+        );
     }
 
     withTranscribeStrategy(transcribeStrategy: TranscribeStrategy): ContentControllerBuilder {

@@ -21,6 +21,7 @@
       <v-card class="pa-3">
         <v-card-title>Aktionen</v-card-title>
         <v-btn class="mt-3" block color="#FF8E3C">Veröffentlichen</v-btn>
+        <v-btn class="mt-3" block color="#FF8E3C" @click="remove">Löschen</v-btn>
       </v-card>
     </v-col>
   </v-row>
@@ -35,6 +36,12 @@ export default {
   data: () => ({
     content: ""
   }),
+  methods: {
+    async remove() {
+      await store.dispatch('removeContent', {content: this.contentId, space: this.spaceId});
+      await this.$router.replace({path: '/spaces'});
+    }
+  },
   computed: {
     contentId() {
       return this.cid;

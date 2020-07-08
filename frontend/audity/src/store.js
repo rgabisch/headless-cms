@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         service: {
-            url: 'api',
+            url: '/api',
             config: {
                 headers: {
                     Authorization: undefined
@@ -151,6 +151,13 @@ export default new Vuex.Store({
         },
         async viewContent({state}, {content, space}) {
             const response = await axios.get(
+                `${state.service.url}/contents/${content}/spaces/${space}`,
+                state.service.config
+            );
+            return response.data;
+        },
+        async removeContent({state}, {content, space}) {
+            const response = await axios.delete(
                 `${state.service.url}/contents/${content}/spaces/${space}`,
                 state.service.config
             );

@@ -10,7 +10,7 @@ import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUs
 import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllContentsfromSpacesCommand";
 import {TypeId} from "../../domain/entities/Type";
 import {promises as fs} from "fs";
-import {Readable} from "stream";
+import RemoveContentUseCase from "../../domain/usecases/RemoveContentUseCase";
 
 const formidable = require('formidable');
 
@@ -22,7 +22,8 @@ class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
                 private listAllContentsUseCase: ListAllContentsUseCase,
                 private listAllContentsUsersUseCase: ListAllContentsUsersUseCase,
-                private viewContentUseCase: ViewContentUseCase) {
+                private viewContentUseCase: ViewContentUseCase,
+                private removeContentUseCase: RemoveContentUseCase) {
     }
 
     routes(): express.Router {
@@ -71,10 +72,12 @@ class ContentController {
                         if (c.typeId !== TypeId.Audio) {
                             mappedContent.push(c);
                         } else {
-                            mappedContent.push(Object.assign(c, {
-                                content: '',
-                                raw: await fs.readFile(files[c.name].path)
-                            }));
+                            if (files[c.name]) {
+                                mappedContent.push(Object.assign(c, {
+                                    content: '',
+                                    raw: await fs.readFile(files[c.name].path)
+                                }));
+                            }
                         }
                     }
 
@@ -168,6 +171,16 @@ class ContentController {
             } catch (e) {
                 res.status(400).send('post body is invalid');
             }
+        });
+
+        router.delete('/:contentId/spaces/:spaceId', async (req, res) => {
+            await this.removeContentUseCase.execute({
+                creatorId: <string>req.headers._creatorId,
+                contentId: req.params.contentId,
+                spaceId: req.params.spaceId,
+            });
+
+            res.sendStatus(200);
         });
 
         return router;
