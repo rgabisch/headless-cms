@@ -4,6 +4,7 @@ import EmptyValueException from "../exceptions/EmptyValueException";
 import {UndefinedSchemaException} from "../exceptions/UndefinedSchemaException";
 import Space from "./Space";
 import NotUniqueSpaceNameException from "../exceptions/NotUniqueSpaceNameException";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 class UndefinedSpaceException implements Error {
     constructor(id: string) {
@@ -80,8 +81,11 @@ class Creator {
         this.spaces.set(space.id, space);
     }
 
-    getSpace(spaceId: string): Space | undefined {
-        return this.spaces.get(spaceId);
+    getSpace(spaceId: string): Space {
+        if (!this.spaces.get(spaceId))
+            throw new UnassignedIdException();
+
+        return <Space>this.spaces.get(spaceId);
     }
 
     getAllSpaces(): Space[] {
@@ -99,10 +103,6 @@ class Creator {
 
     getContentsOf(spaceId: string): Content[] {
         const space = this.getSpace(spaceId);
-
-        if (!space)
-            return [];
-
         return space.getAll();
     }
 
@@ -122,6 +122,10 @@ class Creator {
 
     hasNotWritten(contentId: string, spaceId: string): boolean {
         return !this.hasWritten(contentId, spaceId);
+    }
+
+    removeContent(contentId: string, spaceId: string) {
+        this.getSpace(spaceId).remove(contentId);
     }
 }
 

@@ -1,6 +1,7 @@
 import EmptyValueException from "../exceptions/EmptyValueException";
 import MoreThan50CharactersException from "../exceptions/MoreThan50CharactersException";
 import Content from "./Content";
+import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 
 class Space {
     private contents: Map<string, Content>;
@@ -35,6 +36,11 @@ class Space {
 
     hasName(name: string): boolean {
         return this.name === name;
+    }
+
+    remove(contentId: string) {
+        if (!this.contents.delete(contentId))
+            throw new UnassignedIdException();
     }
 }
 

@@ -51,7 +51,7 @@ class WriteContentUseCase {
             }
         }));
 
-        const space = <Space>creator.getSpace(command.spaceId);
+        const space = creator.getSpace(command.spaceId);
 
         const content = new Content(
             this.idGenerator.generate(),

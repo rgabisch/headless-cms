@@ -17,7 +17,7 @@ class ListAllContentsUseCase {
         if (creator.hasNotOpens(command.spaceId))
             throw new UnassignedIdException();
 
-        const contents = <Content[]>creator.getContentsOf(command.spaceId);
+        const contents = creator.getContentsOf(command.spaceId);
 
         return new ListedAllContentsEvent(this.map(contents));
     }

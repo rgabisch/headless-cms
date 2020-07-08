@@ -24,7 +24,7 @@ suite('Creator Entity', () => {
             const emptyId = '';
 
             try {
-                const creator = new Creator(emptyId, new Map(), new Map());
+                new Creator(emptyId, new Map(), new Map());
             } catch (e) {
                 exception = e;
             } finally {
@@ -37,7 +37,7 @@ suite('Creator Entity', () => {
             const whitespaceId = '    ';
 
             try {
-                const creator = new Creator(whitespaceId, new Map(), new Map());
+                new Creator(whitespaceId, new Map(), new Map());
             } catch (e) {
                 exception = e;
             } finally {
@@ -133,9 +133,14 @@ suite('Creator Entity', () => {
         test('given creator without a space -> return no content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
 
-            const found = creator.getContent('1', '1');
-
-            assert.isUndefined(found);
+            let exception;
+            try {
+                creator.getContent('1', '1');
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.isDefined(exception);
+            }
         });
 
         test('given creator with space without content -> return no content', () => {
@@ -164,9 +169,14 @@ suite('Creator Entity', () => {
         test('given creator without spaces -> returns no content', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
 
-            const contents = creator.getContentsOf('1');
-
-            assert.isEmpty(contents);
+            let exception;
+            try {
+                creator.getContentsOf('1');
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.isDefined(exception);
+            }
         });
 
         test('given creator with spaces without content -> returns no content', () => {
@@ -231,9 +241,14 @@ suite('Creator Entity', () => {
         test('given creator without a space -> returns no space', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
 
-            const found = creator.getSpace('1');
-
-            assert.isUndefined(found);
+            let exception;
+            try {
+                creator.getSpace('1');
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.isDefined(exception);
+            }
         });
 
         test('given creator with a space -> returns a space', () => {
@@ -346,7 +361,7 @@ suite('Creator Entity', () => {
         });
     });
 
-    suite('has open a spave with name', () => {
+    suite('has open a space with name', () => {
         const name = 'My First Podcast';
         const otherName = 'My Second Podcast';
 
