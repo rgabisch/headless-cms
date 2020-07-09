@@ -133,6 +133,15 @@
                     schemaId: this.selectedSchema.id,
                     content: this.selectedSchema.types
                 }
+
+                if(Content.content.filter(c => c.typeId === '6').length) {
+                    const formData = new FormData()
+                    formData.append('json', JSON.stringify(Content))
+                    let audioFile = Content.content.filter(c => c.typeId === '6')[0]
+                    formData.append(audioFile.name, audioFile.content)
+                    Content = formData
+                }
+
                 await store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
                 this.$store.commit("SET_SPACE", this.selectedSpace);
                 await this.$router.push({ name: 'listAllContents', params: { sid: this.selectedSpace.id}});

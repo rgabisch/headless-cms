@@ -44,7 +44,7 @@
         <div v-else-if="id === '6'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
             <v-btn><label for="upload-audio">Durchsuchen</label></v-btn>
-            <input type="file" accept="audio/*" name="audio" id="upload-audio" />
+            <input type="file" accept="audio/*" name="audio" id="upload-audio" @change="onFileUpload"/>
         </div>
         <div v-else>
             Type '{{label}}' with id {{id}} doesn#t exists.
@@ -66,6 +66,10 @@
         methods: {
             getEditorData: function (e) {
                 this.input = e;
+            },
+            onFileUpload (event) {
+                this.input = event.target.files[0]
+
             },
         },
         watch: {

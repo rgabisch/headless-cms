@@ -30,7 +30,7 @@ class ContentController {
         const router = express.Router();
 
         router.post('/spaces/:spaceId/', async (req, res) => {
-            if (req.headers["content-type"] == "application/json") {
+            if (req.headers["content-type"]?.includes("application/json")) {
 
                 let command = new WriteContentCommand(
                     req.body.schemaId,
