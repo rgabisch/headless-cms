@@ -7,6 +7,9 @@ import Space from "../../../src/domain/entities/Space";
 import Content from "../../../src/domain/entities/Content";
 import Schema, {TypeDefinition, TypeMappings} from "../../../src/domain/entities/Schema";
 import Type, {TypeId} from "../../../src/domain/entities/Type";
+import TypeFactory from "../../../src/domain/factories/TypeFactory";
+import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
+import {StaticTranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 
 suite('Edit Content Use Case', () => {
 
@@ -37,7 +40,7 @@ suite('Edit Content Use Case', () => {
             typeMapping
         );
         repository = new InMemoryCreatorRepository();
-        useCase = new EditContentUseCase(repository);
+        useCase = new EditContentUseCase(repository, new TranscribeAudioUseCase(new StaticTranscribeStrategy('lala')), new TypeFactory());
     });
 
     test('given assigned ids -> edit content', async () => {

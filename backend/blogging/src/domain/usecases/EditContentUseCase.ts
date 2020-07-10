@@ -4,14 +4,12 @@ import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import TypeFactory from "../factories/TypeFactory";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
-import {StaticTranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 import {TypeMappings} from "../entities/Schema";
 
 class EditContentUseCase {
-    private typeFactory = new TypeFactory();
-    private transcribeAudioUseCase = new TranscribeAudioUseCase(new StaticTranscribeStrategy('lala'));
-
-    constructor(private readonly creatorRepository: CreatorRepository) {
+    constructor(private readonly creatorRepository: CreatorRepository,
+                private readonly transcribeAudioUseCase: TranscribeAudioUseCase,
+                private readonly typeFactory: TypeFactory) {
     }
 
     public async execute(command: EditContentCommand): Promise<EditedContentEvent> {
