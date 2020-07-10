@@ -147,9 +147,14 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.open(space);
 
-            const found = creator.getContent('1', space.id);
-
-            assert.isUndefined(found);
+            let exception;
+            try {
+                creator.getContent('1', space.id);
+            } catch (e) {
+                exception = e;
+            } finally {
+                assert.isDefined(exception);
+            }
         });
 
         test('given creator with space and content -> return content', () => {
