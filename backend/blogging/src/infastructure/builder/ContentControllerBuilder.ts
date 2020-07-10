@@ -7,6 +7,7 @@ import ListAllContentsUsersUseCase from "../../domain/usecases/ListAllContentsUs
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
 import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 import RemoveContentUseCase from "../../domain/usecases/RemoveContentUseCase";
+import EditContentUseCase from "../../domain/usecases/EditContentUseCase";
 
 class ContentControllerBuilder extends ControllerBuilder<ContentController> {
 
@@ -24,12 +25,14 @@ class ContentControllerBuilder extends ControllerBuilder<ContentController> {
         const listAllContentUsersUseCase = new ListAllContentsUsersUseCase(this.creatorRepository);
         const viewContentUseCase = new ViewContentUseCase(this.creatorRepository);
         const removeContentUseCase = new RemoveContentUseCase(this.creatorRepository);
+        const editContentUseCase = new EditContentUseCase(this.creatorRepository, new TranscribeAudioUseCase(this.transcribeStrategy), this.typeFactory);
         return new ContentController(
             writeContentUseCase,
             listAllContentsUseCase,
             listAllContentUsersUseCase,
             viewContentUseCase,
-            removeContentUseCase
+            removeContentUseCase,
+            editContentUseCase
         );
     }
 

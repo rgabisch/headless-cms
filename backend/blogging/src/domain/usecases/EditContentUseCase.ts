@@ -51,7 +51,12 @@ class EditContentUseCase {
             creatorId: creator.id,
             contentId: content.id,
             spaceId: command.spaceId,
-            content: command.content
+            content: typeMapping.map(({type, name, content}) => ({
+                typeId: type.id,
+                name,
+                content
+            })),
+            creationDate: content.creationDate
         };
     }
 }

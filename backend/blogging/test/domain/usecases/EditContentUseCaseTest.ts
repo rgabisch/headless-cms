@@ -10,6 +10,7 @@ import Type, {TypeId} from "../../../src/domain/entities/Type";
 import TypeFactory from "../../../src/domain/factories/TypeFactory";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
 import {StaticTranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
+import EditContentCommand from "../../../src/domain/commands/EditContentCommand";
 
 suite('Edit Content Use Case', () => {
 
@@ -49,16 +50,17 @@ suite('Edit Content Use Case', () => {
         creator.write(content, space);
         repository.add(creator);
         const editedContent = 'My better Podcast';
-        const command = {
-            creatorId: creator.id,
-            contentId: content.id,
-            spaceId: space.id,
-            content: [{
+        const command = new EditContentCommand(
+            creator.id,
+            content.id,
+            space.id,
+            [{
                 typeId: '1',
                 name: 'Heading',
                 content: editedContent
-            }]
-        };
+            }],
+            undefined
+        );
 
         const event = await useCase.execute(command);
 
@@ -72,22 +74,24 @@ suite('Edit Content Use Case', () => {
                     typeId: '1',
                     name: 'Heading',
                     content: editedContent
-                }]
+                }],
+                creationDate: content.creationDate
             }
         );
     });
 
     test('given unassigned creator -> throws exception', async () => {
-        const command = {
-            creatorId: creator.id,
-            contentId: '1',
-            spaceId: '1',
-            content: [{
+        const command = new EditContentCommand(
+            creator.id,
+            '1',
+            '1',
+            [{
                 typeId: '1',
                 name: 'Heading',
                 content: 'My first Podcast'
-            }]
-        };
+            }],
+            undefined
+        );
 
         let exception;
         try {
@@ -102,16 +106,17 @@ suite('Edit Content Use Case', () => {
     test('given unassigned content -> throws exception', async () => {
         creator.open(space);
         repository.add(creator);
-        const command = {
-            creatorId: '1',
-            contentId: '1',
-            spaceId: '1',
-            content: [{
+        const command = new EditContentCommand(
+            '1',
+            '1',
+            '1',
+            [{
                 typeId: '1',
                 name: 'Heading',
                 content: 'My first Podcast'
-            }]
-        };
+            }],
+            undefined
+        );
 
         let exception;
         try {
@@ -125,16 +130,17 @@ suite('Edit Content Use Case', () => {
 
     test('given unassigned space -> throws exception', async () => {
         repository.add(creator);
-        const command = {
-            creatorId: '1',
-            contentId: '1',
-            spaceId: '1',
-            content: [{
+        const command = new EditContentCommand(
+            '1',
+            '1',
+            '1',
+            [{
                 typeId: '1',
                 name: 'Heading',
                 content: 'My first Podcast'
-            }]
-        };
+            }],
+            undefined
+        );
 
         let exception;
         try {
