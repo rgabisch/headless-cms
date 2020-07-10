@@ -59,7 +59,7 @@ suite('Delete Content Use Case', () => {
 
         await useCase.execute(command);
 
-        assert.isUndefined((<Creator>await repository.findBy(creator.id)).getContent(content.id, space.id));
+        assert.isTrue((<Creator>await repository.findBy(creator.id)).hasNotWritten(content.id, space.id));
     });
 
     test('given unassigned creator id -> throws exception', async () => {

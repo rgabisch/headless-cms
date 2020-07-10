@@ -92,11 +92,8 @@ class Creator {
         return Array.from(this.spaces.values());
     }
 
-    getContent(id: string, spaceId: string): Content | undefined {
+    getContent(id: string, spaceId: string): Content {
         const space = this.getSpace(spaceId);
-
-        if (!space)
-            return undefined;
 
         return space.get(id);
     }
@@ -117,7 +114,7 @@ class Creator {
         if (!space)
             return false;
 
-        return !!space.get(contentId);
+        return space.contains(contentId);
     }
 
     hasNotWritten(contentId: string, spaceId: string): boolean {

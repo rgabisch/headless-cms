@@ -26,8 +26,11 @@ class Space {
         this.contents.set(content.id, content);
     }
 
-    get(id: string): Content | undefined {
-        return this.contents.get(id);
+    get(id: string): Content {
+        if (!this.contains(id))
+            throw new UnassignedIdException();
+
+        return <Content>this.contents.get(id);
     }
 
     getAll(): Content[] {
@@ -41,6 +44,10 @@ class Space {
     remove(contentId: string) {
         if (!this.contents.delete(contentId))
             throw new UnassignedIdException();
+    }
+
+    contains(id: string) {
+        return !!this.contents.get(id);
     }
 }
 
