@@ -1,4 +1,5 @@
 # audity
+![audity](https://user-images.githubusercontent.com/20666195/87147241-8df49000-c2ac-11ea-9216-ac3312627aa5.png)
 ![CI](https://github.com/rgabisch/headless-cms/workflows/CI/badge.svg)
 ## Description
 Audity is a headless-cms, which is specialized on the integration of audio files. It transcribes audio files and can be used for search engine optimization. 
