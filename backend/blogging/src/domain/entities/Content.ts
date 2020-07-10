@@ -23,6 +23,10 @@ export class Content {
     get schemaName(): string {
         return this.schema.name;
     }
+
+    edit(typeMappings: TypeMappings) {
+
+    }
 }
 
 export default Content;
