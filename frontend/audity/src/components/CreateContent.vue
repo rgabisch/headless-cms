@@ -25,7 +25,7 @@
             <v-card class="pa-5 mt-3 text-center">
                 <v-card-title id="schema-type">{{ cardTitle }}</v-card-title>
                 <Container
-                        id ="drop-container"
+                        id="drop-container"
                         class="drop-container"
                         group-name="1"
                         :get-child-payload="getChildPayload"
@@ -75,9 +75,9 @@
                     </Draggable>
                 </Container>
                 <v-btn
-                    block
-                    color="#FF8E3C"
-                    to="create-schema"
+                        block
+                        color="#FF8E3C"
+                        to="create-schema"
                 >Erstellen
                 </v-btn>
             </v-card>
@@ -87,7 +87,7 @@
 <script>
 
     import {Container, Draggable} from 'vue-smooth-dnd'
-    import { mapGetters } from "vuex";
+    import {mapGetters} from "vuex";
     import Type from './Type.vue'
     import store from '../store';
 
@@ -99,7 +99,7 @@
             schemas: [],
             spaces: [],
             selectedSchema: {},
-            selectedSpace : '',
+            selectedSpace: '',
             cardTitle: '',
             formValid: false,
             rules: {
@@ -133,18 +133,20 @@
                     schemaId: this.selectedSchema.id,
                     content: this.selectedSchema.types
                 }
-
-                if(Content.content.filter(c => c.typeId === '6').length) {
-                    const formData = new FormData()
-                    formData.append('json', JSON.stringify(Content))
+                //
+                // if(Content.content.filter(c => c.typeId === '6').length) {
+                const formData = new FormData()
+                formData.append('json', JSON.stringify(Content))
+                if (Content.content.filter(c => c.typeId === '6').length) {
                     let audioFile = Content.content.filter(c => c.typeId === '6')[0]
                     formData.append(audioFile.name, audioFile.content)
-                    Content = formData
                 }
+                Content = formData
+                // }
 
                 await store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
                 this.$store.commit("SET_SPACE", this.selectedSpace);
-                await this.$router.push({ name: 'listAllContents', params: { sid: this.selectedSpace.id}});
+                await this.$router.push({name: 'listAllContents', params: {sid: this.selectedSpace.id}});
             },
             handleData: function (e, type) {
                 type.content = e
@@ -170,7 +172,7 @@
     }
 </script>
 <style scoped>
-    #drop-text{
+    #drop-text {
         text-align: center;
         vertical-align: middle;
         line-height: 250px;
@@ -178,9 +180,11 @@
         color: #dcd9d9;
         position: static;
     }
-    .draggable-item{
+
+    .draggable-item {
         cursor: grab;
     }
+
     .drop-container {
         min-height: 250px;
         border: 2px dashed #dcd9d9;
