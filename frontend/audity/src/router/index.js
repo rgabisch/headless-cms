@@ -18,7 +18,8 @@ const routes = [
         name: 'register',
         component: () => import('../views/Register')
     },
-    {   path: '/',
+    {
+        path: '/',
         name: 'index',
         component: () => import('../views/Index'),
         meta: {
@@ -39,6 +40,12 @@ const routes = [
                 path: '/create-content',
                 name: 'createContent',
                 component: () => import('../components/CreateContent'),
+            },
+            {
+                path: '/edit-content/:contentId/space/:spaceId',
+                name: 'editContent',
+                props: true,
+                component: () => import('../components/EditContent'),
             },
             {
                 path: '/spaces/:sid/contents',
@@ -86,7 +93,7 @@ const router = new VueRouter({
 })
 
 
-router.beforeEach((to, from, next) =>{
+router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor);
     const isLoggedIn = store.getters.isLoggedIn;
@@ -94,12 +101,10 @@ router.beforeEach((to, from, next) =>{
     if (requiresAuth && !isLoggedIn) {
         console.log(`in router; is not logged in = ${isLoggedIn}`)
         next('login');
-    }
-    else if (requiresVisitor && isLoggedIn) {
+    } else if (requiresVisitor && isLoggedIn) {
         console.log(`in router; is logged in = ${isLoggedIn}`)
         next('/');
-    }
-    else {
+    } else {
         console.log(`requires no auth`)
         next();
     }
