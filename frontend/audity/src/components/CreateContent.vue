@@ -33,7 +33,7 @@
                     <div id="drop-text">drop here</div>
                     <div v-if="selectedSchema.types !== ''">
                         <div class="p-3" v-for="type in selectedSchema.types" :key="type.name">
-                            <type :id="type.typeId" :label="type.name" @input="handleData($event, type)"></type>
+                            <type :id="type.typeId" :label="type.name" @update:value="handleData($event, type)"></type>
                         </div>
                     </div>
                 </Container>
