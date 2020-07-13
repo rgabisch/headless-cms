@@ -129,6 +129,13 @@ export default new Vuex.Store({
                 state.service.config
             )
         },
+        async editContent({state}, payload) {
+            await axios.put(
+                `${state.service.url}/contents/${payload.contentId}/spaces/${payload.spaceId}`,
+                payload.content,
+                state.service.config
+            )
+        },
         async viewSpace({state}, space) {
             const response = await axios.get(
                 `${state.service.url}/contents/spaces/${space}`,
