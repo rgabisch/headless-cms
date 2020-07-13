@@ -8,7 +8,7 @@
                         label="Name der Seite"
                         filled
                         dense
-                        v-model="name"
+                        v-model="content.name"
                         :rules="rules.required"
                 ></v-text-field>
                 <v-select
@@ -23,19 +23,21 @@
             </v-card>
             <br/>
             <v-card class="pa-5 mt-3 text-center">
-                <v-card-title id="schema-type">{{ cardTitle }}</v-card-title>
-
-                <div v-if="selectedSchema.types !== ''">
-                    <div class="p-3" v-for="type in selectedSchema.types" :key="type.name">
-                        <type v-if="type.typeId === 6"
+                <v-card-title id="schema-type">{{content.mapping  }}</v-card-title>
+                <div v-if="content.mapping !== ''">
+                    <div class="p-3" v-for="type in content.mapping" :key="type.type.name">
+                        <type v-if="type.type.id === 6"
                               :id="1"
-                              :label="text">
+                              :label="type.type.name"
+                              :value="type.content"
+                              @update:value="handleData($event, type.type)">
                         </type>
                         <type v-else
-                              :id="type.typeId"
-                              :label="type.name"
-                              @input="handleData($event, type)">
-                        </type>
+                              :id="type.type.id"
+                              :label="type.type.name"
+                              :value="type.content"
+                              @update:value="handleData($event, type)">
+                        </type>{{type.content}}
                     </div>
                 </div>
 
@@ -72,11 +74,10 @@
         components: {Type},
         data: () => ({
             name: '',
-            schemas: [],
             spaces: [],
+            content: {},
             selectedSchema: {},
             selectedSpace: '',
-            cardTitle: '',
             formValid: false,
             rules: {
                 required: [value => !!value || "Required"]
@@ -84,15 +85,33 @@
         }),
         methods: {
             async editContent() {
+
+                const typeMapping = [];
+                for (let map of this.content.mapping) {
+                    typeMapping.push({typeId: map.type.id, name : map.type.name, content: map.content})
+                }
+                let Content = {
+                    name: this.content.name,
+                    schemaId: this.selectedSchema.id,
+                    content: typeMapping
+                }
+                //
+                // if(Content.content.filter(c => c.typeId === '6').length) {
+                const formData = new FormData()
+                formData.append('json', JSON.stringify(Content))
+                if (Content.content.filter(c => c.typeId === '6').length) {
+                    let audioFile = Content.content.filter(c => c.typeId === '6')[0]
+                    formData.append(audioFile.name, audioFile.content)
+                }
+                Content = formData
+                // }
+
                 await store.dispatch(
-                    'writeContent',
+                    'editContent',
                     {
-                        space: this.selectedSpace.id,
-                        content: {
-                            name: this.name,
-                            schemaId: this.selectedSchema.id,
-                            content: this.selectedSchema.types
-                        }
+                        spaceId: this.selectedSpace.id,
+                        contentId: this.content.id,
+                        content: Content
                     }
                 );
                 this.$store.commit("SET_SPACE", this.selectedSpace);
@@ -103,7 +122,7 @@
             }
         },
         async mounted() {
-            const content = await store.dispatch(
+            this.content = await store.dispatch(
                 'viewContent',
                 {content: this.contentId, space: this.spaceId}
             );
@@ -111,9 +130,8 @@
                 'listAllSpaces'
             );
 
-            this.selectedSchema = await store.dispatch('viewSchema', content.schema.id);
+            this.selectedSchema = await store.dispatch('viewSchema', this.content.schema.id);
             this.selectedSpace = this.spaces.find(space => space.id === this.spaceId);
-            this.name = content.name;
         },
 
         computed: {
