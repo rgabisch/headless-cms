@@ -2,42 +2,26 @@
     <v-row class="pa-2">
         <v-col lg="9" class="col-12">
             <v-card class="p-3">
-                <h1>Seite bearbeiten</h1>
-                <p>Zurück</p>
-                <v-text-field
-                        label="Name der Seite"
-                        filled
-                        dense
-                        v-model="content.name"
-                        :rules="rules.required"
-                ></v-text-field>
-                <v-select
-                        label="Veröffentlichen in Space"
-                        filled
-                        dense
-                        :items="spaces"
-                        item-text="name"
-                        item-value="id"
-                        v-model="selectedSpace"
-                ></v-select>
+                <h1>{{content.name}} bearbeiten</h1>
+                <p v-if="content.schema !== undefined">{{content.schema.name}}</p>
+                <time>{{content.creationDate}}</time>
             </v-card>
             <br/>
             <v-card class="pa-5 mt-3 text-center">
-                <v-card-title id="schema-type">{{content.mapping  }}</v-card-title>
                 <div v-if="content.mapping !== ''">
                     <div class="p-3" v-for="type in content.mapping" :key="type.type.name">
-                        <type v-if="type.type.id === 6"
-                              :id="1"
+                        <type v-if="type.type.id === '6'"
+                              :id="'1'"
                               :label="type.type.name"
                               :value="type.content"
-                              @update:value="handleData($event, type.type)">
+                              @update:value="handleData($event, type)">
                         </type>
                         <type v-else
                               :id="type.type.id"
                               :label="type.type.name"
                               :value="type.content"
                               @update:value="handleData($event, type)">
-                        </type>{{type.content}}
+                        </type>
                     </div>
                 </div>
 
@@ -73,7 +57,6 @@
         props: ['contentId', 'spaceId'],
         components: {Type},
         data: () => ({
-            name: '',
             spaces: [],
             content: {},
             selectedSchema: {},

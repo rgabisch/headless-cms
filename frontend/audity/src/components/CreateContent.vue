@@ -3,7 +3,6 @@
         <v-col md="9" class="col-12">
             <v-card class="p-3">
                 <h1>Seite erstellen</h1>
-                <p>Zurück</p>
                 <v-text-field
                         label="Name der Seite"
                         filled
@@ -143,7 +142,13 @@
                 Content = formData
                 // }
 
-                await this.$store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
+                await this.$store.dispatch(
+                    'writeContent',
+                    {
+                        space: this.selectedSpace.id,
+                        content: Content
+                    }
+                );
                 this.$store.commit("SET_SPACE", this.selectedSpace);
                 await this.$router.push({name: 'listAllContents', params: {sid: this.selectedSpace.id}});
             },
