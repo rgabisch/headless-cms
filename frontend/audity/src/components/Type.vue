@@ -12,7 +12,7 @@
         <!-- Rich Text -->
         <div v-else-if="id === '2'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <rich-text-editor @contentHtml="getEditorData($event)"></rich-text-editor>
+            <rich-text-editor v-model="input"></rich-text-editor>
         </div>
         <!-- Number -->
         <div v-else-if="id === '3'">

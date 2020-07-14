@@ -3,7 +3,6 @@
         <v-col lg="9" class="col-12">
             <v-card class="p-3">
                 <h1>Seite erstellen</h1>
-                <p>Zurück</p>
                 <v-text-field
                         label="Name der Seite"
                         filled
@@ -144,7 +143,13 @@
                 Content = formData
                 // }
 
-                await store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
+                await store.dispatch(
+                    'writeContent',
+                    {
+                        space: this.selectedSpace.id,
+                        content: Content
+                    }
+                );
                 this.$store.commit("SET_SPACE", this.selectedSpace);
                 await this.$router.push({name: 'listAllContents', params: {sid: this.selectedSpace.id}});
             },
@@ -154,8 +159,12 @@
         },
         async mounted() {
             //this.$refs.form.validate();
-            this.spaces = await store.dispatch('listAllSpaces');
-            this.schemas = await store.dispatch('listAllSchemas');
+            this.spaces = await store.dispatch(
+                'listAllSpaces'
+            );
+            this.schemas = await store.dispatch(
+                'listAllSchemas'
+            );
 
             //Bekommt den Namen und der Seite und den Namen des Spaces aus Vuex
             this.name = this.$store.getters.content.name;
