@@ -1,6 +1,6 @@
 <template>
         <v-row class="pa-2">
-            <v-col lg="9" class="col-12">
+            <v-col md="9" class="col-12">
                 <v-card class="p-3">
                 <h1>Schema erstellen</h1>
                 <p>Zurück</p>
@@ -43,7 +43,7 @@
                         </Container>
                     </v-card>
             </v-col>
-            <v-col lg="3">
+            <v-col md="3">
                 <v-card class="p-3">
                     <v-card-title>Aktionen</v-card-title>
                     <v-btn
@@ -78,7 +78,7 @@
 <script>
 
     import { Container, Draggable } from 'vue-smooth-dnd'
-    import store from '../store';
+
 
 export default {
   name: 'DefineSchema',
@@ -132,7 +132,7 @@ export default {
               name: this.name,
               types: this.selectedTypes
           };
-          await store.dispatch('defineSchema', Schema)
+          await this.$store.dispatch('defineSchema', Schema)
           await this.$router.push('schemas');
       }
   },

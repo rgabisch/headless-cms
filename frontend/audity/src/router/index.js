@@ -18,15 +18,19 @@ const routes = [
         name: 'register',
         component: () => import('../views/Register')
     },
-    {   path: '/',
+    {
+        path: '/',
         name: 'index',
-        component: () => import('../views/Index'),
+        component: () => import('../views/Index')
+    },
+    {   path: '/',
+        component: () => import('../views/Core'),
         meta: {
             requiresAuth: true
         },
         children: [
             {
-                path: '',
+                path: '/dashboard',
                 name: 'Dashboard',
                 component: () => import('../components/Dashboard'),
             },
@@ -85,7 +89,6 @@ const router = new VueRouter({
     routes
 })
 
-
 router.beforeEach((to, from, next) =>{
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor);
@@ -93,11 +96,11 @@ router.beforeEach((to, from, next) =>{
 
     if (requiresAuth && !isLoggedIn) {
         console.log(`in router; is not logged in = ${isLoggedIn}`)
-        next('login');
+        next('/');
     }
     else if (requiresVisitor && isLoggedIn) {
         console.log(`in router; is logged in = ${isLoggedIn}`)
-        next('/');
+        next('/dashboard');
     }
     else {
         console.log(`requires no auth`)

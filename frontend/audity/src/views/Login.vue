@@ -62,7 +62,6 @@
 </template>
 
 <script>
-    import store from "../store";
 
     export default {
         data() {
@@ -77,11 +76,11 @@
         methods: {
             async submit() {
                 try {
-                    await store.dispatch('login', {
+                    await this.$store.dispatch('login', {
                         email: this.form.email,
                         password: this.form.password
                     });
-                    await this.$router.replace({path: '/'});
+                    await this.$router.replace({path: '/dashboard'});
                 } catch (e) {
                     console.log(e);
                 }

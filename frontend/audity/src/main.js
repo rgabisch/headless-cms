@@ -10,16 +10,9 @@ Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-
-// Initialize the app only when we are sure Firebase Auth object is ready to use
-// Now when refreshing the page, or trying to access view from url, won't redirect to /login
-let app = '';
-
-if (!app) {
-    app = new Vue({
+new Vue({
         router,
         vuetify,
         store,
         render: h => h(App),
     }).$mount('#app')
-}

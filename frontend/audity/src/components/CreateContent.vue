@@ -1,6 +1,6 @@
 <template>
     <v-row class="pa-2">
-        <v-col lg="9" class="col-12">
+        <v-col md="9" class="col-12">
             <v-card class="p-3">
                 <h1>Seite erstellen</h1>
                 <p>Zurück</p>
@@ -39,7 +39,7 @@
                 </Container>
             </v-card>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3">
             <v-card class="p-3">
                 <v-card-title>Aktionen</v-card-title>
                 <v-btn
@@ -89,7 +89,6 @@
     import {Container, Draggable} from 'vue-smooth-dnd'
     import { mapGetters } from "vuex";
     import Type from './Type.vue'
-    import store from '../store';
 
     export default {
         name: 'CreateContent',
@@ -142,7 +141,7 @@
                     Content = formData
                 }
 
-                await store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
+                await this.$store.dispatch('writeContent', {space: this.selectedSpace.id, content: Content});
                 this.$store.commit("SET_SPACE", this.selectedSpace);
                 await this.$router.push({ name: 'listAllContents', params: { sid: this.selectedSpace.id}});
             },
@@ -152,8 +151,8 @@
         },
         async mounted() {
             //this.$refs.form.validate();
-            this.spaces = await store.dispatch('listAllSpaces');
-            this.schemas = await store.dispatch('listAllSchemas');
+            this.spaces = await this.$store.dispatch('listAllSpaces');
+            this.schemas = await this.$store.dispatch('listAllSchemas');
 
             //Bekommt den Namen und der Seite und den Namen des Spaces aus Vuex
             this.name = this.$store.getters.content.name;

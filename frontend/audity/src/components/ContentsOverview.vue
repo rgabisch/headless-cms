@@ -15,7 +15,6 @@
 </template>
 
 <script>
-    import store from "../store";
 
     export default {
         name: "SpaceOverview",
@@ -25,19 +24,19 @@
             allContents: [],
             componentLoaded: false,
             headers: [{
-                text: 'Seiten',
+                text: 'Seite',
                 align: 'start',
                 sortable: true,
                 value: 'name',
             },
                 { text: 'Space', value: 'space' },
                 { text: 'Datum', value: 'creationDate' },
-                { text: 'Online', value: 'online' },
+                { text: 'Status', value: 'online' },
             ]
         }),
         methods: {
             async getData() {
-                this.spaces = await store.dispatch('listAllContents')
+                this.spaces = await this.$store.dispatch('listAllContents')
                 for (let i = 0; i < this.spaces.length; i++) {
                     for(let content of this.spaces[i].content){
                         content.space = this.spaces[i].space.name
@@ -47,13 +46,16 @@
                     }
                 }
             },
-            // @SR What does this do?
-            created() {
-                this.getData();
-                this.componentLoaded = true;
-            },
             openContent(value) {
-                this.$router.push({ name: 'content', params: { sid: value.spaceId, cid: value.id }});
+                this.$router.push(
+                    {
+                        name: 'content',
+                        params: {
+                            sid: value.spaceId,
+                            cid: value.id
+                        }
+                    }
+                );
             },
         },
 

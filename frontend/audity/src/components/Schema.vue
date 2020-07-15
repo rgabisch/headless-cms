@@ -1,6 +1,6 @@
 <template>
     <v-row class="pa-2">
-        <v-col lg="9" class="col-12">
+        <v-col md="9" class="col-12">
             <v-card class="p-3">
                 <h1>{{schema.name}}</h1>
             </v-card>
@@ -13,10 +13,10 @@
                 </div>
             </v-card>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3">
             <v-card class="pa-3">
                 <v-card-title>Seite erstellen</v-card-title>
-                <v-form>
+                <v-form @submit.prevent="storeContent">
                     <v-text-field
                             label="Titel der Seite"
                             placeholder=" "
@@ -34,7 +34,7 @@
                     <v-btn
                             block
                             color="#FF8E3C"
-                            @click="storeContent"
+                            type="submit"
                     >
                         Erstellen
                     </v-btn>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-    import store from '../store';
 
     export default {
         name: "Schema",
@@ -69,12 +68,8 @@
             }
         },
         async mounted() {
-            this.schema = await store.dispatch('viewSchema', this.schemaId);
-            this.spaces = await store.dispatch('listAllSpaces');
+            this.schema = await this.$store.dispatch('viewSchema', this.schemaId);
+            this.spaces = await this.$store.dispatch('listAllSpaces');
         },
     }
 </script>
-
-<style scoped>
-
-</style>

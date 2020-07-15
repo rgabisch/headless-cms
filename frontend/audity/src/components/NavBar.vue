@@ -50,7 +50,7 @@
 
 <script>
   import { mapGetters } from "vuex";
-  // import firebase from 'firebase/app';
+
 export default {
     name: 'NavBar',
     computed: {
@@ -67,7 +67,7 @@ export default {
       links: [
         { text: 'Dashboard',
         icon: 'mdi-poll',
-        to: '/'},
+        to: '/dashboard'},
         { text: 'Spaces',
         icon: 'mdi-folder',
         to: '/spaces' },
@@ -81,8 +81,11 @@ export default {
       }),
       methods: {
           signOut() {
+              this.$store.commit("setToken", null);
+              this.$store.commit("setLoggedIn", false);
+              this.$store.commit("setUserEmail", null);
               this.$router.replace({
-                  name: "login"
+                  name: "index"
               });
           }
       }
