@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-2">
-    <v-col lg="9" class="col-12">
+    <v-col md="9" class="col-12">
       <v-card class="p-3">
         <h1>{{spacename}}</h1>
       </v-card>
@@ -26,10 +26,10 @@
           </v-list-item>
       </v-card>
     </v-col>
-    <v-col lg="3">
+    <v-col md="3">
       <v-card class="p-3">
         <v-card-title>Seite erstellen</v-card-title>
-        <v-form>
+        <v-form @submit.prevent="storeContent">
           <v-text-field
                   label="Titel der Seite"
                   placeholder=" "
@@ -38,7 +38,7 @@
           <v-btn
                   block
                   color="#FF8E3C"
-                  @click="storeContent"
+                  type="submit"
           >
             Erstellen
           </v-btn>
@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import store from "../store";
 
 export default {
   name: "AllContents",
@@ -72,7 +71,7 @@ export default {
     }
   },
   async mounted() {
-    this.contents = await store.dispatch('viewSpace', this.spaceId);
+    this.contents = await this.$store.dispatch('viewSpace', this.spaceId);
     this.spacename = this.$store.getters.space.name;
     this.newContentName = ""
   }

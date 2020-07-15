@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-2">
-    <v-col lg="9" class="col-12">
+    <v-col md="9" class="col-12">
       <v-card class="p-3">
         <h1>Deine Spaces</h1>
       </v-card>
@@ -20,7 +20,7 @@
         <v-card-text v-if="spaces === ''">
           <strong>Hinweis:</strong>Erstelle einen Space um in dieser Liste deine Spaces zu sehen.
         </v-card-text>
-        <v-col lg="12">
+        <v-col md="12">
           <v-list-item
                   v-for="space in spaces"
                   :key="space.name"
@@ -38,10 +38,10 @@
         </v-col>
       </v-card>
     </v-col>
-    <v-col lg="3">
+    <v-col md="3">
       <v-card class="pa-3">
         <v-card-title>Space erstellen</v-card-title>
-        <v-form>
+        <v-form @submit.prevent="addSpace">
           <v-text-field
                   label="Name des Spaces"
                   placeholder=" "
@@ -51,7 +51,7 @@
                   block
                   color="#FF8E3C"
                   id="submit-btn"
-                  @click="addSpace"
+                  type="addSpace"
           >
             Erstellen
           </v-btn>
@@ -72,7 +72,6 @@
 
 
 <script>
-import store from '../store';
 
 export default {
   name: "Space",
@@ -86,7 +85,7 @@ export default {
   methods: {
     async addSpace() {
       try {
-        await store.dispatch('openSpace', this.spaceName);
+        await this.$store.dispatch('openSpace', this.spaceName);
         this.dataChecker = "created";
       } catch (e) {
         this.dataChecker = "fail";
@@ -103,7 +102,7 @@ export default {
         this.$store.commit("SET_SPACE", space);
       },
     async getData() {
-      this.spaces = await store.dispatch('listAllSpaces');
+      this.spaces = await this.$store.dispatch('listAllSpaces');
       }
     },
     // when the comonent is displayed, call this method to show all spaces

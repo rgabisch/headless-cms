@@ -1,6 +1,6 @@
 <template>
     <v-row class="pa-2">
-        <v-col lg="9" class="col-12">
+        <v-col md="9" class="col-12">
             <v-row>
                 <v-col class="pt-0">
                     <v-card class="pa-2">
@@ -28,10 +28,10 @@
                 <ContentsOverview/>
             </v-card>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3">
             <v-card class="pa-3">
                 <v-card-title>Seite erstellen</v-card-title>
-                <v-form>
+                <v-form @submit.prevent="storeContent">
                     <v-text-field
                             label="Titel der Seite"
                             placeholder=" "
@@ -57,7 +57,7 @@
             </v-card>
             <v-card class="pa-3 mt-2">
                 <v-card-title>Space erstellen</v-card-title>
-                <v-form>
+                <v-form @submit.prevent="addSpace">
                     <v-text-field
                             label="Name des Spaces"
                             placeholder=" "
@@ -67,7 +67,7 @@
                             block
                             color="#FF8E3C"
                             id="submit-btn"
-                            @click="addSpace"
+                            type="submit"
                     >
                         Erstellen
                     </v-btn>
@@ -75,16 +75,20 @@
             </v-card>
             <v-card class="pa-3 mt-2">
                 <v-card-title>Schema erstellen</v-card-title>
-                <v-text-field
-                        label="Name des Schemas"
-                        placeholder=" "
-                        v-model="schemaName"
-                ></v-text-field>
-                <v-btn
-                        block
-                        color="#FF8E3C"
-                        @click="storeSchema"
-                        >Erstellen</v-btn>
+                <v-form @submit.prevent="storeSchema">
+                    <v-text-field
+                            label="Name des Schemas"
+                            placeholder=" "
+                            v-model="schemaName"
+                    ></v-text-field>
+                    <v-btn
+                            block
+                            color="#FF8E3C"
+                            type="submit"
+                            >
+                        Erstellen
+                    </v-btn>
+                </v-form>
             </v-card>
         </v-col>
     </v-row>
@@ -93,7 +97,6 @@
 <script>
     import  { mapGetters } from "vuex";
     import ContentsOverview from "./ContentsOverview";
-    import store from "../store";
 
     export default {
         components: {ContentsOverview},
@@ -107,13 +110,13 @@
         }),
         methods: {
             addSpace() {
-                store.dispatch('openSpace', this.spaceName);
+                this.$store.dispatch('openSpace', this.spaceName);
                 // delete User-Input
                 this.spaceName = "";
                 this.$router.push('spaces');
             },
             async getSpaces() {
-                this.spaces = await store.dispatch('listAllSpaces');
+                this.spaces = await this.$store.dispatch('listAllSpaces');
             },
             //Speichert Namen des Schemas in Vuex
             storeSchema() {

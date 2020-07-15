@@ -56,7 +56,6 @@
 </template>
 
 <script>
-    import store from "../store";
 
     export default {
         name: "Register",
@@ -72,11 +71,11 @@
         methods: {
             async submit() {
                 try {
-                    await store.dispatch('signUp', {
+                    await this.$store.dispatch('signUp', {
                         email: this.form.email,
                         password: this.form.password
                     });
-                    await this.$router.replace({path: '/'});
+                    await this.$router.replace({path: '/dashboard'});
                 } catch (e) {
                     console.log(e);
                 }

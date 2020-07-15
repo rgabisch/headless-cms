@@ -1,6 +1,6 @@
 <template>
     <v-row class="pa-2">
-        <v-col lg="9" class="col-12">
+        <v-col md="9" class="col-12">
             <v-card class="p-3">
                 <h1>Schemas</h1>
             </v-card>
@@ -27,26 +27,29 @@
                 </v-col>
             </v-card>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3">
         <v-card class="pa-3">
             <v-card-title>Schema erstellen</v-card-title>
-            <v-text-field
-                    label="Name des Schemas"
-                    placeholder=" "
-                    v-model="newSchemaName"
-            ></v-text-field>
-            <v-btn
-                    block
-                    color="#FF8E3C"
-                    @click="storeSchema"
-                    >Erstellen</v-btn>
+            <v-form @submit.prevent="storeSchema">
+                <v-text-field
+                        label="Name des Schemas"
+                        placeholder=" "
+                        v-model="newSchemaName"
+                ></v-text-field>
+                <v-btn
+                        block
+                        color="#FF8E3C"
+                        type="submit"
+                        >
+                    Erstellen
+                </v-btn>
+            </v-form>
         </v-card>
         </v-col>
     </v-row>
 </template>
 
 <script>
-    import store from '../store'
 
     export default {
         name: "AllSchemas",
@@ -61,7 +64,7 @@
             }
         },
         async mounted() {
-            this.schemas = await store.dispatch('listAllSchemas')
+            this.schemas = await this.$store.dispatch('listAllSchemas')
             this.newSchemaName = ""
         }
     }
