@@ -71,15 +71,15 @@
 
                 const typeMapping = [];
                 for (let map of this.content.mapping) {
-                    typeMapping.push({typeId: map.type.id, name : map.type.name, content: map.content})
+                    typeMapping.push({typeId: map.type.id, name: map.type.name, content: map.content})
                 }
+
                 let Content = {
                     name: this.content.name,
                     schemaId: this.selectedSchema.id,
                     content: typeMapping
                 }
-                //
-                // if(Content.content.filter(c => c.typeId === '6').length) {
+
                 const formData = new FormData()
                 formData.append('json', JSON.stringify(Content))
                 if (Content.content.filter(c => c.typeId === '6').length) {
@@ -87,8 +87,7 @@
                     formData.append(audioFile.name, audioFile.content)
                 }
                 Content = formData
-                // }
-
+                console.log()
                 await store.dispatch(
                     'editContent',
                     {
