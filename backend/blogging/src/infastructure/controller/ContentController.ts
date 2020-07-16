@@ -117,15 +117,12 @@ class ContentController {
                 }
 
                 const content = JSON.parse(<string>fields['json']);
-                console.log(JSON.stringify(content, null, 2));
 
                 const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
 
                 for (let c of content.content) {
                     mappedContent.push(c);
                 }
-
-                console.log(JSON.stringify(content, null, 2));
 
                 let command = new EditContentCommand(
                     <string>req.headers._creatorId,

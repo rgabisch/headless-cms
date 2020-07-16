@@ -13,9 +13,6 @@ class EditContentUseCase {
     }
 
     public async execute(command: EditContentCommand): Promise<EditedContentEvent> {
-        console.log(command);
-
-
         const creator = await this.creatorRepository.findBy(command.creatorId);
 
         if (!creator)

@@ -11,7 +11,7 @@
                 <div v-if="content.mapping !== ''">
                     <div class="p-3" v-for="type in content.mapping" :key="type.type.name">
                         <type v-if="type.type.id === '6'"
-                              :id="'1'"
+                              :id="'2'"
                               :label="type.type.name"
                               :value="type.content"
                               @update:value="handleData($event, type)">
@@ -86,8 +86,9 @@
                     let audioFile = Content.content.filter(c => c.typeId === '6')[0]
                     formData.append(audioFile.name, audioFile.content)
                 }
+
                 Content = formData
-                console.log()
+
                 await store.dispatch(
                     'editContent',
                     {
