@@ -11,19 +11,18 @@ import {ListAllContentsfromSpacesCommand} from "../../domain/commands/ListAllCon
 import {TypeId} from "../../domain/entities/Type";
 import {promises as fs} from "fs";
 import RemoveContentUseCase from "../../domain/usecases/RemoveContentUseCase";
+import EditContentUseCase from "../../domain/usecases/EditContentUseCase";
+import EditContentCommand from "../../domain/commands/EditContentCommand";
 
 const formidable = require('formidable');
-
-var util = require('util');
-
-// var fs = require('fs');
 
 class ContentController {
     constructor(private writeContentUseCase: WriteContentUseCase,
                 private listAllContentsUseCase: ListAllContentsUseCase,
                 private listAllContentsUsersUseCase: ListAllContentsUsersUseCase,
                 private viewContentUseCase: ViewContentUseCase,
-                private removeContentUseCase: RemoveContentUseCase) {
+                private removeContentUseCase: RemoveContentUseCase,
+                private editContentUseCase: EditContentUseCase) {
     }
 
     routes(): express.Router {
@@ -104,6 +103,48 @@ class ContentController {
                     }
                 })
             }
+        });
+
+        router.put('/:contentId/spaces/:spaceId/', async (req, res) => {
+            console.log("Content-Type " + req.headers["content-type"])
+            let form = new formidable.IncomingForm();
+
+            let x = this
+            form.parse(req, async function (err: any, fields: any, files: any) {
+                if (err) {
+                    console.error(err.message);
+                    return;
+                }
+
+                const content = JSON.parse(<string>fields['json']);
+
+                const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
+
+                for (let c of content.content) {
+                    mappedContent.push(c);
+                }
+
+                let command = new EditContentCommand(
+                    <string>req.headers._creatorId,
+                    req.params.contentId,
+                    req.params.spaceId,
+                    mappedContent,
+                    <string | undefined>req.query.dateFormat,
+                );
+
+                try {
+                    let editedContentEvent = await x.editContentUseCase.execute(command);
+                    res.send({
+                        contentId: editedContentEvent.contentId,
+                        creatorId: editedContentEvent.creatorId,
+                        creationDate: x.format(editedContentEvent.creationDate, command.dateFormat),
+                        content: editedContentEvent.content
+                    });
+                } catch (e) {
+                    res.status(400).send('post body is invalid');
+                    console.log(e)
+                }
+            })
         });
 
         router.get('/spaces/:spaceId', async (req, res) => {

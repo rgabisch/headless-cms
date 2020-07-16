@@ -2,7 +2,6 @@
     <div class="editor">
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
             <div class="menubar">
-
                 <button
                         class="menubar__button pa-0"
                         :class="{ 'is-active': isActive.bold() }"
@@ -96,7 +95,6 @@
                 >
                     <v-icon name="redo">mdi-redo</v-icon>
                 </button>
-
             </div>
         </editor-menu-bar>
         <editor-content class="editor__content mb-7" :editor="editor"></editor-content>
@@ -124,10 +122,13 @@
             EditorContent,
             EditorMenuBar,
         },
+        props: [ 'value' ],
         data: () => ({
-            editor: new Editor({
-                extensions: [
-                    new Blockquote(),
+        editor: null
+        }),
+        mounted() {
+            this.editor = new Editor({
+                extensions: [new Blockquote(),
                     new BulletList(),
                     new Heading({ levels: [1, 2, 3] }),
                     new ListItem(),
@@ -136,31 +137,26 @@
                     new Code(),
                     new Italic(),
                     new Underline(),
-                    new History(),
-                ],
-                content: '',
-            }),
-            html: '',
-        }),
-        methods: {
-
+                    new History(), ],
+                content: this.value,
+                onUpdate: ({ getHTML }) => {
+                    this.$emit('input', getHTML())
+                },
+            })
+            this.editor.setContent(this.value)
         },
         beforeDestroy() {
-            this.editor.destroy()
+            if (this.editor) {
+                this.editor.destroy()
+            }
         },
         watch: {
-            contentHtml: {
-                handler: function() {
-                    console.log(this.html)
-                    this.$emit('contentHtml', this.contentHtml);
-                },
-                deep: true
-            }
-        },
-        computed: {
-            contentHtml() {
-                return this.editor.getHTML()
-            }
+            value (val) {
+                if (this.editor && val !== this.value) {
+                    this.editor.setContent(val, true)
+                }
+            },
+
         }
     }
 </script>

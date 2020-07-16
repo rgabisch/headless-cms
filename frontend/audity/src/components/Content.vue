@@ -22,6 +22,7 @@
                 <v-card-title>Aktionen</v-card-title>
                 <v-btn class="mt-3" block color="#FF8E3C">Veröffentlichen</v-btn>
                 <v-btn class="mt-3" block color="#FF8E3C" @click="remove">Löschen</v-btn>
+                <v-btn class="mt-3" block color="#FF8E3C" @click="edit">Editieren</v-btn>
             </v-card>
         </v-col>
     </v-row>
@@ -42,13 +43,11 @@
                     {
                         content: this.contentId,
                         space: this.spaceId
-                    }
-                );
-                await this.$router.replace(
-                    {
-                        path: '/spaces'
-                    }
-                );
+                }
+                );await this.$router.replace({path: '/spaces'});
+            },
+            async edit() {
+                await this.$router.replace({path: `/edit-content/${this.contentId}/space/${this.spaceId}`});
             }
         },
         computed: {

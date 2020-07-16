@@ -12,7 +12,7 @@
         <!-- Rich Text -->
         <div v-else-if="id === '2'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
-            <rich-text-editor @contentHtml="getEditorData($event)"></rich-text-editor>
+            <rich-text-editor v-model="input"></rich-text-editor>
         </div>
         <!-- Number -->
         <div v-else-if="id === '3'">
@@ -45,6 +45,7 @@
             <v-card-subtitle>{{label}}</v-card-subtitle>
             <v-btn><label for="upload-audio">Durchsuchen</label></v-btn>
             <input type="file" accept="audio/*" name="audio" id="upload-audio" @change="onFileUpload"/>
+            {{fileName}}
         </div>
         <div v-else>
             Type '{{label}}' with id {{id}} doesn#t exists.
@@ -55,10 +56,10 @@
     import RichTextEditor from './RichTextEditor.vue'
     export default {
         name: 'Type',
-        props: ['id', 'label'],
+        props: ['id', 'label', 'value'],
         components: {RichTextEditor},
         data: () => ({
-            input: '',
+            fileName: '',
             rules: {
                 number: [value => !!Number(value) || "The input must be a number"]
             }
@@ -68,16 +69,19 @@
                 this.input = e;
             },
             onFileUpload (event) {
+                this.fileName=event.target.files[0].name;
                 this.input = event.target.files[0]
 
             },
         },
-        watch: {
+        computed: {
             input: {
-                handler: function() {
-                    this.$emit('input', this.input);
+                get: function() {
+                    return this.value;
                 },
-                deep: true
+                set: function (newValue) {
+                    this.$emit('update:value', newValue)
+                }
             }
         }
     }

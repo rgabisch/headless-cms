@@ -45,6 +45,12 @@ const routes = [
                 component: () => import('../components/CreateContent'),
             },
             {
+                path: '/edit-content/:contentId/space/:spaceId',
+                name: 'editContent',
+                props: true,
+                component: () => import('../components/EditContent'),
+            },
+            {
                 path: '/spaces/:sid/contents',
                 name: 'listAllContents',
                 props: true,
@@ -89,7 +95,7 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) =>{
+router.beforeEach((to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const requiresVisitor = to.matched.some(record => record.meta.requiresVisitor);
     const isLoggedIn = store.getters.isLoggedIn;
