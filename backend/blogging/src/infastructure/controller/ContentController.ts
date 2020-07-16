@@ -106,78 +106,48 @@ class ContentController {
         });
 
         router.put('/:contentId/spaces/:spaceId/', async (req, res) => {
-            if (req.headers["content-type"] == "application/json") {
+            console.log("Content-Type " + req.headers["content-type"])
+            let form = new formidable.IncomingForm();
+
+            let x = this
+            form.parse(req, async function (err: any, fields: any, files: any) {
+                if (err) {
+                    console.error(err.message);
+                    return;
+                }
+
+                const content = JSON.parse(<string>fields['json']);
+                console.log(JSON.stringify(content, null, 2));
+
+                const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
+
+                for (let c of content.content) {
+                    mappedContent.push(c);
+                }
+
+                console.log(JSON.stringify(content, null, 2));
 
                 let command = new EditContentCommand(
                     <string>req.headers._creatorId,
                     req.params.contentId,
                     req.params.spaceId,
-                    req.body.content,
+                    mappedContent,
                     <string | undefined>req.query.dateFormat,
                 );
 
                 try {
-                    let writtenContentEvent = await this.editContentUseCase.execute(command);
+                    let editedContentEvent = await x.editContentUseCase.execute(command);
                     res.send({
-                        contentId: writtenContentEvent.contentId,
-                        creatorId: writtenContentEvent.creatorId,
-                        creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
-                        content: writtenContentEvent.content
+                        contentId: editedContentEvent.contentId,
+                        creatorId: editedContentEvent.creatorId,
+                        creationDate: x.format(editedContentEvent.creationDate, command.dateFormat),
+                        content: editedContentEvent.content
                     });
                 } catch (e) {
                     res.status(400).send('post body is invalid');
                     console.log(e)
                 }
-            } else {
-                console.log("Content-Type " + req.headers["content-type"])
-                let form = new formidable.IncomingForm();
-
-                let x = this
-                form.parse(req, async function (err: any, fields: any, files: any) {
-                    if (err) {
-                        console.error(err.message);
-                        return;
-                    }
-
-                    const content = JSON.parse(<string>fields['json']);
-
-                    const mappedContent: { typeId: string; name: string, content: string, raw?: Buffer }[] = [];
-
-                    for (let c of content.content) {
-                        if (c.typeId !== TypeId.Audio) {
-                            mappedContent.push(c);
-                        } else {
-                            if (files[c.name]) {
-                                mappedContent.push(Object.assign(c, {
-                                    content: '',
-                                    raw: await fs.readFile(files[c.name].path)
-                                }));
-                            }
-                        }
-                    }
-
-                    let command = new EditContentCommand(
-                        <string>req.headers._creatorId,
-                        req.params.contentId,
-                        req.params.spaceId,
-                        mappedContent,
-                        <string | undefined>req.query.dateFormat,
-                    );
-
-                    try {
-                        let editedContentEvent = await x.editContentUseCase.execute(command);
-                        res.send({
-                            contentId: editedContentEvent.contentId,
-                            creatorId: editedContentEvent.creatorId,
-                            creationDate: x.format(editedContentEvent.creationDate, command.dateFormat),
-                            content: editedContentEvent.content
-                        });
-                    } catch (e) {
-                        res.status(400).send('post body is invalid');
-                        console.log(e)
-                    }
-                })
-            }
+            })
         });
 
         router.get('/spaces/:spaceId', async (req, res) => {
