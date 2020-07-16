@@ -13,6 +13,9 @@ class EditContentUseCase {
     }
 
     public async execute(command: EditContentCommand): Promise<EditedContentEvent> {
+        console.log(command);
+
+
         const creator = await this.creatorRepository.findBy(command.creatorId);
 
         if (!creator)
@@ -25,17 +28,6 @@ class EditContentUseCase {
 
 
         const typeMapping = await Promise.all(command.content.map(async ({typeId, name, content, raw}) => {
-            const type = this.typeFactory.createBy(typeId);
-
-            if (type.isAudio()) {
-                const transcribedAudioEvent = await this.transcribeAudioUseCase.execute({
-                    audio: <Buffer>raw,
-                    audioType: 'mp3'
-                });
-
-                content = transcribedAudioEvent.transcription
-            }
-
             return {
                 type: this.typeFactory.createBy(typeId),
                 name,
