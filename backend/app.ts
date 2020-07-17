@@ -24,6 +24,7 @@ import {
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 let history = require('connect-history-api-fallback');
 const app = express();
+app.use(history());
 const port = process.env.PORT || 3000;
 
 const creatorRepositoryFactory = new CreatorRepositoryFactory();
@@ -58,7 +59,7 @@ if (process.env.NODE_ENV == Environment.DEV) {
 if (process.env.NODE_ENV === Environment.PROD) {
     app.use(express.static(__dirname + '/public'));
 }
-app.use(history());
+
 app.use(bodyParser.json());
 app.use(cors({
     credentials: true,
