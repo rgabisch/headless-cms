@@ -47,7 +47,8 @@ class WriteContentUseCase {
             return {
                 type: this.typeFactory.createBy(typeId),
                 name,
-                content: <string>content
+                content: <string>content,
+                raw
             }
         }));
 

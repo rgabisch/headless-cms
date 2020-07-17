@@ -164,6 +164,13 @@ class Firebase {
         }
     }
 
+    async storage_getURL(filepath: string) {
+        let data = await this.storage.file(this.root + "/" + filepath).getSignedUrl({action : "read", expires : "01-01-9999"})
+        .catch((err: any) => {console.log(err)})
+        return data
+       
+
+    }
 
     /*
     Update Data within the reference

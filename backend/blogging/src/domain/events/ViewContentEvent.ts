@@ -3,7 +3,7 @@ class ViewContentEvent {
                 readonly name: string,
                 readonly creationDate: Date,
                 readonly schema: { id: string, name: string },
-                readonly mapping: { type: { id: string, name: string }, content: string }[]) {
+                readonly mapping: { type: { id: string, name: string }, content: string, contentURL?: string }[]) {
     }
 }
 
