@@ -25,7 +25,7 @@ class ContentControllerBuilder extends ControllerBuilder<ContentController> {
         const listAllContentUsersUseCase = new ListAllContentsUsersUseCase(this.creatorRepository);
         const viewContentUseCase = new ViewContentUseCase(this.creatorRepository);
         const removeContentUseCase = new RemoveContentUseCase(this.creatorRepository);
-        const editContentUseCase = new EditContentUseCase(this.creatorRepository, new TranscribeAudioUseCase(this.transcribeStrategy), this.typeFactory);
+        const editContentUseCase = new EditContentUseCase(this.creatorRepository, new TranscribeAudioUseCase(this.transcribeStrategy), this.typeFactory, this.dateGenerator);
         return new ContentController(
             writeContentUseCase,
             listAllContentsUseCase,

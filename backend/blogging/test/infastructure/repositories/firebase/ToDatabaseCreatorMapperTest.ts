@@ -126,7 +126,7 @@ suite('Creator Mapper', () => {
             creator.open(otherSpace);
             creator.define(schema);
             creator.define(otherSchema);
-            creator.write(new Content('1', 'my first podcsat', schema, new Date(), new TypeMappings([{
+            creator.write(new Content('1', 'my first podcsat', schema, new Date(), new Date(), new TypeMappings([{
                 type: new Type(TypeId.Text),
                 name: 'heading',
                 content: 'My first Podcast'

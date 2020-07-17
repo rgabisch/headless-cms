@@ -36,12 +36,6 @@
                         @click="editContent"
                 >Speichern
                 </v-btn>
-                <v-btn
-                        class="mt-3"
-                        block
-                        color="#FF8E3C"
-                >Veröffentlichen
-                </v-btn>
             </v-card>
         </v-col>
     </v-row>

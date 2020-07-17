@@ -33,7 +33,7 @@ suite('Space Mapper', () => {
         test('given space with content -> return mapped', () => {
             const space = new Space('1', 'My Podcasts');
             const schema = new Schema('1', 'Podcast', new TypeDefinition([]));
-            const content = new Content('1', 'my first podcsat', schema, new Date(), new TypeMappings([]));
+            const content = new Content('1', 'my first podcsat', schema, new Date(), new Date(), new TypeMappings([]));
             space.add(content);
 
             const mapped = spaceMapper.map(space);

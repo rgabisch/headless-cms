@@ -11,6 +11,10 @@ export type MappedContent = {
         nanoseconds: number,
         seconds: number
     },
+    editDate: {
+        nanoseconds: number,
+        seconds: number
+    },
     schema: MappedSchema,
     typeMappings: {
         id: string,
@@ -26,14 +30,19 @@ class ToDatabaseContentMapper implements Mapper<Content, MappedContent> {
     }
 
     map(content: Content): MappedContent {
-        const timestamp = Timestamp.fromDate(content.creationDate);
+        const creationTimestamp = Timestamp.fromDate(content.creationDate);
+        const editTimestamp = Timestamp.fromDate(content.editDate);
 
         return {
             id: content.id,
             name: content.name,
             creationDate: {
-                nanoseconds: timestamp.nanoseconds,
-                seconds: timestamp.seconds
+                nanoseconds: creationTimestamp.nanoseconds,
+                seconds: creationTimestamp.seconds
+            },
+            editDate: {
+                nanoseconds: editTimestamp.nanoseconds,
+                seconds: editTimestamp.seconds
             },
             schema: this.schemaMapper.map(content.schema),
             typeMappings: this.mapTypeMapping(content)

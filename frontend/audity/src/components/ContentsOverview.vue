@@ -30,8 +30,8 @@
                 value: 'name',
             },
                 { text: 'Space', value: 'space' },
-                { text: 'Datum', value: 'creationDate' },
-                { text: 'Status', value: 'online' },
+                { text: 'Erstellt am', value: 'creationDate' },
+                { text: 'Geändert am', value: 'editDate' }
             ]
         }),
         methods: {

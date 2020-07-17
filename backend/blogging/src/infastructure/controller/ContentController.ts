@@ -46,6 +46,7 @@ class ContentController {
                         contentId: writtenContentEvent.contentId,
                         creatorId: writtenContentEvent.creatorId,
                         creationDate: this.format(writtenContentEvent.creationDate, command.dateFormat),
+                        editDate: this.format(writtenContentEvent.editDate, command.dateFormat),
                         content: writtenContentEvent.content
                     });
                 } catch (e) {
@@ -95,6 +96,7 @@ class ContentController {
                             contentId: writtenContentEvent.contentId,
                             creatorId: writtenContentEvent.creatorId,
                             creationDate: x.format(writtenContentEvent.creationDate, command.dateFormat),
+                            editDate: x.format(writtenContentEvent.editDate, command.dateFormat),
                             content: writtenContentEvent.content
                         });
                     } catch (e) {
@@ -138,6 +140,7 @@ class ContentController {
                         contentId: editedContentEvent.contentId,
                         creatorId: editedContentEvent.creatorId,
                         creationDate: x.format(editedContentEvent.creationDate, command.dateFormat),
+                        editDate: x.format(editedContentEvent.editDate, command.dateFormat),
                         content: editedContentEvent.content
                     });
                 } catch (e) {
@@ -157,10 +160,11 @@ class ContentController {
                 const writtenContentEvent = await this.listAllContentsUseCase.execute(command);
 
                 const response = writtenContentEvent.content
-                                                    .map(({id, name, creationDate}) => ({
+                                                    .map(({id, name, creationDate, editDate}) => ({
                                                         id,
                                                         name,
-                                                        creationDate: this.format(creationDate, command.dateFormat)
+                                                        creationDate: this.format(creationDate, command.dateFormat),
+                                                        editDate: this.format(editDate, command.dateFormat)
                                                     }));
                 res.send(response);
             } catch (e) {
@@ -182,7 +186,8 @@ class ContentController {
                     content: space.contents.map(content => ({
                         id: content.id,
                         name: content.name,
-                        creationDate: this.format(content.creationDate, command.dateFormat)
+                        creationDate: this.format(content.creationDate, command.dateFormat),
+                        editDate: this.format(content.editDate, command.dateFormat)
                     }))
                 }));
 
@@ -206,6 +211,7 @@ class ContentController {
                     id: viewedContentEvent.id,
                     name: viewedContentEvent.name,
                     creationDate: this.format(viewedContentEvent.creationDate, command.dateFormat),
+                    editDate: this.format(viewedContentEvent.editDate, command.dateFormat),
                     schema: viewedContentEvent.schema,
                     mapping: viewedContentEvent.mapping
                 });

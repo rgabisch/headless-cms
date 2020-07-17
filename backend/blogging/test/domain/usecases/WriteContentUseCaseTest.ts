@@ -214,6 +214,7 @@ suite('Write Content Use Case', () => {
                 contentId,
                 creatorId,
                 dateGenerator.generate(),
+                dateGenerator.generate(),
                 [{
                     typeId: typeId,
                     name: typeName,
