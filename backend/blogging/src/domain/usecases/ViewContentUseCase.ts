@@ -4,6 +4,7 @@ import {CreatorRepository} from "../repositories/CreatorRepository";
 import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import Content from "../entities/Content";
 import {TypeMappings} from "../entities/Schema";
+import { type } from "os";
 
 class ViewContentUseCase {
 
@@ -35,9 +36,9 @@ class ViewContentUseCase {
         }
     }
 
-    private map(typeMappings: TypeMappings): { type: { id: string, name: string }, content: string }[] {
+    private map(typeMappings: TypeMappings): { type: { id: string, name: string }, content: string, contentURL?: string}[] {
         const mapped = [];
-
+        
         for (let typeMapping of typeMappings) {
             mapped.push(
                 {
@@ -45,7 +46,8 @@ class ViewContentUseCase {
                         id: typeMapping.type.id,
                         name: typeMapping.name
                     },
-                    content: typeMapping.content
+                    content: typeMapping.content,
+                    contentURL: typeMapping.contentURL
                 }
             );
         }

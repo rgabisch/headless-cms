@@ -53,8 +53,8 @@ export class TypeDefinition {
     }
 }
 
-export class TypeMappings implements Iterable<{ type: Type, name: string, content: string, raw?: Buffer }> {
-    constructor(private mappings: { type: Type, name: string, content: string, raw?: Buffer }[]) {
+export class TypeMappings implements Iterable<{ type: Type, name: string, content: string, contentURL?: string, raw?: Buffer }> {
+    constructor(private mappings: { type: Type, name: string, content: string,contentURL?: string, raw?: Buffer }[]) {
     }
 
     hasDefinitionAtIndex(definition: { type: Type; name: string }, index: number) {
@@ -68,11 +68,11 @@ export class TypeMappings implements Iterable<{ type: Type, name: string, conten
         return !this.hasDefinitionAtIndex(definition, index);
     }
 
-    [Symbol.iterator](): Iterator<{ type: Type; name: string; content: string, raw?: Buffer }> {
+    [Symbol.iterator](): Iterator<{ type: Type; name: string; content: string,contentURL?: string, raw?: Buffer }> {
         let counter = 0;
         const mappings = this.mappings;
         return {
-            next: function (...args: [] | [undefined]): IteratorYieldResult<{ type: Type; name: string; content: string, raw?: Buffer }> | IteratorReturnResult<any> {
+            next: function (...args: [] | [undefined]): IteratorYieldResult<{ type: Type; name: string; content: string,contentURL?: string, raw?: Buffer }> | IteratorReturnResult<any> {
                 return {
                     done: counter == mappings.length,
                     value: mappings[counter++]

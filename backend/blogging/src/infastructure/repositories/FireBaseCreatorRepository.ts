@@ -52,7 +52,8 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
         for (let content of creator.getAllContents()) {
             for (const typeMapping of content.typeMappings) {
                 if (typeMapping.type.isAudio()) {
-                    super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
+                    await super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
+                    typeMapping.contentURL = await super.storage_getURL(this.audioStoragePath(creator.id, content.id, typeMapping.name))
                 }
             }
         }
@@ -66,7 +67,8 @@ class FireBaseCreatorRepository extends FireBase implements CreatorRepository {
         for (let content of creator.getAllContents()) {
             for (const typeMapping of content.typeMappings) {
                 if (typeMapping.type.isAudio()) {
-                    super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
+                    await super.storage_add(this.audioStoragePath(creator.id, content.id, typeMapping.name), <Buffer>typeMapping.raw);
+                    typeMapping.contentURL = await super.storage_getURL(this.audioStoragePath(creator.id, content.id, typeMapping.name))
                 }
             }
         }
