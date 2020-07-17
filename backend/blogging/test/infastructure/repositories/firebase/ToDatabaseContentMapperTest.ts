@@ -56,12 +56,16 @@ suite('Content Mapper', () => {
                 schema,
                 new Date(),
                 new TypeMappings([
-                    {type: new Type(TypeId.Text), name: 'heading', content: 'my first javascript podcast'}
+                    {
+                        type: new Type(TypeId.Text),
+                        name: 'heading',
+                        content: 'my first javascript podcast'
+                    }
                 ])
             );
 
             const mapped = contentMapper.map(content);
-
+            console.log(JSON.stringify(mapped, null, 2));
             assert.deepStrictEqual(
                 mapped,
                 {
@@ -76,7 +80,8 @@ suite('Content Mapper', () => {
                         {
                             id: TypeId.Text,
                             name: 'heading',
-                            content: 'my first javascript podcast'
+                            content: 'my first javascript podcast',
+                            contentURL: ''
                         }
                     ]
                 }

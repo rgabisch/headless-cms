@@ -1,9 +1,8 @@
 import {Mapper} from "./ToDatabaseCreatorMapper";
 import Content from "../../../domain/entities/Content";
 import admin from "firebase-admin";
-import Timestamp = admin.firestore.Timestamp;
 import ToDatabaseSchemaMapper, {MappedSchema} from "./ToDatabaseSchemaMapper";
-import { type } from "os";
+import Timestamp = admin.firestore.Timestamp;
 
 export type MappedContent = {
     id: string,
@@ -16,7 +15,8 @@ export type MappedContent = {
     typeMappings: {
         id: string,
         name: string,
-        content: string
+        content: string,
+        contentURL?: string
     }[]
 }
 
@@ -48,7 +48,7 @@ class ToDatabaseContentMapper implements Mapper<Content, MappedContent> {
                 id: typeMapping.type.id,
                 name: typeMapping.name,
                 content: typeMapping.content,
-                contentURL: typeMapping.contentURL ||""
+                contentURL: typeMapping.contentURL || ""
             });
         }
 
