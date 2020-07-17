@@ -22,7 +22,7 @@ import {
 } from "./transcribing/src/TranscribeAudioStrategy";
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
-
+let history = require('connect-history-api-fallback');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -58,7 +58,7 @@ if (process.env.NODE_ENV == Environment.DEV) {
 if (process.env.NODE_ENV === Environment.PROD) {
     app.use(express.static(__dirname + '/public'));
 }
-
+app.use(history());
 app.use(bodyParser.json());
 app.use(cors({
     credentials: true,
