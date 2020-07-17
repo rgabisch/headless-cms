@@ -32,12 +32,16 @@ export class WatsonDeveloperCloudTranscribeStrategy implements TranscribeStrateg
             audio: readSteam,
             content_type: `audio/${fileExtension}`,
             timestamps: this.timestamps,
+            model: 'de-DE_BroadbandModel',
             word_alternatives_threshold: this.wordAlternativesThreshold,
         };
 
         const recognition = await this.speech_to_text.recognize(params);
-
-        return recognition.results[0].alternatives[0].transcript;
+        let transcript = '';
+        for (let i = 0; i < recognition.results.length; i++) {
+            transcript = transcript.concat(recognition.results[i].alternatives[0].transcript + '\n')
+        }
+        return transcript;
     }
 
 }

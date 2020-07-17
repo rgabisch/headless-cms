@@ -128,7 +128,7 @@
         methods: {
 
             getData() {
-                axios.get("http://localhost:3000/api/contents",{headers: {'creatorId':'tvV1kMaboBaVK7diK3ZAm493YXe2'}})
+                axios.get("http://localhost:3000/api/contents",{headers: {'creatorId':'YWKppHY0ZNMqTjLovaninIJXIGn1'}})
                     .then(response => {this.allSpaces = response.data})
                     .catch(function(error){
                         console.log(error);
