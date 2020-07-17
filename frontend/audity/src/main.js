@@ -10,9 +10,13 @@ Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
 
-new Vue({
+let app = '';
+
+if (!app) {
+    app = new Vue({
         router,
         vuetify,
         store,
         render: h => h(App),
-    }).$mount('#app')
+        }).$mount('#app')
+    }

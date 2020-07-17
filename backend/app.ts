@@ -22,8 +22,9 @@ import {
 } from "./transcribing/src/TranscribeAudioStrategy";
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
-
+let history = require('connect-history-api-fallback');
 const app = express();
+app.use(history());
 const port = process.env.PORT || 3000;
 
 const creatorRepositoryFactory = new CreatorRepositoryFactory();
