@@ -85,8 +85,34 @@ const routes = [
         path: '/template',
         name: 'template',
         props: true,
-        component: () => import('../views/Template'),
-    }
+        component: () => import('../views/Demo-Blog/Template')
+    },
+
+    {
+        path: '/demo',
+        name: 'demo',
+        component: () => import('../views/Demo-Blog/Demo'),
+    },
+    {
+        path: 'demo/blogs/:sid/:cid',
+        name: 'blog',
+        props: true,
+        component: () => import('../views/Demo-Blog/Blog'),
+    },
+    {
+        path: 'demo/about/:sid/:cid',
+        name: 'aboutMe',
+        props: true,
+        component: () => import('../views/Demo-Blog/About'),
+    },
+    {
+        path: 'demo/podcast/:sid/:cid',
+        name: 'podcast',
+        props: true,
+        component: () => import('../views/Demo-Blog/Podcast'),
+    },
+
+
 ]
 
 const router = new VueRouter({
