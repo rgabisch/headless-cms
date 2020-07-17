@@ -24,7 +24,8 @@ class ListAllContentsUsersUseCase {
         return contents.map(content => ({
             id: content.id,
             name: content.name,
-            creationDate: content.creationDate
+            creationDate: content.creationDate,
+            editDate: content.editDate
         }));
     }
 
@@ -40,7 +41,7 @@ class ListAllContentsUsersUseCase {
 }
 
 export class ListedAllContentsSpacesEvent {
-    constructor(readonly spaces: { space: { id: string, name: string }, contents: { id: string, name: string, creationDate: Date }[] }[]) {
+    constructor(readonly spaces: { space: { id: string, name: string }, contents: { id: string, name: string, creationDate: Date, editDate: Date }[] }[]) {
     }
 }
 

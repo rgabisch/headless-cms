@@ -6,11 +6,8 @@ import IdGenerator from "../../shared/IdGenerator";
 import Content from "../entities/Content";
 import {TypeMappings} from "../entities/Schema";
 import TypeFactory from "../factories/TypeFactory";
-import Space from "../entities/Space";
 import DateGenerator from "../../shared/DateGenerator";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
-import {TranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
-import {Readable} from "stream";
 
 class WriteContentUseCase {
     constructor(private creatorRepository: CreatorRepository,
@@ -58,6 +55,7 @@ class WriteContentUseCase {
             command.contentName,
             creator.getSchemaBy(command.schemaId),
             this.dateGenerator.generate(),
+            this.dateGenerator.generate(),
             new TypeMappings(typeMapping)
         );
 
@@ -70,6 +68,7 @@ class WriteContentUseCase {
             content.id,
             creator.id,
             content.creationDate,
+            content.editDate,
             typeMapping.map(({type, name, content}) => ({
                 typeId: type.id,
                 name,

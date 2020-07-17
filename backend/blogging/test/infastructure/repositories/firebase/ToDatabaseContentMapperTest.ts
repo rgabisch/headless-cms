@@ -25,6 +25,7 @@ suite('Content Mapper', () => {
                 'my first javascript podcast',
                 schema,
                 date,
+                date,
                 new TypeMappings([])
             );
 
@@ -36,6 +37,10 @@ suite('Content Mapper', () => {
                     id: content.id,
                     name: content.name,
                     creationDate: {
+                        seconds: Timestamp.fromDate(content.creationDate).seconds,
+                        nanoseconds: Timestamp.fromDate(content.creationDate).nanoseconds
+                    },
+                    editDate: {
                         seconds: Timestamp.fromDate(content.creationDate).seconds,
                         nanoseconds: Timestamp.fromDate(content.creationDate).nanoseconds
                     },
@@ -55,6 +60,7 @@ suite('Content Mapper', () => {
                 'my first javascript podcast',
                 schema,
                 new Date(),
+                new Date(),
                 new TypeMappings([
                     {type: new Type(TypeId.Text), name: 'heading', content: 'my first javascript podcast'}
                 ])
@@ -68,6 +74,10 @@ suite('Content Mapper', () => {
                     id: content.id,
                     name: content.name,
                     creationDate: {
+                        seconds: Timestamp.fromDate(content.creationDate).seconds,
+                        nanoseconds: Timestamp.fromDate(content.creationDate).nanoseconds
+                    },
+                    editDate: {
                         seconds: Timestamp.fromDate(content.creationDate).seconds,
                         nanoseconds: Timestamp.fromDate(content.creationDate).nanoseconds
                     },

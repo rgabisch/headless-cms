@@ -1,15 +1,13 @@
 import {assert} from "chai";
 import ToEntitySchemaMapper from "../../../../src/infastructure/repositories/firebase/ToEntitySchemaMapper";
-import {MappedSchema} from "../../../../src/infastructure/repositories/firebase/ToDatabaseSchemaMapper";
-import Schema, {TypeDefinition, TypeMappings} from "../../../../src/domain/entities/Schema";
+import {TypeMappings} from "../../../../src/domain/entities/Schema";
 import TypeFactory from "../../../../src/domain/factories/TypeFactory";
 import ToEntitySpaceMapper from "../../../../src/infastructure/repositories/firebase/ToEntitySpaceMapper";
 import {MappedSpace} from "../../../../src/infastructure/repositories/firebase/ToDatabaseSpaceMapper";
 import Space from "../../../../src/domain/entities/Space";
 import * as firebase from "firebase";
-import Timestamp = firebase.firestore.Timestamp;
 import Content from "../../../../src/domain/entities/Content";
-import {CreateDialogNodeConstants} from "watson-developer-cloud/assistant/v1";
+import Timestamp = firebase.firestore.Timestamp;
 
 suite('To Space Entity Mapper', () => {
 
@@ -45,6 +43,7 @@ suite('To Space Entity Mapper', () => {
                     id: '1',
                     name: 'my first podcast',
                     creationDate: Timestamp.fromDate(date),
+                    editDate: Timestamp.fromDate(date),
                     schema: {
                         id: '1',
                         name: 'Podcast',
@@ -62,6 +61,7 @@ suite('To Space Entity Mapper', () => {
             mappedSpace.contents[0].id,
             mappedSpace.contents[0].name,
             schemaEntityMapper.map(mappedSpace.contents[0].schema),
+            date,
             date,
             new TypeMappings([])
         ));
@@ -83,6 +83,7 @@ suite('To Space Entity Mapper', () => {
                     id: '1',
                     name: 'my first podcast',
                     creationDate: Timestamp.fromDate(date),
+                    editDate: Timestamp.fromDate(date),
                     schema: {
                         id: '1',
                         name: 'Podcast',
@@ -111,6 +112,7 @@ suite('To Space Entity Mapper', () => {
             mappedSpace.contents[0].id,
             mappedSpace.contents[0].name,
             schemaEntityMapper.map(mappedSpace.contents[0].schema),
+            date,
             date,
             new TypeMappings([
                 {

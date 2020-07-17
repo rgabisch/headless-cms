@@ -5,11 +5,13 @@ import {UnassignedIdException} from "../exceptions/UnassignedIdException";
 import TypeFactory from "../factories/TypeFactory";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
 import {TypeMappings} from "../entities/Schema";
+import DateGenerator from "../../shared/DateGenerator";
 
 class EditContentUseCase {
     constructor(private readonly creatorRepository: CreatorRepository,
                 private readonly transcribeAudioUseCase: TranscribeAudioUseCase,
-                private readonly typeFactory: TypeFactory) {
+                private readonly typeFactory: TypeFactory,
+                private readonly dateGenerator: DateGenerator) {
     }
 
     public async execute(command: EditContentCommand): Promise<EditedContentEvent> {
@@ -32,7 +34,7 @@ class EditContentUseCase {
             }
         }));
 
-        content.edit(new TypeMappings(typeMapping));
+        content.edit(new TypeMappings(typeMapping), this.dateGenerator.generate());
 
         this.creatorRepository.update(creator);
 
@@ -45,7 +47,8 @@ class EditContentUseCase {
                 name,
                 content
             })),
-            creationDate: content.creationDate
+            creationDate: content.creationDate,
+            editDate: this.dateGenerator.generate()
         };
     }
 }

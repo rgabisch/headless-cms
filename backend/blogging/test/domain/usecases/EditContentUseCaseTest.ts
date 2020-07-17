@@ -11,9 +11,11 @@ import TypeFactory from "../../../src/domain/factories/TypeFactory";
 import TranscribeAudioUseCase from "../../../../transcribing/src/TranscribeAudioUseCase";
 import {StaticTranscribeStrategy} from "../../../../transcribing/src/TranscribeAudioStrategy";
 import EditContentCommand from "../../../src/domain/commands/EditContentCommand";
+import StaticDateGenerator from "../../../src/shared/StaticDateGenerator";
 
 suite('Edit Content Use Case', () => {
 
+    const dateGenerator = new StaticDateGenerator(new Date(new Date().getTime() + 86400000));
     let repository: CreatorRepository;
     let creator: Creator;
     let space: Space;
@@ -38,10 +40,11 @@ suite('Edit Content Use Case', () => {
             'My First Podcast',
             schema,
             new Date(),
+            new Date(),
             typeMapping
         );
         repository = new InMemoryCreatorRepository();
-        useCase = new EditContentUseCase(repository, new TranscribeAudioUseCase(new StaticTranscribeStrategy('lala')), new TypeFactory());
+        useCase = new EditContentUseCase(repository, new TranscribeAudioUseCase(new StaticTranscribeStrategy('lala')), new TypeFactory(), dateGenerator);
     });
 
     test('given assigned ids -> edit content', async () => {
@@ -75,7 +78,8 @@ suite('Edit Content Use Case', () => {
                     name: 'Heading',
                     content: editedContent
                 }],
-                creationDate: content.creationDate
+                creationDate: content.creationDate,
+                editDate: dateGenerator.generate(),
             }
         );
     });

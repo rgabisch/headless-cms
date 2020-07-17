@@ -15,7 +15,8 @@ class ToEntitySpaceMapper implements Mapper<MappedSpace, Space> {
         const space = new Space(mappedSpace.id, mappedSpace.name);
         for (let mappedContent of mappedSpace.contents ?? []) {
             const schema = this.schemaMapper.map(mappedContent.schema);
-            let date = new Date(new Date(0).setUTCSeconds(mappedContent.creationDate.seconds));
+            let creationDate = new Date(new Date(0).setUTCSeconds(mappedContent.creationDate.seconds));
+            let editDate = new Date(new Date(0).setUTCSeconds(mappedContent.editDate.seconds));
             const typeMappings = [];
             for (let typeMapping of mappedContent.typeMappings ?? []) {
                 typeMappings.push({
@@ -26,7 +27,7 @@ class ToEntitySpaceMapper implements Mapper<MappedSpace, Space> {
             }
             const typeMapping = new TypeMappings(typeMappings);
 
-            const content = new Content(mappedContent.id, mappedContent.name, schema, date, typeMapping);
+            const content = new Content(mappedContent.id, mappedContent.name, schema, creationDate, editDate, typeMapping);
             space.add(content);
         }
         return space;

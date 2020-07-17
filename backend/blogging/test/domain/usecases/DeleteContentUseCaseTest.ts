@@ -20,7 +20,7 @@ suite('Delete Content Use Case', () => {
     setup(async () => {
         creator = new Creator('1', new Map(), new Map());
         space = new Space('1', 'My Podcasts');
-        content = new Content('1', 'first podcast', schema, new Date(), new TypeMappings([]));
+        content = new Content('1', 'first podcast', schema, new Date(), new Date(), new TypeMappings([]));
         repository = new InMemoryCreatorRepository();
         useCase = new RemoveContentUseCase(repository);
 

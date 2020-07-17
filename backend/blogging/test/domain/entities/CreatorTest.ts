@@ -11,8 +11,8 @@ suite('Creator Entity', () => {
     const schemaId = '53632';
     let space: Space;
     const schema = new Schema(schemaId, 'podcast', new TypeDefinition([]));
-    const content = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
-    const otherContent = new Content('2', 'my second podcast', schema, new Date(), new TypeMappings([]));
+    const content = new Content('1', 'my first podcast', schema, new Date(), new Date(), new TypeMappings([]));
+    const otherContent = new Content('2', 'my second podcast', schema, new Date(), new Date(), new TypeMappings([]));
 
     setup(() => {
         space = new Space('1', 'name');
@@ -102,7 +102,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.open(new Space('1', 'name'));
             const undefinedSchema = new Schema('unit-test', 'podcast', new TypeDefinition([]));
-            const content = new Content('1', 'my first podcast', undefinedSchema, new Date(), new TypeMappings([]));
+            const content = new Content('1', 'my first podcast', undefinedSchema, new Date(), new Date(), new TypeMappings([]));
 
             try {
                 creator.write(content, space);
@@ -117,7 +117,7 @@ suite('Creator Entity', () => {
             const creator = new Creator(creatorId, new Map(), new Map());
             creator.define(schema);
             creator.open(new Space('1', 'name'));
-            const content = new Content('1', 'my first podcast', schema, new Date(), new TypeMappings([]));
+            const content = new Content('1', 'my first podcast', schema, new Date(), new Date(), new TypeMappings([]));
             creator.write(content, space);
 
             const expected = creator.getContent(content.id, '1');

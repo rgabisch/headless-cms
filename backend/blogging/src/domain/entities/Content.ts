@@ -8,16 +8,19 @@ class ContentNotFitInWithSchema implements Error {
 
 export class Content {
     private _typeMappings!: TypeMappings;
+    private _lastEditDate!: Date;
 
     constructor(readonly id: string,
                 readonly name: string,
                 readonly schema: Schema,
                 readonly creationDate: Date,
+                _lastEditDate: Date,
                 _typeMappings: TypeMappings) {
         if (schema.isNotFitInWith(_typeMappings))
             throw new ContentNotFitInWithSchema();
 
         this._typeMappings = _typeMappings;
+        this._lastEditDate = _lastEditDate;
     }
 
     get schemaId(): string {
@@ -32,8 +35,13 @@ export class Content {
         return this._typeMappings
     }
 
-    edit(typeMappings: TypeMappings) {
-        this._typeMappings = typeMappings
+    get editDate() {
+        return this._lastEditDate;
+    }
+
+    edit(typeMappings: TypeMappings, lastEditDate: Date) {
+        this._lastEditDate = lastEditDate;
+        this._typeMappings = typeMappings;
     }
 }
 
