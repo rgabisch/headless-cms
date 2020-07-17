@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid fill-height class="home-hero" style="background-color: #3e65c0">
+    <v-container fluid fill-height class="home-hero" style="min-height: 100vh; background-color: #3e65c0">
         <v-layout justify-center align-center column pa-5>
             <div class="display-4 font-weight-black white--text text-xs-center">
                 {{content.name}}
@@ -26,7 +26,7 @@
         methods: {
 
             getData() {
-                axios.get(`http://localhost:3000/api/contents/${this.contentId}/spaces/${this.spaceId}`,{headers: {'creatorId':'YWKppHY0ZNMqTjLovaninIJXIGn1'}})
+                axios.get(`http://localhost:3000/api/contents/${this.contentId}/spaces/${this.spaceId}`,{headers: {'creatorId':'5BfgV1AzBNPmb7l2qIX3ur80aLM2'}})
                     .then(response => {this.content = response.data})
                     .catch(function(error){
                         console.log(error);

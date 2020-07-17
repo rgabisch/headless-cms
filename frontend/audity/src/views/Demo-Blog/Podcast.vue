@@ -38,7 +38,7 @@
         methods: {
 
             getData() {
-                axios.get(`http://localhost:3000/api/contents/${this.contentId}/spaces/${this.spaceId}`,{headers: {'creatorId':'YWKppHY0ZNMqTjLovaninIJXIGn1'}})
+                axios.get(`http://localhost:3000/api/contents/${this.contentId}/spaces/${this.spaceId}`,{headers: {'creatorId':'5BfgV1AzBNPmb7l2qIX3ur80aLM2'}})
                     .then(response => {this.content = response.data})
                     .catch(function(error){
                         console.log(error);
