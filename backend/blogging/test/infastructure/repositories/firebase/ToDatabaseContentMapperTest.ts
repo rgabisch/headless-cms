@@ -65,7 +65,7 @@ suite('Content Mapper', () => {
             );
 
             const mapped = contentMapper.map(content);
-            console.log(JSON.stringify(mapped, null, 2));
+
             assert.deepStrictEqual(
                 mapped,
                 {
