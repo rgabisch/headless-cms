@@ -37,12 +37,14 @@
         <!-- Image -->
         <div v-else-if="id === '5'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
+            <v-img v-if="preview" :src="preview" class="uploading-image"></v-img>
             <v-btn><label for="upload-image">Durchsuchen</label></v-btn>
             <input type="file" accept="image/*" name="image" id="upload-image" />
         </div>
         <!-- Audio -->
         <div v-else-if="id === '6'">
             <v-card-subtitle>{{label}}</v-card-subtitle>
+            <div><audio v-if="preview" controls :src="preview"></audio></div>
             <v-btn><label for="upload-audio">Durchsuchen</label></v-btn>
             <input type="file" accept="audio/*" name="audio" id="upload-audio" @change="onFileUpload"/>
             {{fileName}}
@@ -59,6 +61,7 @@
         props: ['id', 'label', 'value'],
         components: {RichTextEditor},
         data: () => ({
+            preview: null,
             fileName: '',
             rules: {
                 number: [value => !!Number(value) || "The input must be a number"]
@@ -69,7 +72,9 @@
                 this.input = e;
             },
             onFileUpload (event) {
-                this.fileName=event.target.files[0].name;
+                const file = event.target.files[0];
+                this.preview = URL.createObjectURL(file);
+                console.log(event.target.files[0])
                 this.input = event.target.files[0]
 
             },

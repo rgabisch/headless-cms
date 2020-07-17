@@ -4,6 +4,7 @@
             <div class="container d-flex align-items-center flex-column">
                 <h1 class="masthead-heading text-uppercase mb-0">Title</h1>
                 <!-- Icon Divider-->
+                {{contents}}
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
@@ -28,7 +29,7 @@
                 <div class="row">
                     <!-- Portfolio Item 1-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/cabin.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/cabin.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -37,7 +38,7 @@
                     </div>
                     <!-- Portfolio Item 2-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/cake.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/cake.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -46,7 +47,7 @@
                     </div>
                     <!-- Portfolio Item 3-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/circus.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/circus.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -55,7 +56,7 @@
                     </div>
                     <!-- Portfolio Item 4-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/game.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/game.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -64,7 +65,7 @@
                     </div>
                     <!-- Portfolio Item 5-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/safe.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/safe.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -73,7 +74,7 @@
                     </div>
                     <!-- Portfolio Item 6-->
                     <div class="card col-3" style="width: 18rem;">
-                        <img class="img-fluid" src="../assets/img/submarine.png" alt="" />
+                        <img class="img-fluid" src="../../assets/img/submarine.png" alt="" />
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -230,10 +231,32 @@
 </template>
 
 <script>
+    import axios from "axios";
+
     export default {
         name: "Template",
+        data: () => ({
+            contents: [],
+        }),
+        methods: {
 
-    }
+            getData() {
+                console.log('aaaaaaaaaaaaaa')
+                axios.get("http://localhost:3000/api/contents",{headers: {'creatorId':'4biXedudugfxd8ee2mB1EV7SjI93'}})
+                    .then(response => {this.contents = response.data})
+                    .catch(function(error){
+                        console.log(error);
+
+                    });
+                console.log('aaaaaaaaaaaaaa')
+            },
+
+        },
+        // when the comonent is displayed, call this method to show all spaces
+        mounted(){
+            this.getData();
+        }
+    };
 </script>
 
 <style scoped>

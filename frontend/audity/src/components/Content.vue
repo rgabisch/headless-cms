@@ -12,6 +12,7 @@
                 <div class="pa-3" v-for="map in content.mapping" :key="map.type.name">
                     <v-card class="text-center">
                         <v-card-subtitle>{{map.type.name}}</v-card-subtitle>
+                        <div><audio v-if="map.contentURL" controls :src="map.contentURL" class="controlBar"></audio></div>
                         <v-card-text v-html="map.content">{{map.content}}</v-card-text>
                     </v-card>
                 </div>
@@ -68,3 +69,10 @@
         }
     };
 </script>
+<style scoped>
+    .controlBar {
+        background-color: grey !important;
+        color: orange !important;
+        width: 200px;
+    }
+    </style>

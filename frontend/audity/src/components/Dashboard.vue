@@ -1,28 +1,6 @@
 <template>
     <v-row class="pa-2">
         <v-col md="9" class="col-12">
-            <v-row>
-                <v-col class="pt-0">
-                    <v-card class="pa-2">
-                        <v-card-title>Aufrufe</v-card-title>
-                        <div class="d-flex">
-                            <p>0</p>
-                            <v-spacer></v-spacer>
-                            <p>0% &#8594;</p>
-                        </div>
-                    </v-card>
-                </v-col>
-                <v-col class="pt-0">
-                    <v-card class="pa-2">
-                        <v-card-title>Kommentare</v-card-title>
-                        <div class="d-flex justify-xl-space-between">
-                            <p>0</p>
-                            <v-spacer></v-spacer>
-                            <p>0% &#8594;</p>
-                        </div>
-                    </v-card>
-                </v-col>
-            </v-row>
             <v-card class="mt-3">
                 <v-card-title>Aktive Seiten und Entwürfe</v-card-title>
                 <ContentsOverview/>
